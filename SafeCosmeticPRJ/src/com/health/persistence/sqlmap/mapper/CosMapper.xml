@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.persistence.mapper.CosMapper">
+
+	<!-- 화장품등록 -->
+	<insert id="insertCos" parameterType="cosmeticDTO">
+		INSERT INTO COSMETIC
+		(
+		COS_NO, COS_NAME, COS_TYPE, PRICE, BRAND, LIKE_COUNT, REG_NO, REG_DT, ING_NAME
+		)
+		VALUES(
+		(SELECT IFNULL(MAX(COS.COS_NO),10000000)+1 FROM COSMETIC COS), #{cos_name},
+		#{cos_type}, #{price}, #{brand}, '00000000', '10000010', NOW(),
+		#{ing_name}
+		)
+	</insert>
+	<!-- 화장품목록 -->
+	<select id="getCosList" resultType="cosmeticDTO">
+		SELECT COS_NO, COS_NAME, COS_TYPE, PRICE, BRAND, LIKE_COUNT, REG_NO , REG_DT, ING_NAME
+		FROM COSMETIC
+		ORDER BY COS_NAME ASC
+	</select>
+	<!-- TEST cos_no 찾기 -->
+	<select id="getCosNo" parameterType="cosmeticDTO" resultType="cosmeticDTO">
+		SELECT COS_NO
+		WHERE COS_NO = #{cos_no} 
+	</select>
+
+</mapper>

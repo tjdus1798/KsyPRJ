@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+    <typeAliases>
+    	<!-- 사용할 DTO 등록  -->
+    	<!-- <typeAlias type="poly.dto.BoardDTO" alias="BoardDTO" /> -->
+    	<typeAlias type="com.health.DTO.mainDTO" alias="mainDTO" /> 
+    	<typeAlias type="com.health.DTO.cosmeticDTO" alias="cosmeticDTO" /> 
+    	<typeAlias type="com.health.DTO.likeDTO" alias="likeDTO" /> 
+    	<typeAlias type="com.health.DTO.ingDTO" alias="ingDTO" /> 
+    	<typeAlias type="com.health.DTO.boardDTO" alias="boardDTO" />
+    	<typeAlias type="com.health.DTO.boardDTO" alias="bo_imgDTO" />
+    	 
+    	
+    </typeAliases>
+</configuration>

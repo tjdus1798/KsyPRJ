@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.persistence.mapper.IngMapper">
+
+	<!-- 성분등록 -->
+	<insert id="insertIng" parameterType="ingDTO">
+		INSERT INTO INGREDIENT
+		(
+		ING_NO, ING_NAME, ING_ENG, ING_TYPE, DANGER_CHECK, EWG_LEVEL, REG_NO, REG_DT,
+		MIX
+		)
+		VALUES(
+		(SELECT IFNULL(MAX(ING.ING_NO),10000000)+1 FROM INGREDIENT ING), #{ing_name},
+		#{ing_eng}, #{ing_type}, #{danger_check}, #{ewg_level} , #{reg_no},
+		NOW(), #{mix}
+		)
+	</insert>
+	<!-- 성분목록 -->
+	<select id="getIngList" resultType="ingDTO">
+		SELECT ING_NO, ING_NAME, ING_ENG, ING_TYPE, DANGER_CHECK, EWG_LEVEL, REG_NO , REG_DT, MIX
+		FROM INGREDIENT
+		ORDER BY ING_NAME ASC
+	</select>
+	<!-- 성분상세 -->
+	<select parameterType="String" id="getingDetail" resultType="ingDTO">
+	SELECT * 
+	FROM INGREDIENT
+	WHERE ING_NO = #{ing_no} 
+</select>
+</mapper>

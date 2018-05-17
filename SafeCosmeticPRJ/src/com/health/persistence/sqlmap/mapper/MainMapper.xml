@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.health.persistence.mapper.MainMapper">
+
+<!-- 회원가입 -->
+<insert id="insertJoin" parameterType="mainDTO" >
+	 INSERT INTO USER_INFO(USER_NO, USER_ID, PASSWORD, EMAIL, AGE, GENDER, SOMETHING, SKIN_TYPE, REG_NO, REG_DT, AUTH, EMAIL_CONFIRM) 
+	 VALUES((SELECT IFNULL(MAX(UI.USER_NO),10000000)+1 FROM USER_INFO UI), #{user_id}, #{password}, #{email}, #{age}, #{gender}, #{something}, #{skin_type}, (SELECT IFNULL(MAX(UI.USER_NO),10000000)+1 FROM USER_INFO UI), NOW(), 'u', 'n' )
+</insert>
+<!-- 이메일 인증 -->
+<update id="emailConfirm" parameterType="mainDTO">
+		UPDATE USER_INFO
+		SET EMAIL_CONFIRM = 'Y'
+		WHERE USER_NO = #{user_no}
+</update>
+<!-- 로그인 -->
+<select id="getUserInfo" resultType="mainDTO" parameterType="mainDTO"> 
+	SELECT USER_NO, USER_ID, PASSWORD, EMAIL_CONFIRM, EMAIL
+	FROM USER_INFO 
+	WHERE USER_ID = #{user_id} AND PASSWORD = #{password} 
+</select>
+<!-- 아이디찾기 -->
+<select parameterType="mainDTO" id="getUserId" resultType="mainDTO">
+ 	SELECT USER_ID
+	FROM USER_INFO
+	WHERE EMAIL = #{email}
+</select>
+
+<!-- 비밀번호찾기 -->
+<select parameterType="mainDTO" id="getUserPw" resultType="mainDTO">
+ 	SELECT USER_NO
+	FROM USER_INFO
+	WHERE EMAIL = #{email} AND USER_ID = #{user_id} 
+</select>
+
+<!-- 회원목록 -->
+<select id="getUserList" resultType="mainDTO">
+	SELECT USER_NO, USER_ID, EMAIL, GENDER, AGE, SKIN_TYPE, SOMETHING , REG_DT
+	FROM USER_INFO
+	WHERE AUTH = 'u' 
+	ORDER BY USER_NO ASC
+</select>
+<!-- 회원상세 -->
+<select parameterType="String" id="getUserDetail" resultType="mainDTO">
+	SELECT * 
+	FROM USER_INFO
+	WHERE USER_NO = #{user_no} 
+</select>
+<!-- 회원수정 -->
+<update parameterType="mainDTO" id="updateUserInfo">
+	UPDATE USER_INFO 
+	SET AGE = #{age}, GENDER = #{gender}, SKIN_TYPE = #{skin_type}, SOMETHING = #{something}, CHG_NO = #{chg_no}, CHG_DT = NOW()
+	WHERE USER_NO = #{user_no}
+</update>
+<!-- 회원삭제 -->
+<delete parameterType="mainDTO" id="deleteUserInfo">
+	DELETE FROM USER_INFO 
+	WHERE USER_NO = #{user_no}
+</delete>
+<!-- 이메일인증 -->
+<update parameterType="mainDTO" id="updateEmailConfirm"> 
+	UPDATE USER_INFO 
+	SET EMAIL_CONFIRM = 'y'
+	WHERE USER_NO = #{user_no}
+</update>
+<!-- 비밀번호변경 -->
+<update id="updatePwEmailConfirm">
+ 	UPDATE USER_INFO 
+	SET PASSWORD = #{password} 
+ 	WHERE USER_NO = #{user_no}
+</update>
+<!-- 아이디중복체크 -->
+<select id="getIdCheck" parameterType="mainDTO" resultType="int">
+	SELECT COUNT(*) FROM USER_INFO
+	WHERE USER_ID = #{user_id}
+</select>
+<!-- 이메일중복체크 -->
+<select id="getEmailCheck" parameterType="mainDTO" resultType="int">
+	SELECT COUNT(*) FROM USER_INFO
+	WHERE EMAIL = #{email}
+</select>
+</mapper>
