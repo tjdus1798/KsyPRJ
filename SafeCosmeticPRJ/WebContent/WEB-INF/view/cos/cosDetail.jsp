@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="com.health.util.CmmUtil"%>
+<%@ page import="com.health.DTO.likeDTO" %>
+<%@ page import="com.health.DTO.cosmeticDTO" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -9,6 +11,11 @@
 
     String SESSION_USER_ID = CmmUtil.nvl((String)session.getAttribute("session_user_id"));
     String SESSION_USER_NO = CmmUtil.nvl((String)session.getAttribute("session_user_no"));
+    
+    cosmeticDTO cDTO = (cosmeticDTO)request.getAttribute("cDTO");
+	if(cDTO==null) cDTO = new cosmeticDTO();
+	likeDTO lDTO = (likeDTO)request.getAttribute("lDTO");
+	if(lDTO==null) lDTO = new likeDTO();
     %>
 <meta charset="UTF-8">
 <meta
@@ -138,7 +145,81 @@ div.listTable {
 	font-size: 13px;
 }
 </style>
+<script src="./bootstrap/js/jquery-3.3.1.min.js"></script>
+<script>
 
+
+$(function(){
+	select();
+});
+
+//좋아요검색
+function select() {
+	
+	$.ajax({
+		type: 'post',
+		url : '/like_select.do',
+		data : {
+	             'user_no' : '${sessionScope.SESSION_USER_NO}',
+	             'cos_no' : '<%=cDTO.getCos_no() %>',
+	    },
+	    success : function(data) {
+	    	console.log(data);
+	    }, 
+		error : function(data) {
+           console.log("검색 실패");
+	    }
+	});
+	
+}
+//좋아요추가
+function insert(){
+	 $.ajax({
+	         type : 'post',
+	         url : '/like_insert.do',
+	         data : {
+	            'user_no' : '${sessionScope.SESSION_USER_NO}',
+	            'cos_no' : '<%=cDTO.getCos_no() %>',
+	            'reg_no' : '${sessionScope.SESSION_USER_NO}',
+	            'cos_name' : '<%=cDTO.getCos_name() %>',
+	            'price' : '<%=cDTO.getPrice() %>',
+	            'brand' : '<%=cDTO.getBrand() %>'
+	         },
+	         success : function(data) {
+	            alert("좋아요 추가되었습니다.");
+	            console.log("좋아요 추가");
+	            console.log(data);
+	       		$('#dislike').hide();
+	            $('#like').show();
+				},
+	         error : function(data) {
+	            alert("다시 시도해주세요.");
+	         }
+	   });
+
+};
+
+//좋아요취소
+function LikeDelete(){
+       $.ajax({
+          type : 'post',
+          url : '/like_delete.do',
+          data : {
+        	  'cos_no' : '<%=cDTO.getCos_no() %>'
+          },
+          success : function(data) {
+                alert("좋아요 취소되었습니다.");
+                console.log("좋아요 취소");
+                
+               $('#like').hide();
+                $('#dislike').show();
+          },
+          error : function(data) {
+             alert("다시 시도해주시기 바랍니다.");
+          }
+    });
+}
+</script>
 </head>
 <body class="index-page ">
 	<div class="main main-raised">
@@ -151,20 +232,24 @@ div.listTable {
 						<div>
 							<img src="./image/NoPic.png" alt="Rounded Image" class="rounded img-fluid" id="w" id="inline">
 							<div id="inline">
-								<p id="brand">EdudeHouse</p>
-								<h4>플레이 컬러 립 앤 치크</h4>
+								<p id="brand"><%=cDTO.getBrand()%></p>
+								<h4><%=cDTO.getCos_name()%></h4>
 
-								<label>분류 :</label>&ensp;<label id="db">페이스오일</label><br /> <label>정가
-									:</label>&ensp;<label id="db">28000원</label> <br /> <br /> <br /> <br />
+								<label>분류 :</label>&ensp;<label id="db"><%=cDTO.getCos_type()%></label><br /> <label>정가
+									:</label>&ensp;<label id="db"><%=cDTO.getPrice()%></label> <br /> <br /> <br /> <br />
 								<input type="button" value="쇼핑하기" class="btn"
 									style="width: 130px;" id="button">&ensp;
 								<%if (SESSION_USER_ID.equals("admin")) {%>
 									<input type="button" value="제품분석" class="btn" style="width: 130px" id="button">
 									<% }else{%>
-										
-									<img src="./image/like.png" >
-									<img src="./image/like_border.png">
-									<% } %>
+										<%if(lDTO.getLike_no()==null) {%>
+											<img src="./image/like.png" id="like" name="like" style="display:none"  onclick="javascript:LikeDelete('<%=CmmUtil.nvl(cDTO.getCos_no()) %>');return false;">
+											<img src="./image/like_border.png" id="dislike"  name="dislike" onclick="javascript:insert();return false;"  >
+										<%}else{%>
+											<img src="./image/like.png" id="like" name="like" onclick="javascript:LikeDelete('<%=CmmUtil.nvl(cDTO.getCos_no()) %>');return false;">
+											<img src="./image/like_border.png" id="dislike" name="dislike" style="display:none"  onclick="javascript:insert();return false;" >
+									<% }} %>
+
 							</div>
 						</div>
 

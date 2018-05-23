@@ -9,6 +9,7 @@ import java.util.Locale;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.health.DTO.cos_imgDTO;
 import com.health.DTO.cosmeticDTO;
+import com.health.DTO.likeDTO;
 import com.health.service.ICosService;
 import com.health.util.CmmUtil;
 import com.health.util.SHA256;
@@ -46,13 +48,14 @@ public class CosController {
 		String cos_name = CmmUtil.nvl(req.getParameter("cos_name"));
 		String price = CmmUtil.nvl(req.getParameter("price"));
 		String brand = CmmUtil.nvl(req.getParameter("brand"));
-		String[] ing_namex = req.getParameterValues("ing_name");
+		String ing_name = CmmUtil.nvl(req.getParameter("ing_name"));
+		//String[] ing_namex = req.getParameterValues("ing_name");
 		
-		String ing_name = join(ing_namex,",");
+		//String ing_name = join(ing_namex,",");
 		
-		for(int i =0; i<ing_namex.length; i++){
-			log.info("ing_namex : " + ing_namex[i]);
-		}
+		//for(int i =0; i<ing_namex.length; i++){
+			//log.info("ing_namex : " + ing_namex[i]);
+		//}
 		log.info("ing_name : " + ing_name);
 		log.info("cos_type : " + cos_type);
 		log.info("cos_name : " + cos_name);
@@ -60,8 +63,6 @@ public class CosController {
 		log.info("brand : " + brand);
 		
 		cosmeticDTO cDTO = new cosmeticDTO();
-
-		
 			
 		cDTO.setCos_name(cos_name);
 		cDTO.setCos_type(cos_type);
@@ -81,10 +82,7 @@ public class CosController {
 		log.info(this.getClass() + ".cosReg_proc end");
 		return "/alert";
 	}
-	private String join(String[] ing_namex, String string) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+
 	//화장품목록
 	@RequestMapping(value="/cosList", method=RequestMethod.GET)
 	public String cosList(Model model) throws Exception{
@@ -99,12 +97,37 @@ public class CosController {
 		log.info(this.getClass() + ".cosList end");
 		return "/cos/cosList";
 	}
+	
 	//화장품상세
-		@RequestMapping(value="/cosDetail", method=RequestMethod.GET)
-		public String cosDetail() throws Exception{
+	@RequestMapping(value="/cosDetail", method=RequestMethod.GET)
+	public String cosDetail(Model model, HttpServletRequest req,HttpSession session) throws Exception{
 
-			return "/cos/cosDetail";
-		}
+	log.info(this.getClass() + ".cosDetail start");
+	String cos_no = CmmUtil.nvl(req.getParameter("cos_no"));
+	String user_no =  CmmUtil.nvl((String) session.getAttribute("session_user_no"));
+	
+	log.info("cos_no =" + cos_no);
+	cosmeticDTO cDTO = cosService.getcosDetail(cos_no);
+
+	likeDTO lDTO = new likeDTO();
+
+	lDTO.setCos_no(cos_no);
+	lDTO.setUser_no(user_no);
+	
+	lDTO = cosService.getLikeList(lDTO);
+	
+	if (cDTO == null) {
+		cDTO = new cosmeticDTO();}
+	if (lDTO == null) {
+		lDTO = new likeDTO();}
+	
+	model.addAttribute("cDTO", cDTO);
+	model.addAttribute("lDTO", lDTO);
+	
+	log.info(this.getClass() + ".cosDetail end");
+	return "/cos/cosDetail";
+	}
+
 	//성분별 화장품목록
 	@RequestMapping(value="/ingredientList", method=RequestMethod.GET)
 	public String ingredientList() throws Exception{

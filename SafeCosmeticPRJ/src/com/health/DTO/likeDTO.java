@@ -9,6 +9,20 @@ public class likeDTO {
 	String reg_dt;
 	String chg_no;
 	String chg_dt;
+	String price;
+	String brand;
+	public String getBrand() {
+		return brand;
+	}
+	public void setBrand(String brand) {
+		this.brand = brand;
+	}
+	public String getPrice() {
+		return price;
+	}
+	public void setPrice(String price) {
+		this.price = price;
+	}
 	public String getLike_no() {
 		return like_no;
 	}

@@ -2,8 +2,33 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.health.persistence.mapper.LikeMapper">
-
-
-
-
+	<!-- 좋아요추가 -->
+	<insert id="insertLike" parameterType="likeDTO" > 
+   INSERT INTO LIKE_COSMETIC
+     (
+      LIKE_NO, USER_NO, COS_NO, COS_NAME, REG_NO, REG_DT, PRICE, BRAND
+     )
+    VALUES(
+     (SELECT IFNULL(MAX(LC.LIKE_NO),10000000)+1 FROM LIKE_COSMETIC LC), #{user_no}, #{cos_no}, #{cos_name}, #{reg_no}, NOW(), #{price}, #{brand} 
+     )
+	</insert>
+   <!-- 좋아요취소 -->
+   <delete id="deleteLike" parameterType="likeDTO">
+	   DELETE FROM LIKE_COSMETIC
+	   WHERE USER_NO = #{user_no}
+	   AND COS_NO = #{cos_no}
+   </delete>
+	<!-- 좋아요목록(화장품상세)  -->
+	<select id="selectLike" parameterType="likeDTO" resultType="likeDTO">
+	   SELECT LIKE_NO, USER_NO, COS_NO, REG_DT, COS_NAME, PRICE, BRAND
+	   FROM LIKE_COSMETIC
+	   WHERE COS_NO = #{cos_no} AND USER_NO = #{user_no}
+	</select>
+	<!-- 좋아요상세 -->
+   <select id="getLikeSelect" resultType="likeDTO">
+   SELECT 
+     LIKE_NO, USER_NO, COS_NO, REG_DT, COS_NAME, PRICE, BRAND
+   FROM LIKE_COSMETIC
+   WHERE USER_NO = #{user_no}
+   </select>
 </mapper>

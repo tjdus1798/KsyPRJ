@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.health.DTO.cos_imgDTO;
 import com.health.DTO.cosmeticDTO;
+import com.health.DTO.likeDTO;
 import com.health.persistence.mapper.CosMapper;
 import com.health.service.ICosService;
 
@@ -27,8 +28,13 @@ public class CosService implements ICosService{
 	}
 	//화장품상세보기
 	@Override
-	public cosmeticDTO getCosNo(cosmeticDTO cDTO) throws Exception {
-		return cosMapper.getCosNo(cDTO);
-		}
+	public cosmeticDTO getcosDetail(String cos_no) throws Exception {
+		return cosMapper.getcosDetail(cos_no);
+	}
+	//좋아요목록
+	@Override
+	public likeDTO getLikeList(likeDTO lDTO) throws Exception {
+		return cosMapper.getLikeList(lDTO);
+	}
 
 }

@@ -69,19 +69,51 @@ public class BoardController {
 	}
 	//게시판 등록
 	@RequestMapping(value="/boardReg_proc", method=RequestMethod.POST)
-	public String boardReg_proc(@RequestParam("imgFile") MultipartFile imgFile,Model model, HttpServletRequest req) throws Exception{
+	public String boardReg_proc(Model model, HttpServletRequest req) throws Exception{
 		log.info(this.getClass() + ".boardReg_proc start");
-		//MultipartRequest multi=new MultipartRequest(req,save_path,sizeLimit,"UTF-8", new DefaultFileRenamePolicy());
+		
+		String root = req.getSession().getServletContext().getRealPath("/");
+		File isDir = new File(root);
+
+	    if(!isDir.isDirectory()){
+	    	System.out.println("디렉토리가 없습니다. 디렉토리를 새로 생성합니다.");
+	    	isDir.mkdir();
+	    }
+		String savePath = root+"upload";
+		String saveThumbPath = root+"thumbnail";
+		int thumbWidth = 500;
+		int thumbHeight = 300;
+		int sizeLimit = 10 * 1024 * 1024;
+		
+		MultipartRequest multi=new MultipartRequest(req,savePath,sizeLimit,"UTF-8", new DefaultFileRenamePolicy());
 		String title = CmmUtil.nvl(req.getParameter("title"));
 		String content = CmmUtil.nvl(req.getParameter("content"));
-		//String file_name = multi.getFilesystemName(imgFile);
+		String img_name = multi.getFilesystemName("imgFile");
+		String img_path = savePath + "/" + img_name;
+		String ori_img_name = multi.getOriginalFileName("imgFile");
+		String thumb_name = multi.getFilesystemName("imgFile");
+        String thumb_path = saveThumbPath+"/"+thumb_name;
 		
+        Image thumbnail=JimiUtils.getThumbnail(img_path, thumbWidth, thumbHeight, Jimi.IN_MEMORY);
+        
+        Jimi.putImage(thumbnail,thumb_path);
+        
 		log.info("title : " + title);
 		log.info("content : " + content);
+		log.info("img_name : " + img_name);
+		log.info("img_path : " + img_path);
+		log.info("orgFileName : " + ori_img_name);
+		log.info("thumbName : " + thumb_name);
+		log.info("thumbPath : " + thumb_path);
 		
 		boardDTO bDTO = new boardDTO();
 		bDTO.setTitle(title);
 		bDTO.setContent(content);
+		bDTO.setImg_name(img_name);
+		bDTO.setImg_path(img_path);
+		bDTO.setOri_img_name(ori_img_name);
+		bDTO.setThumb_name(thumb_name);
+		bDTO.setThumb_path(thumb_path);
 		
 		int re = boardService.insertBoard(bDTO);
 		if (re != 0) {

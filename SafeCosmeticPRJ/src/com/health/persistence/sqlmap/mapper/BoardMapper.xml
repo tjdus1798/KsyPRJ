@@ -6,11 +6,11 @@
 	<insert id="insertBoard" parameterType="boardDTO">
 		INSERT INTO BOARD
 		(
-		BO_NO, TITLE, CONTENT, CNT, REG_NO, REG_DT, FILE_CHECK
+		BO_NO, TITLE, CONTENT, CNT, REG_NO, REG_DT, IMG_PATH, IMG_NAME, ORI_IMG_NAME, THUMB_NAME, THUMB_PATH
 		)
 		VALUES(
 		(SELECT IFNULL(MAX(BO.BO_NO),10000000)+1 FROM BOARD BO), #{title},
-		#{content}, '0', '10000010', NOW(), #{file_check}
+		#{content}, '0', '10000010', NOW(), #{img_path}, #{img_name}, #{ori_img_name}, #{thumb_name}, #{thumb_path}
 		)
 	</insert>
 	<!-- 게시판목록 -->

@@ -1,9 +1,19 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ page import="com.health.util.CmmUtil" %>
+<%@ page import="com.health.DTO.likeDTO" %>
+<%@ page import="java.util.List"%>
+<%@ page import="java.util.ArrayList"%>
 <!DOCTYPE html>
 <html>
 <head>
+	<%
+	List<likeDTO> lList = (List<likeDTO>)request.getAttribute("lList");
+	if(lList == null){
+		lList = new ArrayList();
+	}
+	
+	%>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />  
@@ -119,6 +129,12 @@ p {
        	
        	$("#a").text("dfdfdf");
     });
+    
+	//상세이동
+    function doDetail(n){
+        var cos_no = n;
+        location.href="/cosDetail.do?cos_no=" + cos_no;
+     }
     </script>
     <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
 </head>
@@ -131,18 +147,18 @@ p {
                     <div class="col-md-12 ml-auto mr-auto" >
                             <h3>좋아요</h3>
                             <hr> 
-                            <form class="form" method="post" action="#">
+                            <%for (likeDTO lDTO : lList) { %>
                            <div>
-							<img src="./image/NoPic.png" alt="Rounded Image" class="rounded img-fluid" id="w" id="inline">
+							<img src="./image/NoPic.png" alt="Rounded Image" class="rounded img-fluid" id="w" id="inline" style="cursor:pointer">
 							<div id="inline">
-								<p id="brand">EdudeHouse</p>
-								<p id="cos_name">플레이 컬러 립 앤 치크</p>
-								<p id="price">28000원</p>
+								<p id="brand"><%=lDTO.getBrand() %></p>
+								<p id="cos_name" onclick="javascript:doDetail('<%=lDTO.getCos_no()%>');" style="cursor:pointer"><%=lDTO.getCos_name() %></p>
+								<p id="price"><%=lDTO.getPrice() %></p>
 								<p id="a"></p>
 							</div>
 							</div>
                            <hr>
-                            </form>
+                          <%} %>
                 	</div>
             	</div>
            </div>

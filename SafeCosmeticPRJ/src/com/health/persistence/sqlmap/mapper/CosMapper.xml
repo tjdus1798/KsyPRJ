@@ -21,10 +21,16 @@
 		FROM COSMETIC
 		ORDER BY COS_NAME ASC
 	</select>
-	<!-- TEST cos_no 찾기 -->
-	<select id="getCosNo" parameterType="cosmeticDTO" resultType="cosmeticDTO">
-		SELECT COS_NO
+	<!-- 화장품상세 -->
+	<select parameterType="String" id="getcosDetail" resultType="cosmeticDTO">
+		SELECT * 
+		FROM COSMETIC
 		WHERE COS_NO = #{cos_no} 
 	</select>
-
+	<!-- 좋아요목록(화장품상세)  -->
+	<select id="getLikeList" parameterType="likeDTO" resultType="likeDTO">
+	   SELECT LIKE_NO, USER_NO, COS_NO, REG_DT, COS_NAME, PRICE, BRAND
+	   FROM LIKE_COSMETIC
+	   WHERE COS_NO = #{cos_no} AND USER_NO = #{user_no}
+	</select>
 </mapper>
