@@ -30,6 +30,20 @@ public class IngService implements IIngService{
 	public ingDTO getingDetail(String ing_no) throws Exception {
 		return ingMapper.getingDetail(ing_no);
 	}
-	
+	//성분수정
+	@Override
+	public int updateIng(ingDTO iDTO) throws Exception {
+		return ingMapper.updateIng(iDTO);
+	}
+	//성분삭제
+	@Override
+	public int deleteIng(ingDTO iDTO) throws Exception {
+		return ingMapper.deleteIng(iDTO);
+	}
+	//성분정보조회(화장품상세)
+	@Override
+	public ingDTO selectIngInfo(List<ingDTO> iList) throws Exception {
+		return ingMapper.selectIngInfo(iList);
+	}
 	
 }

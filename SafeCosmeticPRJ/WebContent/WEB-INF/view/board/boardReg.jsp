@@ -2,6 +2,7 @@
 <%@ page import="com.health.util.CmmUtil" %>
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" name="viewport" />
@@ -31,21 +32,36 @@
 	display:inline;
 	}
     </style>
+     <script type="text/javascript" src="http://code.jquery.com/jquery-2.1.0.min.js"></script>
+    <script>
+ 
+
+    </script>
+    <style>
+    #inline {
+	display: inline-block;
+	position: absolute;
+	top: 120px;
+	left: 450px;
+}
+#w {
+	height:300px;
+	width: 400px;
+	display: inline-block;
+	border:solid #ecebeb 1px
+}
+    </style>
     <script>
     window.onload = function() {
     	var input = document.querySelector('#image_uploads');
 		var preview = document.querySelector('.preview');
 		var fn = document.querySelector('.fileName');
-
 		input.style.opacity = 0;
-
 		input.addEventListener('change', updateImageDisplay);
-
 		function updateImageDisplay() {
 			while (preview.firstChild) {
 				preview.removeChild(preview.firstChild);
 			}
-
 			var curFiles = input.files;
 			if (curFiles.length === 0) {
 				var para = document.createElement('p');
@@ -58,40 +74,33 @@
 					var listItem = document.createElement('li');
 					var para = document.createElement('p');
 					if (validFileType(curFiles[i])) {
-						para.textContent = 'File name ' + curFiles[i].name
-								+ ', file size '
-								+ returnFileSize(curFiles[i].size) + '.';
+						para.textContent = '[File name : ' + curFiles[i].name
+								+ ', file size : '
+								+ returnFileSize(curFiles[i].size) + '.]';
 						var image = document.createElement('img');
 						image.src = window.URL.createObjectURL(curFiles[i]);
 						fn.value = curFiles[i].name
-
-						listItem.appendChild(image);
-						listItem.appendChild(para);
-
+						list.appendChild(image);
+						list.appendChild(para);
 					} else {
 						para.textContent = 'File name '
 								+ curFiles[i].name
 								+ ': Not a valid file type. Update your selection.';
 						listItem.appendChild(para);
 					}
-
-					list.appendChild(listItem);
+					//list.appendChild(listItem);
 				}
 			}
 		}
-
 		var fileTypes = [ 'image/jpeg', 'image/pjpeg', 'image/png' ]
-
 		function validFileType(file) {
 			for (var i = 0; i < fileTypes.length; i++) {
 				if (file.type === fileTypes[i]) {
 					return true;
 				}
 			}
-
 			return false;
 		}
-
 		function returnFileSize(number) {
 			if (number < 1024) {
 				return number + 'bytes';
@@ -102,6 +111,7 @@
 			}
 		}
     };
+    
     </script>
 </head>
 <body class="index-page ">
@@ -110,27 +120,27 @@
              <div class="container">
 
                 <div class="row">
-                    <div class="col-md-12 ml-auto mr-auto" >
+                    <div class="col-md-12 ml-auto mr-auto" style="margin:0 auto">
                     <form class="form" method="post" action="/boardReg_proc.do" enctype="multipart/form-data">
-				    	<div class="form-group">
-			            <input class="form-control" id="exampleInputEmail1" name="title" type="text" aria-describedby="emailHelp" placeholder="제목" >
-			          	</div>
-			          	
+                    
+				    	<div class="form-group" style="left: 10%;">
+				    	
+			            	<input class="form-control" id="exampleInputEmail1" name="titles" type="text" aria-describedby="emailHelp" placeholder="&nbsp;Enter a title" style="text-decoration:none;border: solid 0.1px #d2d2d2;width:50%">
+			          		<br/><div class="preview" ></div>
 			          	<div class="fileBox">
 								<input type="text" class="fileName" readonly="readonly">
 								<label for="image_uploads" class="btn_file">파일찾기</label> 
-								<input type="file" id="image_uploads" name="imgFile"
-									accept=".jpg, .jpeg, .png">
-							</div>
-							<div class="preview">
-								<p><i class="material-icons">report_problem</i>선택한 파일이 존재하지 않습니다.</p>
-							</div>
+								<input type="file" id="image_uploads" name="imgFile" accept=".jpg, .jpeg, .png" style="display:none">
+						</div>
 			          	 <br>
-						<textarea name="content" cols="150" rows="10" style="resize:none;border-color:#ced4da"></textarea>
-							<div class="card-header card-header-primary text-center">
+						<textarea name="contents" cols="100%" rows="10" style="resize:none;border-color:#ced4da"></textarea>
+						</div>
+							
+							<div class="card-header card-header-primary text-center" style="border-bottom:0px">
 				           <input type="reset" value="다시 작성" class="btn" style="width:150px" id="button">
 				           <input type="submit" value="등록" class="btn" style="width:150px" id="button">
 				           </div>
+				           
                     </form>
                 	</div>
             	</div>

@@ -11,6 +11,23 @@ public class likeDTO {
 	String chg_dt;
 	String price;
 	String brand;
+	String count;
+	String img_name;
+	
+	
+	public String getImg_name() {
+		return img_name;
+	}
+	public void setImg_name(String img_name) {
+		this.img_name = img_name;
+	}
+
+	public String getCount() {
+		return count;
+	}
+	public void setCount(String count) {
+		this.count = count;
+	}
 	public String getBrand() {
 		return brand;
 	}

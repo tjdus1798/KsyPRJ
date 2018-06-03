@@ -70,6 +70,7 @@ public class MainService implements IMainService {
 	public int getIdCheck(mainDTO mDTO) throws Exception {
 		return mainMapper.getIdCheck(mDTO);
 	}
+	//이메일중복체크
 	@Override
 	public int getEmailCheck(mainDTO mDTO) throws Exception {
 		return mainMapper.getEmailCheck(mDTO);

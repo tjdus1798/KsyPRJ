@@ -56,14 +56,9 @@
 }
 </style>
 <script>
-
-
 	$(function(){
 		
 	});
-
-    	
-	
 </script>
 <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
 </head>
@@ -75,7 +70,8 @@
 					<div class="col-md-12 ml-auto mr-auto">
 						<h3>성분등록</h3>
 						<hr>
-						<form class="form" method="post" action="/ingReg_proc.do">
+						<form class="form" method="post" action="/ingEdit_proc.do">
+							<input type="hidden" id="ing_no" name="ing_no" value="<%=CmmUtil.nvl(iDTO.getIng_no()) %>">
 							<div class="form-group">
 								<label for="exampleInputEmail1">성분명</label> <input
 									class="form-control" id="exampleInputEmail1" name="ing_name"
@@ -104,10 +100,12 @@
 								<label for="exampleInputEmail1">피부타입별</label><br/>
 								<select
 									name="ing_type" id="selectbox1">
-									<option value="1" <% if(CmmUtil.nvl(iDTO.getIng_type()).equals("1")) { out.println("SELECTED"); } %>>건성</option>
-									<option value="2" <% if(CmmUtil.nvl(iDTO.getIng_type()).equals("2")) { out.println("SELECTED"); } %>>중성</option>
-									<option value="3" <% if(CmmUtil.nvl(iDTO.getIng_type()).equals("3")) { out.println("SELECTED"); } %>>지성</option>
-									<option value="4" <% if(CmmUtil.nvl(iDTO.getIng_type()).equals("4")) { out.println("SELECTED"); } %>>복합성</option>
+									
+									<option value="1" <% if(CmmUtil.nvl(iDTO.getIng_type()).equals("1")) { out.println("SELECTED"); } %>>해당없음</option>
+									<option value="2" <% if(CmmUtil.nvl(iDTO.getIng_type()).equals("2")) { out.println("SELECTED"); } %>>건성</option>
+									<option value="3" <% if(CmmUtil.nvl(iDTO.getIng_type()).equals("3")) { out.println("SELECTED"); } %>>중성</option>
+									<option value="4" <% if(CmmUtil.nvl(iDTO.getIng_type()).equals("4")) { out.println("SELECTED"); } %>>지성</option>
+									<option value="5" <% if(CmmUtil.nvl(iDTO.getIng_type()).equals("5")) { out.println("SELECTED"); } %>>복합성</option>
 								</select>
 							</div>
 							<div class="form-group">

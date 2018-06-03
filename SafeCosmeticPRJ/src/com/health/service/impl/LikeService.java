@@ -6,7 +6,11 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 
+import com.health.DTO.ageDTO;
+import com.health.DTO.cosmeticDTO;
 import com.health.DTO.likeDTO;
+import com.health.DTO.skin_typeDTO;
+import com.health.DTO.somethingDTO;
 import com.health.persistence.mapper.LikeMapper;
 import com.health.service.ILikeService;
 
@@ -34,6 +38,19 @@ public class LikeService implements ILikeService{
 	public List<likeDTO> getLikeSelect(likeDTO lDTO) throws Exception {
 		return likeMapper.getLikeSelect(lDTO);
 	}
-	
-	
+	//피부타입별 차트
+	@Override
+	public List<skin_typeDTO> getSkinType(String cos_no) throws Exception {
+		return likeMapper.getSkinType(cos_no);
+	}
+	//피부고민별 차트
+	@Override
+	public List<somethingDTO> getSomething(String cos_no) throws Exception {
+		return likeMapper.getSomething(cos_no);
+	}
+	//얀령별 차트
+	@Override
+	public List<ageDTO> getAge(String cos_no) throws Exception {
+		return likeMapper.getAge(cos_no);
+	}
 }

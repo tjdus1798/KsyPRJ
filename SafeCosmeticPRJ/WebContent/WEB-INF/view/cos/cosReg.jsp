@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="com.health.util.CmmUtil"%>
+
 <!DOCTYPE html>
 <html>
 <head>
@@ -74,7 +75,7 @@
     background-color: gainsboro;
 }
 #selectbox {
-	width: 35%;
+	width: 50%;
 	height: 30px;
 	border-radius: 7px;
 	border-color: #e4e2e2;
@@ -88,6 +89,40 @@
 	border-bottom: 0;
 }
 </style>
+<script src="./bootstrap/js/jquery-3.3.1.min.js"></script>
+<script>
+$(function(){
+	var id = document.getElementById("user_id");
+	id.focus();
+	var checkAjaxSetTimeout;
+	$("#user_id").keyup(function(){
+		//clearTimeout(checkAjaxSetTimeout);
+	    //checkAjaxSetTimeout = setTimeout(function(){
+	    var id = $("#user_id").val();
+    	//if(id.length > 4){
+    		var id = $("#user_id").val();
+    		$.ajax({
+    			url : '/idCheck.do',
+    			method : "POST",
+    			data : {
+    				user_id: id
+    			},
+    			dataType:"text",
+    			success : function(data) {
+    				if(data == 1){
+    					$("#ui").html("This ID already exists.");
+    				}else if(data == -1){
+    					$("#ui").html("This ID can be used.");
+    				}
+    			}
+    		});
+    		
+    		//}
+	       // },1000);
+	});
+})
+
+</script>
 <script>
 	window.onload = function() {
 		var btn = document.getElementById("btn");
@@ -95,9 +130,10 @@
 		var del_btn = document.getElementById("del_btn");
 
 		btn.onclick = function() {
+			var num = 2;
 			var newDIV = document.createElement("div");
-
-			newDIV.innerHTML = "<input class='form-control' id='exampleInputEmail2' type='text' name='ing_name' aria-describedby='emailHelp'>";
+			newDIV.innerHTML = "&nbsp;"+num+"<input type='hidden' name='ing_seq' value='"+num+"'>";
+			newDIV.innerHTML = "<input class='form-control' id='exampleInputEmail2' type='text' name='ing_names' aria-describedby='emailHelp'>";
 			newDIV.setAttribute("class", "form-group");
 			newDIV.setAttribute("id", "del");
 			add.appendChild(newDIV);
@@ -141,8 +177,8 @@
 						image.src = window.URL.createObjectURL(curFiles[i]);
 						fn.value = curFiles[i].name
 
-						listItem.appendChild(image);
-						listItem.appendChild(para);
+						list.appendChild(image);
+						list.appendChild(para);
 
 					} else {
 						para.textContent = 'File name '
@@ -189,9 +225,9 @@
 					<div class="col-md-12 ml-auto mr-auto">
 						<h3>화장품 등록</h3>
 						<hr>
-						<form class="form" method="post" action="/cosReg_proc.do">
+						<form class="form" method="post" action="/cosReg_proc.do" enctype="multipart/form-data">
 							<div class="form-group" style="width: 50%">
-								<label for="exampleInputEmail1">카테고리분류</label> &ensp; 
+								<label for="exampleInputEmail1">카테고리분류</label><br/>
 								<select name="cos_type" id="selectbox">
 									<option style="background: #cdd0c3;">선택</option>
 									<option style="background: #cdd0c3;">기초화장품</option>
@@ -225,12 +261,12 @@
 							<div class="form-group">
 								<label for="exampleInputEmail1">브랜드명</label> <input
 									class="form-control" id="exampleInputEmail1" type="text"
-									name="brand" aria-describedby="emailHelp">
+									name="brands" aria-describedby="emailHelp">
 							</div>
 							<div class="form-group">
 								<label for="exampleInputEmail1">품명</label> <input
 									class="form-control" id="exampleInputEmail1" type="text"
-									name="cos_name" aria-describedby="emailHelp">
+									name="cos_names" aria-describedby="emailHelp">
 							</div>
 							<div class="form-group">
 								<label for="exampleInputEmail1">가격</label> <input
@@ -238,8 +274,9 @@
 									name="price" aria-describedby="emailHelp">
 							</div>
 							<div class="form-group">
-								<label for="exampleInputEmail1">성분</label> <input
-									class="form-control" id="exampleInputEmail1" type="text" name="ing_name"
+								<label for="exampleInputEmail1">성분</label> 
+									<input type="hidden" name="ing_seq" value="1">
+									<input class="form-control" id="exampleInputEmail1" type="text" name="ing_names"
 									aria-describedby="emailHelp">&ensp; 
 									<input type="button" value="추가하기" class="btn" id="btn" > 
 									<input type="button" value="삭제하기" class="btn" id="del_btn">
@@ -249,11 +286,10 @@
 							<div class="fileBox">
 								<input type="text" class="fileName" readonly="readonly">
 								<label for="image_uploads" class="btn_file">파일찾기</label> <input
-									type="file" id="image_uploads" name="image_uploads"
+									type="file" id="image_uploads" name="upfile"
 									accept=".jpg, .jpeg, .png">
 							</div>
 							<div class="preview">
-								<p><i class="material-icons">report_problem</i>선택한 파일이 존재하지 않습니다.</p>
 							</div>
 							<div class="card-header card-header-primary text-center">
 								<input type="submit" value="등록" class="btn" style="width: 150px" id="button">

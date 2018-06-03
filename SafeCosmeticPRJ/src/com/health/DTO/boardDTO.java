@@ -1,5 +1,7 @@
 package com.health.DTO;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class boardDTO {
 	String bo_no;
 	String title;
@@ -14,7 +16,13 @@ public class boardDTO {
 	String ori_img_name;
 	String thumb_name;
 	String thumb_path;
-	
+	MultipartFile upfile;
+	public MultipartFile getUpfile(){
+		return upfile;
+	}
+	public void setUpfile(MultipartFile upfile){
+		this.upfile = upfile;
+	}	
 	public String getBo_no() {
 		return bo_no;
 	}

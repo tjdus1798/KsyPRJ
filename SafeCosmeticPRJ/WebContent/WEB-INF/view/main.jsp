@@ -122,7 +122,7 @@
                             <a href="/pregnantList.do" class="dropdown-item">
                                 <i class="material-icons">pregnant_woman</i>임산부
                             </a>
-                            <a href="/childList.do" class="dropdown-item">
+                            <a href="/babyList.do" class="dropdown-item">
                                 <i class="material-icons">child_care</i>영유아
                             </a>
                             <a href="/allergyList.do" class="dropdown-item">

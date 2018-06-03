@@ -19,33 +19,15 @@
 		FROM BOARD
 		ORDER BY REG_NO DESC
 	</select>
-	<!-- bo_no 찾기 -->
-	<select id="getBo_no" parameterType="boardDTO" resultType="boardDTO">
-		SELECT BO_NO, CONTENT, TITLE, REG_NO 
-		FROM BOARD
-		WHERE CONTENT = #{content} AND TITLE = #{title}
-	</select>
-	<!-- 파입업로드-->
-	<insert id="insertImage" parameterType="bo_imgDTO">
-		INSERT INTO BO_IMG
-		(
-		BI_NO, BO_NO, ORI_NAME, IMG_NAME, EXTENTION, IMG_RENAME,
-		IMG_PATH, IMG_SIZE, REG_NO, REG_DT, SAVE_PATH
-		)VALUES(
-		(SELECT IFNULL(MAX(BI.BI_NO),10000000)+1 FROM BO_IMG BI), #{bo_no}, #{ori_name}, #{img_name}, #{extention},
-		#{img_rename}, #{img_path}, #{img_size}, '10000010', NOW() ,#{save_path}
-		)
-	</insert>
 	<!-- 게시판상세 -->
 	<select id="getBoardDetail" resultType="boardDTO">
 		SELECT *
 		FROM BOARD
 		WHERE BO_NO = #{bo_no}
 	</select>
-	<!-- 이미지상세 -->
-	<select id="getBo_img" resultType="bo_imgDTO">
-		SELECT *
-		FROM BO_IMG
+	<!-- 게시판삭제 -->
+	<delete parameterType="boardDTO" id="DeleteBoard">
+		DELETE FROM BOARD 
 		WHERE BO_NO = #{bo_no}
-	</select>
+	</delete>
 </mapper>

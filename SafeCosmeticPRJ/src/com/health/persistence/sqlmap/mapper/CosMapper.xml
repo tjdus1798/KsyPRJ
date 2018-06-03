@@ -5,21 +5,33 @@
 
 	<!-- 화장품등록 -->
 	<insert id="insertCos" parameterType="cosmeticDTO">
-		INSERT INTO COSMETIC
+	INSERT INTO COSMETIC
 		(
-		COS_NO, COS_NAME, COS_TYPE, PRICE, BRAND, LIKE_COUNT, REG_NO, REG_DT, ING_NAME
+		COS_NO, COS_NAME, COS_TYPE, PRICE, BRAND, LIKE_COUNT, REG_NO, REG_DT, ING_NAME, IMG_NAME, IMG_PATH, THUMB_NAME, THUMB_PATH
 		)
 		VALUES(
 		(SELECT IFNULL(MAX(COS.COS_NO),10000000)+1 FROM COSMETIC COS), #{cos_name},
 		#{cos_type}, #{price}, #{brand}, '00000000', '10000010', NOW(),
-		#{ing_name}
+		#{ing_name}, #{img_name}, #{img_path}, #{thumb_name}, #{thumb_path}
 		)
 	</insert>
+	<!-- 화장품등록 - 성분목록 -->
+	<select id="CosIng" resultType="ingDTO">
+		SELECT ING_NAME
+		FROM INGREDIENT
+		ORDER BY ING_NAME ASC
+	</select>
+	<!-- 화장품등록 - 브랜드목록 -->
+	<select id="CosBrand" resultType="cosmeticDTO">
+		SELECT BRAND
+		FROM COSMETIC
+		ORDER BY BRAND ASC
+	</select>
 	<!-- 화장품목록 -->
 	<select id="getCosList" resultType="cosmeticDTO">
 		SELECT COS_NO, COS_NAME, COS_TYPE, PRICE, BRAND, LIKE_COUNT, REG_NO , REG_DT, ING_NAME
 		FROM COSMETIC
-		ORDER BY COS_NAME ASC
+		ORDER BY COS_TYPE ASC
 	</select>
 	<!-- 화장품상세 -->
 	<select parameterType="String" id="getcosDetail" resultType="cosmeticDTO">
@@ -32,5 +44,86 @@
 	   SELECT LIKE_NO, USER_NO, COS_NO, REG_DT, COS_NAME, PRICE, BRAND
 	   FROM LIKE_COSMETIC
 	   WHERE COS_NO = #{cos_no} AND USER_NO = #{user_no}
+	</select>
+	<!-- 브랜드명으로 검색 -->
+	<select id="getBrandSearch" parameterType="cosmeticDTO" resultType="cosmeticDTO">
+		SELECT COS_NO, COS_NAME, PRICE, BRAND,
+		(SELECT COUNT(*) FROM COSMETIC WHERE BRAND LIKE CONCAT('%', #{search}, '%')) AS LIKE_COUNT, IMG_NAME
+		FROM COSMETIC
+		WHERE BRAND LIKE CONCAT('%', #{search}, '%')
+		ORDER BY COS_NO DESC
+	</select>
+	<!-- 브랜드명 자동완성 -->
+	<select id="getBrandAuto" parameterType="cosmeticDTO" resultType="cosmeticDTO">
+		SELECT DISTINCT BRAND
+		FROM COSMETIC
+		WHERE BRAND LIKE CONCAT('%', #{search}, '%')
+	</select>
+	<!-- 완전체 성분으로 검색 -->
+	<select id="getIngSearch" parameterType="cosmeticDTO" resultType="cosmeticDTO">
+		SELECT COS_NO, COS_NAME, PRICE, BRAND, IMG_NAME
+		FROM COSMETIC
+		WHERE (ING_NAME LIKE CONCAT('%', #{good}, '%') AND ING_NAME NOT LIKE CONCAT('%', #{bad}, '%') AND COS_TYPE LIKE CONCAT('%', #{cos_type}, '%'))
+		ORDER BY COS_NO DESC
+	</select>
+	<!--좋은성분제외 검색 -->
+	<select id="getWithoutGood" parameterType="cosmeticDTO" resultType="cosmeticDTO">
+		SELECT COS_NO, COS_NAME, PRICE, BRAND,
+		(SELECT COUNT(*) FROM COSMETIC WHERE
+		 (ING_NAME NOT LIKE CONCAT('%', #{bad}, '%') AND COS_TYPE LIKE CONCAT('%', #{cos_type}, '%'))
+		 ) AS LIKE_COUNT, IMG_NAME
+		FROM COSMETIC 
+		WHERE (ING_NAME NOT LIKE CONCAT('%', #{bad}, '%') AND COS_TYPE LIKE CONCAT('%', #{cos_type}, '%'))
+		ORDER BY COS_NO DESC
+	</select>
+	<!-- 피할성분제외 검색 -->
+	<select id="getWithoutBad" parameterType="cosmeticDTO" resultType="cosmeticDTO">
+		SELECT COS_NO, COS_NAME, PRICE, BRAND,
+		(SELECT COUNT(*) FROM COSMETIC WHERE
+		 (ING_NAME LIKE CONCAT('%', #{good}, '%') AND COS_TYPE LIKE CONCAT('%', #{cos_type}, '%'))
+		 ) AS LIKE_COUNT, IMG_NAME
+		FROM COSMETIC
+		WHERE (ING_NAME LIKE CONCAT('%', #{good}, '%') AND COS_TYPE LIKE CONCAT('%', #{cos_type}, '%'))
+		ORDER BY COS_NO DESC
+	</select>
+	<!--화장품타입제외 검색 -->
+	<select id="getWithoutCosType" parameterType="cosmeticDTO" resultType="cosmeticDTO">
+		SELECT COS_NO, COS_NAME, PRICE, BRAND,
+		(SELECT COUNT(*) FROM COSMETIC WHERE
+		 (ING_NAME LIKE CONCAT('%', #{good}, '%') AND ING_NAME NOT LIKE CONCAT('%', #{bad}, '%'))
+		 ) AS LIKE_COUNT, IMG_NAME
+		FROM COSMETIC
+		WHERE (ING_NAME LIKE CONCAT('%', #{good}, '%') AND ING_NAME NOT LIKE CONCAT('%', #{bad}, '%'))
+		ORDER BY COS_NO DESC
+	</select>
+	<!-- 좋은성분명 자동완성 -->
+	<select id="getIngGoodAuto" parameterType="ingDTO" resultType="ingDTO">
+		SELECT DISTINCT ING_NAME
+		FROM INGREDIENT
+		WHERE ING_NAME LIKE CONCAT('%', #{good}, '%')
+	</select>
+	<!-- 나쁜성분명 자동완성 -->
+	<select id="getIngBadAuto" parameterType="ingDTO" resultType="ingDTO">
+		SELECT DISTINCT ING_NAME
+		FROM INGREDIENT
+		WHERE ING_NAME LIKE CONCAT('%', #{bad}, '%')
+	</select>
+	<!-- 임산부추천화장품 -->
+	<select id="getPregnantList" resultType="cosmeticDTO">
+		SELECT COS_NO, COS_NAME, PRICE, BRAND, LIKE_COUNT, ING_NAME, IMG_NAME
+		FROM COSMETIC
+		ORDER BY LIKE_COUNT DESC
+	</select>
+	<!-- 영유아추천화장품 -->
+	<select id="getBabyList" resultType="cosmeticDTO">
+		SELECT COS_NO, COS_NAME, PRICE, BRAND, LIKE_COUNT, ING_NAME, IMG_NAME
+		FROM COSMETIC
+		ORDER BY LIKE_COUNT DESC
+	</select>
+	<!-- 알레르기추천화장품 -->
+	<select id="getAllergyList" resultType="cosmeticDTO">
+		SELECT COS_NO, COS_NAME, PRICE, BRAND, LIKE_COUNT, ING_NAME, IMG_NAME
+		FROM COSMETIC
+		ORDER BY LIKE_COUNT DESC
 	</select>
 </mapper>

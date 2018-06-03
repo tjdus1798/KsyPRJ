@@ -1,15 +1,9 @@
 package com.health.controller;
 
-import java.awt.Image;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileOutputStream;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -19,25 +13,15 @@ import javax.servlet.http.HttpSession;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.multipart.MultipartFile;
 
-import com.health.DTO.bo_imgDTO;
 import com.health.DTO.boardDTO;
-import com.health.DTO.ingDTO;
+import com.health.DTO.mainDTO;
 import com.health.service.IBoardService;
 import com.health.util.CmmUtil;
-import com.health.util.SHA256;
-import com.sun.jimi.core.Jimi;
-import com.sun.jimi.core.JimiException;
-import com.sun.jimi.core.JimiUtils;
-import com.oreilly.servlet.MultipartRequest;
-import com.oreilly.servlet.multipart.DefaultFileRenamePolicy;
-
+import com.health.util.TextUtil;
 
 @Controller
 public class BoardController {
@@ -69,61 +53,64 @@ public class BoardController {
 	}
 	//게시판 등록
 	@RequestMapping(value="/boardReg_proc", method=RequestMethod.POST)
-	public String boardReg_proc(Model model, HttpServletRequest req) throws Exception{
+	public String boardReg_proc(Model model, HttpServletRequest req, boardDTO bdto) throws Exception{
 		log.info(this.getClass() + ".boardReg_proc start");
 		
 		String root = req.getSession().getServletContext().getRealPath("/");
-		File isDir = new File(root);
-
-	    if(!isDir.isDirectory()){
-	    	System.out.println("디렉토리가 없습니다. 디렉토리를 새로 생성합니다.");
-	    	isDir.mkdir();
-	    }
-		String savePath = root+"upload";
+		String savePath = root +"upload";
 		String saveThumbPath = root+"thumbnail";
 		int thumbWidth = 500;
 		int thumbHeight = 300;
-		int sizeLimit = 10 * 1024 * 1024;
 		
-		MultipartRequest multi=new MultipartRequest(req,savePath,sizeLimit,"UTF-8", new DefaultFileRenamePolicy());
-		String title = CmmUtil.nvl(req.getParameter("title"));
-		String content = CmmUtil.nvl(req.getParameter("content"));
-		String img_name = multi.getFilesystemName("imgFile");
-		String img_path = savePath + "/" + img_name;
-		String ori_img_name = multi.getOriginalFileName("imgFile");
-		String thumb_name = multi.getFilesystemName("imgFile");
-        String thumb_path = saveThumbPath+"/"+thumb_name;
+		log.info("11111111111");
 		
-        Image thumbnail=JimiUtils.getThumbnail(img_path, thumbWidth, thumbHeight, Jimi.IN_MEMORY);
+		String titles = CmmUtil.nvl(req.getParameter("titles"));
+		String title = TextUtil.exchangeEscapeNvl(titles);
+		
+		String contents = CmmUtil.nvl(req.getParameter("contents"));
+		String content = TextUtil.exchangeEscapeNvl(contents);
+		content = content.replace("\r\n", "<br>");
+		
+		String img_name = bdto.getUpfile().getOriginalFilename();
+		String img_path = savePath + "\\" + img_name;
+		String ori_img_name = bdto.getUpfile().getOriginalFilename();
+		//String thumb_name = bdto.getUpfile().getOriginalFilename();
+        //String thumb_path = saveThumbPath+"\\"+thumb_name;
+       
+       // Image thumbnail=JimiUtils.getThumbnail(img_path, thumbWidth, thumbHeight, Jimi.IN_MEMORY);
+        //Jimi.putImage(thumbnail,thumb_path);
         
-        Jimi.putImage(thumbnail,thumb_path);
-        
-		log.info("title : " + title);
-		log.info("content : " + content);
+		log.info("title : " + bdto.getTitle());
+		log.info("content : " + bdto.getContent());
 		log.info("img_name : " + img_name);
 		log.info("img_path : " + img_path);
 		log.info("orgFileName : " + ori_img_name);
-		log.info("thumbName : " + thumb_name);
-		log.info("thumbPath : " + thumb_path);
+		//log.info("thumbName : " + thumb_name);
+		//log.info("thumbPath : " + thumb_path);
+		log.info("savePath : " + savePath);
 		
-		boardDTO bDTO = new boardDTO();
-		bDTO.setTitle(title);
-		bDTO.setContent(content);
-		bDTO.setImg_name(img_name);
-		bDTO.setImg_path(img_path);
-		bDTO.setOri_img_name(ori_img_name);
-		bDTO.setThumb_name(thumb_name);
-		bDTO.setThumb_path(thumb_path);
+		bdto.setTitle(title);
+		bdto.setContent(content);
+		bdto.setImg_name(img_name);
+		bdto.setImg_path(img_path);
+		bdto.setOri_img_name(ori_img_name);
+		//bdto.setThumb_name(thumb_name);
+		//bdto.setThumb_path(thumb_path);
 		
-		int re = boardService.insertBoard(bDTO);
-		if (re != 0) {
+		
+		File normal = new File(img_path);
+		//File thumnail = new File(thumb_path);
+		bdto.getUpfile().transferTo(normal);
+		//bdto.getUpfile().transferTo(thumnail);
+		int re = boardService.insertBoard(bdto);
+		
+	if (re != 0) {
 			model.addAttribute("msg", "등록되었습니다.");
 			model.addAttribute("url", "/boardList.do");
 		} else {
 			model.addAttribute("msg", "실패하였습니다.");
 			model.addAttribute("url", "/boardReg.do");
 		}
-		
 		log.info(this.getClass() + ".boardReg_proc end");
 		return "/alert";
 	}
@@ -135,13 +122,9 @@ public class BoardController {
 		log.info(this.getClass() + ".boardDetail start");
 		String bo_no = CmmUtil.nvl(req.getParameter("bo_no"));
 		log.info("bo_no =" + bo_no);
-		bo_imgDTO biDTO = boardService.getBo_img(bo_no);
 		boardDTO bDTO = boardService.getBoardDetail(bo_no);
 		if (bDTO == null) {
 			bDTO = new boardDTO();
-		}
-		if (biDTO == null) {
-			biDTO = new bo_imgDTO();
 		}
 		model.addAttribute("bDTO", bDTO);
 		log.info(this.getClass() + ".boardDetail end");
@@ -152,5 +135,30 @@ public class BoardController {
 	public String boardEdit() throws Exception{
 
 		return "/board/boardEdit";
+	}
+	//게시판 삭제
+	@RequestMapping(value="/boardDelete", method=RequestMethod.GET)
+	public String boardDelete(Model model, HttpServletRequest req, HttpSession session) throws Exception{
+		
+		log.info(this.getClass() + ".boardDelete start");
+		
+		String bo_no = CmmUtil.nvl(req.getParameter("bo_no"));
+		
+		boardDTO bDTO = new boardDTO();
+		
+		bDTO.setBo_no(bo_no);
+
+		int result = boardService.DeleteBoard(bo_no);
+		if (result != 0) {
+			model.addAttribute("msg", "게시판이 삭제되었습니다.");
+			model.addAttribute("url", "/boardList.do");
+		} else {
+			model.addAttribute("msg", "삭제에 실패하였습니다.");
+			model.addAttribute("url", "/boardDetail.do?bo_no=" + bo_no);
+		}
+		log.info(this.getClass() + ".boardDelete end");
+		
+		
+		return "/alert";
 	}
 }

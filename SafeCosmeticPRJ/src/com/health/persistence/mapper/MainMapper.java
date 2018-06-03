@@ -35,6 +35,5 @@ public interface MainMapper {
 	//이메일중복체크
 	public int getEmailCheck(mainDTO mDTO) throws Exception;
 	
-	
 
 }

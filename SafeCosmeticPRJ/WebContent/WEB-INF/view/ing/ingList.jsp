@@ -59,6 +59,8 @@ div.listTable {
 	width: 100%;
 	text-align: center;
 	border-collapse: collapse;
+	display: block; 
+	table-layout:fixed;
 }
 
 .divTable.listTable .divTableCell, .divTable.listTable .divTableHead {
@@ -116,11 +118,6 @@ div.listTable {
 }
 </style>
 <script>
-	window.onload = function() {
-		var id = document.getElementById("user_id");
-		id.focus();
-	};
-    
   	//상세이동
     function doDetail(n){
         var ing_no = n;
@@ -147,18 +144,18 @@ div.listTable {
 								<div class="divTable listTable">
 									<div class="divTableHeading">
 										<div class="divTableRow">
-											<div class="divTableHead" style="width: 15px;">번호</div>
+											<div class="divTableHead" style="width: 10%;">번호</div>
 											<div class="divTableHead">성분명</div>
 											<div class="divTableHead">영문명</div>
-											<div class="divTableHead" style="width: 100px;">EWG등급</div>
+											<div class="divTableHead" style="width: 10%;font-size:15px">EWG등급</div>
 										</div>
 									</div>
 									<div class="divTableBody">
 										<%for (ingDTO iDTO : iList) { %>
-										<div class="divTableRow">
-											<div class="divTableCell"><%=iDTO.getIng_no() %></div>
-											<div class="divTableCell" onclick="doDetail(<%=iDTO.getIng_no()%>);" style="cursor:pointer"><%=iDTO.getIng_name() %></div>
-											<div class="divTableCell"><%=iDTO.getIng_eng() %></div>
+										<div class="divTableRow" >
+											<div class="divTableCell" ><%=iDTO.getIng_no() %></div>
+											<div class="divTableCell" onclick="doDetail(<%=iDTO.getIng_no()%>);" style="cursor:pointer;"><p style="white-space:nowrap;width:450px;overflow:hidden;text-overflow:ellipsis;"><%=iDTO.getIng_name() %></p></div>
+											<div class="divTableCell" ><p style="white-space:nowrap;width:450px;overflow:hidden;text-overflow:ellipsis;"><%=iDTO.getIng_eng() %></p></div>
 											<div class="divTableCell">
 												<% if( CmmUtil.nvl(iDTO.getEwg_level()).equals("1")){%>
 													<img style="width: 25px; height: 25px" src="../image/1.png">

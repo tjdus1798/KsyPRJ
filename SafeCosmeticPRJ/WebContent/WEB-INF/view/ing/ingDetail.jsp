@@ -112,6 +112,17 @@ function doEdit(i){
     var ing_no = i;
     location.href="/ingEdit.do?ing_no="+ ing_no;
  }
+
+function delete_check(i) {
+	var ing_no = i;
+    if(confirm("삭제하시겠습니까?")){
+       location.href="/ingDelete.do?ing_no="+ ing_no;
+       return true;
+    }else{
+       return false;
+    }
+  }
+ 
 </script>
 </head>
 <body class="index-page ">
@@ -122,13 +133,14 @@ function doEdit(i){
 					<div class="col-md-12 ml-auto mr-auto">
 						<h3><%= CmmUtil.nvl(iDTO.getIng_name()) %></h3>
 						&ensp; <label id="eng"><%= CmmUtil.nvl(iDTO.getIng_eng()) %></label>&ensp;
-						 <span class="badge" onclick="doEdit(<%=iDTO.getIng_no()%>);">수정하기</span>
+						 <span class="badge" onclick="doEdit(<%=iDTO.getIng_no()%>);">수정</span>
+						 <span class="badge" onclick="delete_check(<%=iDTO.getIng_no()%>);">삭제</span>
 						<hr>
 						 <input type="hidden" id="ing_no" name="ing_no" value="<%=CmmUtil.nvl(iDTO.getIng_no()) %>">
 						<div class="divTable listTable">
 							<div class="divTableBody">
 								<div class="divTableRow">
-									<div class="divTableCell" id="g">성분명<%=CmmUtil.nvl(iDTO.getIng_no()) %></div>
+									<div class="divTableCell" id="g">성분명</div>
 									<div class="divTableCell"><%= CmmUtil.nvl(iDTO.getIng_name()) %></div>
 								</div>
 								<div class="divTableRow">
@@ -177,12 +189,14 @@ function doEdit(i){
 									<div class="divTableCell" id="g">피부타입별</div>
 									<div class="divTableCell">
 									<%if( CmmUtil.nvl(iDTO.getIng_type()).equals("1")){%>
-									건성
+									해당없음
 									<%}else if(CmmUtil.nvl(iDTO.getIng_type()).equals("2")){ %>
-									중성
+									건성
 									<%}else if(CmmUtil.nvl(iDTO.getIng_type()).equals("3")){ %>
-									지성
+									중성
 									<%}else if(CmmUtil.nvl(iDTO.getIng_type()).equals("4")){ %>
+									지성
+									<%}else if(CmmUtil.nvl(iDTO.getIng_type()).equals("5")){ %>
 									복합성
 									<%} %>
 									</div>

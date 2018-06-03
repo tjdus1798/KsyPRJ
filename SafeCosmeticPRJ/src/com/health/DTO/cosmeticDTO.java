@@ -1,21 +1,82 @@
 package com.health.DTO;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class cosmeticDTO {
-	String cos_no;
-	String cos_name;
-	String cos_type;
-	String ing;
-	String brand;
-	String price;
-	String like_count;
-	String reg_no;
-	String reg_dt;
-	String chg_no;
-	String chg_dt;
-	String ing_name;
-	String file_check;
+	private String cos_no;
+	private String cos_name;
+	private String cos_type;
+	private String ing;
+	private String brand;
+	private String price;
+	private String like_count;
+	private String reg_no;
+	private String reg_dt;
+	private String chg_no;
+	private String chg_dt;
+	private String ing_name;
+	private String file_check;
+	private String search;
+	private String good;
+	private String bad;
+	private String img_path;
+	private String img_name;
+	private String thumb_name;
+	MultipartFile upfile;
+	
+	public MultipartFile getUpfile(){
+		return upfile;
+	}
+	public void setUpfile(MultipartFile upfile){
+		this.upfile = upfile;
+	}	
 	
 	
+	public String getImg_path() {
+		return img_path;
+	}
+	public void setImg_path(String img_path) {
+		this.img_path = img_path;
+	}
+	public String getImg_name() {
+		return img_name;
+	}
+	public void setImg_name(String img_name) {
+		this.img_name = img_name;
+	}
+	public String getThumb_name() {
+		return thumb_name;
+	}
+	public void setThumb_name(String thumb_name) {
+		this.thumb_name = thumb_name;
+	}
+	public String getThumb_path() {
+		return thumb_path;
+	}
+	public void setThumb_path(String thumb_path) {
+		this.thumb_path = thumb_path;
+	}
+	String thumb_path;
+
+	
+	public String getGood() {
+		return good;
+	}
+	public void setGood(String good) {
+		this.good = good;
+	}
+	public String getBad() {
+		return bad;
+	}
+	public void setBad(String bad) {
+		this.bad = bad;
+	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
 	public String getFile_check() {
 		return file_check;
 	}

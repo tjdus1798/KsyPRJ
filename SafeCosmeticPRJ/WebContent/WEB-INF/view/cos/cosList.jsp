@@ -49,6 +49,9 @@
 	  width: 100%;
 	  text-align: center;
 	  border-collapse: collapse;
+	  overflow: hidden; 
+  	  text-overflow: ellipsis;
+  	  white-space: nowrap; 
 	}
 	.divTable.listTable .divTableCell, .divTable.listTable .divTableHead {
 	  border: 1px solid #C4C4C4;
@@ -120,7 +123,7 @@
 										<div class="divTableCell"><%= cDTO.getCos_type() %></div>
 										<div class="divTableCell"  onclick="doDetail(<%=cDTO.getCos_no()%>);" style="cursor:pointer"><%= cDTO.getCos_name() %></div>
 										<div class="divTableCell"><%= cDTO.getBrand() %></div>
-										<div class="divTableCell"><%= cDTO.getPrice() %></div>
+										<div class="divTableCell"><%= cDTO.getPrice() %>원</div>
 										</div>
 										<%} %>
 										</div>

@@ -98,8 +98,6 @@
         var bo_no = n;
         location.href="/boardDetail.do?bo_no=" + bo_no;
   		}
-	
-     
 	</script>
     <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
 </head>
@@ -121,7 +119,7 @@
 										<div class="divTableHeading">
 										<div class="divTableRow">
 										<div class="divTableHead">번호</div>
-										<div class="divTableHead">제목</div>
+										<div class="divTableHead" style="width:50%">제목</div>
 										<div class="divTableHead">등록일</div>
 										<div class="divTableHead">조회수</div>
 										</div>
@@ -136,10 +134,8 @@
 										</div>
 										<% } %>
 										</div>
-										
-										
-				           </div>
-				           </div>		
+					           </div>
+					           </div>		
                             </form>
                 	</div>
             	</div>

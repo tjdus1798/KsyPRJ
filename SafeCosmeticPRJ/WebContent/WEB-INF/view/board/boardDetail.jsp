@@ -1,12 +1,9 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"    pageEncoding="UTF-8"%>
 <%@ page import="com.health.util.CmmUtil" %>
 <%@ page import="com.health.DTO.boardDTO" %>
-<%@ page import="com.health.DTO.bo_imgDTO" %>
 <%
 	boardDTO bDTO = (boardDTO)request.getAttribute("bDTO");
-	bo_imgDTO biDTO = (bo_imgDTO)request.getAttribute("biDTO");
 	if(bDTO==null) bDTO = new boardDTO();
-	if(biDTO==null) biDTO = new bo_imgDTO();
 %>
 <!DOCTYPE html>
 <html>
@@ -62,8 +59,15 @@
 	font-weight:bold;
 	}
     </style>
-
+    
     <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
+    <script>
+  //상세이동
+    function doDetail(n){
+        var bo_no = n;
+        location.href="/boardDelete.do?bo_no=" + bo_no;
+  		}
+    </script>
 </head>
 <body class="index-page ">
 <div class="main main-raised">
@@ -74,11 +78,12 @@
                     <div class="col-md-12 ml-auto mr-auto" >
                             <h3 id="h"><%= CmmUtil.nvl(bDTO.getTitle()) %></h3>
                             <%if(SESSION_USER_ID.equals("admin")){ %>
-                            <a href="#"><input type="button" value="삭제" id="right" ></a>
-                            <a href="/boardEdit.do"><input type="button" value="수정" id="right" ></a>
+                            <a>&ensp;<input type="button" value="삭제" id="right" onclick="doDetail(<%=bDTO.getBo_no()%>);">>&ensp;</a>
+                            <a href="/boardEdit.do">&ensp;<input type="button" value="수정" id="right" >&ensp;</a>
                             <%} %><br>
                             <h6><%= CmmUtil.nvl(bDTO.getReg_dt()) %></h6>
                             <hr> 
+                            <img src="./upload/<%= CmmUtil.nvl(bDTO.getImg_name()) %>"><br/>
                             <%= CmmUtil.nvl(bDTO.getContent()) %>
                             <form class="form" method="post" action="#">
                            

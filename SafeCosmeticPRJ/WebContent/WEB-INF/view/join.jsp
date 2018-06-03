@@ -58,15 +58,15 @@
     </style>
     <script src="./bootstrap/js/jquery-3.3.1.min.js"></script>
     <script>
-    $(Document).ready(function(){
+    $(function(){
     	var id = document.getElementById("user_id");
     	id.focus();
     	var checkAjaxSetTimeout;
     	$("#user_id").keyup(function(){
-    		clearTimeout(checkAjaxSetTimeout);
-    	    checkAjaxSetTimeout = setTimeout(function(){
+    		//clearTimeout(checkAjaxSetTimeout);
+    	    //checkAjaxSetTimeout = setTimeout(function(){
     	    var id = $("#user_id").val();
-        	if(id.length > 4){
+        	//if(id.length > 4){
         		var id = $("#user_id").val();
         		$.ajax({
         			url : '/idCheck.do',
@@ -84,15 +84,15 @@
         			}
         		});
         		
-        		}
-    	        },1000);
+        		//}
+    	       // },1000);
     	});
     	var checkAjaxSetTimeout;
     	$("#email").keyup(function(){
-    		clearTimeout(checkAjaxSetTimeout);
-    	    checkAjaxSetTimeout = setTimeout(function(){
+    		//clearTimeout(checkAjaxSetTimeout);
+    	    //checkAjaxSetTimeout = setTimeout(function(){
     	    var email = $("#email").val();
-        	if(email.length > 5){
+        	//if(email.length > 5){
         		var email = $("#email").val();
         		$.ajax({
         			url : '/emailCheck.do',
@@ -110,8 +110,8 @@
         			}
         		});
         		
-        		}
-    	        },1000);
+        		//}
+    	        //},1000);
     	});
 
     	 $("#password_check").keyup(function(){

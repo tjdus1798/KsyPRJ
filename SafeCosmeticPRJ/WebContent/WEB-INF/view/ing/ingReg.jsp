@@ -22,8 +22,23 @@
 	height:50px;
 	font-size:20px;
 	}
+#selectbox1{
 	
-	.card-header card-header-primary text-center {
+	width:35%;
+	height:30px;
+	color:gray;
+	border-radius: 7px;
+	border-color: #d2d2d2;
+}
+#selectbox2{
+	
+	width:35%;
+	height:30px;
+	color:gray;
+	border-radius: 7px;
+	border-color: #d2d2d2;
+}
+.card-header card-header-primary text-center {
 	border-bottom: 0;
 }
 	
@@ -66,14 +81,27 @@
 				           name="ewg_level" type="text" aria-describedby="#">
 				           </div>
 				           <div class="form-group">
-				           <label for="exampleInputEmail1">피부타입별</label>
-				           <input class="form-control" id="exampleInputEmail1"
-				           name="ing_type" type="text" aria-describedby="#">
-				           </div>
-				           <div class="form-group">
-				           <label for="exampleInputEmail1">주의성분</label>
-				           <input class="form-control" id="exampleInputEmail1"
-				           name="danger_check" type="text" aria-describedby="#">
+								<label for="exampleInputEmail1">피부타입별</label><br/>
+								<select
+									name="ing_type" id="selectbox1">
+									<option value="1">해당없음</option>
+									<option value="2">건성</option>
+									<option value="3">중성</option>
+									<option value="4">지성</option>
+									<option value="5">복합성</option>
+								</select>
+							</div>
+							<div class="form-group">
+								<label for="exampleInputEmail1">주의성분</label><br/>
+								<select
+									name="danger_check" id="selectbox2">
+									<option value="a">해당없음</option>
+									<option value="b">임산부</option>
+									<option value="c">영유아용</option>
+									<option value="d">알레르기성피부</option>
+								</select>
+							</div>
+
 				           
 				           <div class="card-header card-header-primary text-center">
 				           <input type="submit" value="등록" class="btn" style="width:150px" id="button">

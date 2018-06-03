@@ -12,6 +12,20 @@ public class ingDTO {
 	String chg_no;
 	String chg_dt;
 	String mix;
+	String good;
+	String bad;
+	public String getGood() {
+		return good;
+	}
+	public void setGood(String good) {
+		this.good = good;
+	}
+	public String getBad() {
+		return bad;
+	}
+	public void setBad(String bad) {
+		this.bad = bad;
+	}
 	public String getMix() {
 		return mix;
 	}
@@ -78,6 +92,7 @@ public class ingDTO {
 	public void setChg_dt(String chg_dt) {
 		this.chg_dt = chg_dt;
 	}
+
 	
 
 }

@@ -27,5 +27,23 @@
 	SELECT * 
 	FROM INGREDIENT
 	WHERE ING_NO = #{ing_no} 
-</select>
+	</select>
+	<!-- 성분수정 -->
+	<update parameterType="ingDTO" id="updateIng">
+		UPDATE INGREDIENT 
+		SET ING_NAME = #{ing_name}, ING_ENG = #{ing_eng}, MIX = #{mix}, EWG_LEVEL = #{ewg_level}, ING_TYPE = #{ing_type}, DANGER_CHECK = #{danger_check}, CHG_NO = #{chg_no}, CHG_DT = NOW()
+		WHERE ING_NO = #{ing_no}
+	</update>
+	<!-- 성분삭제 -->
+	<delete parameterType="ingDTO" id="deleteIng">
+	DELETE FROM INGREDIENT 
+	WHERE ING_NO = #{ing_no}
+	</delete>
+	<!-- 성분정보조회(화장품상세) -->
+	<select id="selectIngInfo" resultType="ingDTO">
+		SELECT ING_NO, ING_NAME, ING_ENG, ING_TYPE, DANGER_CHECK, EWG_LEVEL
+		FROM INGREDIENT
+		WHERE ING_NAME IN (values)
+	</select>
+	
 </mapper>
