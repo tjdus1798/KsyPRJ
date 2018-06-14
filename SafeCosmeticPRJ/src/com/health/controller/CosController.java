@@ -76,11 +76,14 @@ public class CosController {
 	public String cosReg_proc(HttpServletRequest req, Model model, HttpSession session, cosmeticDTO cdto) throws Exception{
 		log.info(this.getClass() + ".cosReg_proc start");
 		
-		String root = req.getSession().getServletContext().getRealPath("cos");
+		String root = req.getSession().getServletContext().getRealPath("/");
+		String savePath = root +"cosmetic";
+		String saveThumbPath = root+"thumbnail";
 		UUID uuid = UUID.randomUUID();
 		String img_name =  uuid + "_" +cdto.getUpfile().getOriginalFilename();
-		String img_path = root + "\\" + img_name;
+		String img_path = savePath + "\\" + img_name;
 		String thumb_name = cdto.getUpfile().getOriginalFilename();
+		String thumb_path = saveThumbPath+"\\"+thumb_name;
 		String cos_names = CmmUtil.nvl(req.getParameter("cos_names"));
 		String brands = CmmUtil.nvl(req.getParameter("brands"));
 		String cos_name = TextUtil.exchangeEscapeNvl(cos_names);
@@ -103,6 +106,8 @@ public class CosController {
 		log.info("img_name : " + img_name);
 		log.info("ing_path : " + img_path);
 		log.info("thumbName : " + thumb_name);
+		log.info("thumbPath : " + thumb_path);
+		log.info("savePath : " + savePath);
 		log.info("ing_name : " + ing_name);
 		
 		cdto.setCos_name(cos_name);
@@ -116,12 +121,14 @@ public class CosController {
 			File normal = new File(img_path);
 			cdto.getUpfile().transferTo(normal);
 		}
+		
 		int re = cosService.insertCos(cdto);
 		
 		for(int i =0; i<ing_name.length; i++){
 			log.info("ing_name : " + ing_name[i]);
 			cosService.codeInsert(ing_name[i], cos_name);
 		}
+		
 		if (re != 0) {
 			model.addAttribute("msg", "등록되었습니다.");
 			model.addAttribute("url", "/cosList.do");
@@ -224,10 +231,11 @@ public class CosController {
 			String brands = CmmUtil.nvl(req.getParameter("brands"));
 			String cos_name = TextUtil.exchangeEscapeNvl(cos_names);
 			String brand = TextUtil.exchangeEscapeNvl(brands);
-			String root = req.getSession().getServletContext().getRealPath("cos");
+			String root = req.getSession().getServletContext().getRealPath("/");
+			String savePath = root +"cosmetic";
 			String[] ing_name = req.getParameterValues("ing_names");
 			String img_name = uuid+"_"+cdto.getUpfile().getOriginalFilename();
-			String img_path = root + "\\" + img_name;
+			String img_path = savePath + "\\" + img_name;
 			String ori_img_name = cdto.getUpfile().getOriginalFilename();
 			
 			//int thumbWidth = 500;
@@ -242,6 +250,7 @@ public class CosController {
 			log.info("brand : " + brand);
 			log.info("img_name : " + img_name);
 			log.info("ing_path : " + img_path);
+			log.info("savePath : " + savePath);
 			log.info("ori_img_name : " + ori_img_name);
 			
 			cdto.setCos_name(cos_name);
@@ -294,8 +303,9 @@ public class CosController {
 		cosmeticDTO cDTO = new cosmeticDTO();
 		
 		String img_name = CmmUtil.nvl(req.getParameter("img_name"));
-		String root = req.getSession().getServletContext().getRealPath("cos");
-		String img_path = root + "\\" + img_name;
+		String root = req.getSession().getServletContext().getRealPath("/");
+		String savePath = root +"cosmetic";
+		String img_path = savePath + "\\" + img_name;
 		
 		log.info("img_name : "+img_name);
 		if(cdto.getImg_name() != null) {

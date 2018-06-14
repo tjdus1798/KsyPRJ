@@ -139,7 +139,7 @@ public class BoardController {
 		log.info("bo_no =" + bo_no);
 		
 		boardDTO bDTO = boardService.getBoardDetail(bo_no);
-		//조회수 증가
+		//��ȸ�� ����
 		boardService.cntUpdate(bDTO);
 		if (bDTO == null) {
 			bDTO = new boardDTO();
@@ -148,6 +148,7 @@ public class BoardController {
 		log.info(this.getClass() + ".boardDetail end");
 		return "/board/boardDetail";
 	}
+	//
 	@RequestMapping(value="/boardEdit", method=RequestMethod.GET)
 	public String boardEdit(Model model,HttpServletRequest req) throws Exception{
 		log.info(this.getClass() + ".boardEdit start");
@@ -177,8 +178,9 @@ public class BoardController {
 				String content = TextUtil.exchangeEscapeNvl(contents);
 				content = content.replace("\r\n", "<br>");
 				String img_name = uuid+"_"+bdto.getUpfile().getOriginalFilename();
-				String root = req.getSession().getServletContext().getRealPath("board");
-				String img_path = root + "\\" + img_name;
+				String root = req.getSession().getServletContext().getRealPath("/");
+				String savePath = root +"upload";
+				String img_path = savePath + "\\" + img_name;
 				String ori_img_name = bdto.getUpfile().getOriginalFilename();
 				
 				log.info("bo_no : " + bo_no);
@@ -233,8 +235,9 @@ public class BoardController {
 		boardDTO bDTO = new boardDTO();
 		
 		String img_name = CmmUtil.nvl(req.getParameter("img_name"));
-		String root = req.getSession().getServletContext().getRealPath("board");
-		String img_path = root + "\\" + img_name;
+		String root = req.getSession().getServletContext().getRealPath("/");
+		String savePath = root +"upload";
+		String img_path = savePath + "\\" + img_name;
 		
 		log.info("img_name : "+img_name);
 		if(bdto.getImg_name() != null) {
