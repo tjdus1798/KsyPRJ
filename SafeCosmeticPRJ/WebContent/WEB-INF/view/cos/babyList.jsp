@@ -164,22 +164,28 @@ p {
                     <div class="col-md-12 ml-auto mr-auto" >
                             <h3>영유아 추천화장품</h3>
                             <hr> 
-                           <%for (cosmeticDTO cDTO : cList) { %>
+                           <c:forEach items="${cList}" var="list">
                            <div style="height:100px">
-							<%if(cDTO.getImg_name().equals("")){ %>
+                           	<c:choose>
+							<c:when test="${list.img_name eq null}">
 							<img src="./image/NoPic.png" alt="Rounded Image" class="rounded img-fluid" id="w" id="inline">
-							<%}else{ %>
-							<img src="./cosmetic/<%= cDTO.getImg_name() %>" alt="Rounded Image" class="rounded img-fluid" id="w" id="inline">
-							<%} %>
+							</c:when>
+							<c:when test="${list.img_name eq ''}">
+							<img src="./image/NoPic.png" alt="Rounded Image" class="rounded img-fluid" id="w" id="inline">
+							</c:when>
+							<c:when test="${list.img_name ne null}">
+							<img src="./cosmetic/${list.img_name }" alt="Rounded Image" class="rounded img-fluid" id="w" id="inline">
+							</c:when>
+							</c:choose>
 							<div id="inline">
-								<p id="brand"><%=cDTO.getBrand() %></p>
-								<p id="cos_name" onclick="javascript:doDetail('<%=cDTO.getCos_no()%>');" style="cursor:pointer"><%=cDTO.getCos_name() %></p>
-								<p id="price"><%=cDTO.getPrice() %>원</p>
+								<p id="brand">${list.brand}</p>
+								<p id="cos_name" onclick="javascript:doDetail('${list.cos_no }');" style="cursor:pointer">${list.cos_name }</p>
+								<p id="price">${list.price }원</p>
 								<p id="a"></p>
 							</div>
 							</div>
                            <hr>
-                          <%} %>
+                         </c:forEach>
                            
                            				           			<!-- 페이징  -->
 		<c:choose>
