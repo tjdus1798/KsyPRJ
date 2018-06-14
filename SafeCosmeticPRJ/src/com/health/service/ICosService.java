@@ -7,39 +7,62 @@ import com.health.DTO.ingDTO;
 import com.health.DTO.likeDTO;
 
 public interface ICosService {
-	//È­ÀåÇ°µî·Ï
+	//í™”ì¥í’ˆ ë“±ë¡
 	int insertCos(cosmeticDTO cDTO) throws Exception ;
-	//È­ÀåÇ°µî·Ï - ¼ººĞ¸ñ·Ï
+	//ì„±ë¶„ëª…ìœ¼ë¡œ ê²€ìƒ‰
 	List<ingDTO> CosIng() throws Exception ;
-	//È­ÀåÇ°µî·Ï - ºê·£µå¸ñ·Ï
+	//ë¸Œëœë“œëª…ìœ¼ë¡œ ê²€ìƒ‰
 	List<cosmeticDTO> CosBrand() throws Exception ;
-	//È­ÀåÇ°¸ñ·Ï
-	List<cosmeticDTO> getCosList() throws Exception ;
-	//È­ÀåÇ°»ó¼¼
-	cosmeticDTO getcosDetail(String cos_no) throws Exception ;
-	//ÁÁ¾Æ¿ä¸ñ·Ï
+	//í™”ì¥í’ˆ ëª©ë¡
+	List<cosmeticDTO> getCosList(int offset, int noOfRecords) throws Exception ;
+	//í™”ì¥í’ˆ ìƒì„¸
+	cosmeticDTO getcosDetail(String cos_no) throws Exception;
+	//í™”ì¥í’ˆ ìƒì„¸ - ì„±ë¶„ëª©ë¡
+	List<ingDTO> getcosDetailIng(String cos_no) throws Exception;
+	//í™”ì¥í’ˆ ìˆ˜ì •
+	int updateCos(cosmeticDTO cdto) throws Exception;
+	//í™”ì¥í’ˆ ì‚­ì œ
+	int DeleteCos(String cos_no) throws Exception;
+	//ì¢‹ì•„ìš” ëª©ë¡
 	likeDTO getLikeList(likeDTO lDTO) throws Exception ;
-	//ºê·£µå¸íÀ¸·Î °Ë»ö
-	List<cosmeticDTO> getBrandSearch(cosmeticDTO cDTO) throws Exception;
-	//ºê·£µå¸í ÀÚµ¿¿Ï¼º
+	//ë¸Œëœë“œëª…ìœ¼ë¡œ ê²€ìƒ‰
+	List<cosmeticDTO> getBrandSearch(String search,int offset, int noOfRecords) throws Exception;
+	//ë¸Œëœë“œëª… ìë™ì™„ì„±
 	List<cosmeticDTO> getBrandAuto(cosmeticDTO cDTO) throws Exception;
-	//¿ÏÀüÃ¼ ¼ººĞÀ¸·Î °Ë»ö
+	//ì„±ë¶„ëª…ìœ¼ë¡œ ê²€ìƒ‰
 	List<cosmeticDTO> getIngSearch(cosmeticDTO cDTO) throws Exception;
-	//ÁÁÀº¼ººĞÁ¦¿Ü °Ë»ö
+	//ì¢‹ì€ì„±ë¶„ì œì™¸
 	List<cosmeticDTO> getWithoutGood(cosmeticDTO cDTO) throws Exception;
-	//ÇÇÇÒ¼ººĞÁ¦¿Ü °Ë»ö
+	//ë‚˜ìœì„±ë¶„ì œì™¸
 	List<cosmeticDTO> getWithoutBad(cosmeticDTO cDTO) throws Exception;
-	//ÁÁÀº¼ººĞ¸í ÀÚµ¿¿Ï¼º
+	//ì¢‹ì€ì„±ë¶„ ìë™ì™„ì„±
 	List<ingDTO> getIngGoodAuto(ingDTO iDTO) throws Exception;
-	//³ª»Û¼ººĞ¸í ÀÚµ¿¿Ï¼º
+	//ë‚˜ìœì„±ë¶„ ìë™ì™„ì„±
 	List<ingDTO> getIngBadAuto(ingDTO iDTO) throws Exception;
-	//È­ÀåÇ°Å¸ÀÔÁ¦¿Ü °Ë»ö
+	//íƒ€ì… ì œì™¸
 	List<cosmeticDTO> getWithoutCosType(cosmeticDTO cDTO) throws Exception;
-	//ÀÓ»êºÎÃßÃµÈ­ÀåÇ°
-	List<cosmeticDTO> getPregnantList() throws Exception;
-	//¿µÀ¯¾ÆÃßÃµÈ­ÀåÇ°	
-	List<cosmeticDTO> getBabyList() throws Exception;
-	//¾Ë·¹¸£±âÃßÃµÈ­ÀåÇ°	
-	List<cosmeticDTO> getAllergyList() throws Exception;
+	//ì„ì‚°ë¶€ ì¶”ì²œí™”ì¥í’ˆ
+	List<cosmeticDTO> getPregnantList(int offset, int noOfRecords) throws Exception;
+	//ì˜ìœ ì•„ ì¶”ì²œí™”ì¥í’ˆ
+	List<cosmeticDTO> getBabyList(int offset, int noOfRecords) throws Exception;
+	//ì•Œë ˆë¥´ê¸° ì¶”ì²œí™”ì¥í’ˆ
+	List<cosmeticDTO> getAllergyList(int offset, int noOfRecords) throws Exception;
+	//í™”ì¥í’ˆ ì „ì²´ ê°¯ìˆ˜ ì¡°íšŒ
+	int writeGetCount() throws Exception;
+	//ì½”ë“œí…Œì´ë¸” ing_no ë“±ë¡
+	void codeInsert(String ing_name,String cos_name) throws Exception;
+	int writePregGetCount() throws Exception;
+	
+	int writeBabyGetCount() throws Exception;
+	
+	int writeAllergyGetCount() throws Exception;
+	
+	void codeDelete(String cos_no) throws Exception;
+	
+	int writeBrandGetCount(String search) throws Exception;
+	
+	List<cosmeticDTO> getWithoutBad(String good, String cos_type, int offset, int maxPost) throws Exception;
+	
+	int writeIngGetCount(String good, String cos_type) throws Exception;
 	
 }

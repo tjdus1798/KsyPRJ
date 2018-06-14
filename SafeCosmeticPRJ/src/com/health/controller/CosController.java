@@ -1,13 +1,16 @@
 package com.health.controller;
 
 import java.awt.Image;
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -21,12 +24,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.health.DTO.boardDTO;
 import com.health.DTO.cosmeticDTO;
 import com.health.DTO.ingDTO;
 import com.health.DTO.shopDTO;
 import com.health.DTO.likeDTO;
 import com.health.service.ICosService;
 import com.health.util.CmmUtil;
+import com.health.util.Paging;
 import com.health.util.TextUtil;
 import com.sun.jimi.core.Jimi;
 import com.sun.jimi.core.JimiUtils;
@@ -44,7 +49,7 @@ public class CosController {
 	
 	@Resource(name = "CosService")
 	private ICosService cosService;
-
+	Paging pagemaker;
 	@RequestMapping(value="/cosReg", method=RequestMethod.GET)
 	public String cosReg(Model model) throws Exception{
 		
@@ -66,46 +71,30 @@ public class CosController {
 		
 		return "/cos/cosReg";
 	}
-	//»≠¿Â«∞µÓ∑œ
+	//ÌôîÏû•Ìíà Îì±Î°ù
 	@RequestMapping(value="/cosReg_proc", method=RequestMethod.POST)
 	public String cosReg_proc(HttpServletRequest req, Model model, HttpSession session, cosmeticDTO cdto) throws Exception{
 		log.info(this.getClass() + ".cosReg_proc start");
 		
-		String root = req.getSession().getServletContext().getRealPath("/");
-		String savePath = root +"cosmetic";
-		String saveThumbPath = root+"thumbnail";
-		
-		String img_name = cdto.getUpfile().getOriginalFilename();
-		String img_path = savePath + "\\" + img_name;
+		String root = req.getSession().getServletContext().getRealPath("cos");
+		UUID uuid = UUID.randomUUID();
+		String img_name =  uuid + "_" +cdto.getUpfile().getOriginalFilename();
+		String img_path = root + "\\" + img_name;
 		String thumb_name = cdto.getUpfile().getOriginalFilename();
-		String thumb_path = saveThumbPath+"\\"+thumb_name;
-		String[] ing_namex = req.getParameterValues("ing_names");
 		String cos_names = CmmUtil.nvl(req.getParameter("cos_names"));
 		String brands = CmmUtil.nvl(req.getParameter("brands"));
-		
 		String cos_name = TextUtil.exchangeEscapeNvl(cos_names);
 		String brand = TextUtil.exchangeEscapeNvl(brands);
-		
 		String reg_no = (String) session.getAttribute("session_user_no");
-		String ing_namee = "";
-		String ing_name = "";
+		String[] ing_name = req.getParameterValues("ing_names");
 		
-		for(int i =0; i<ing_namex.length; i++){
-			log.info("ing_namex : " + ing_namex[i]);
-			ing_namee = TextUtil.exchangeEscapeNvl(ing_namex[i]);
-			log.info("ing_namee : " + ing_namee);
-		}
-		for(int i =0; i<ing_namex.length; i++){
-			log.info("ing_namex : " + ing_namex[i]);
-			ing_name += ing_namex[i]+"$";
-		}
+		//int thumbWidth = 500;
+		//int thumbHeight = 300;
 		
-		int thumbWidth = 500;
-		int thumbHeight = 300;
-		
-		Image thumbnail=JimiUtils.getThumbnail(img_path, thumbWidth, thumbHeight, Jimi.IN_MEMORY);
-		Jimi.putImage(thumbnail,thumb_path);
-		
+		//Image thumbnail=JimiUtils.getThumbnail(img_path, thumbWidth, thumbHeight, Jimi.IN_MEMORY);
+		//Jimi.putImage(thumbnail,thumb_path);
+		//String ing_namee = "";
+		//String ing_name = "";
 		log.info("cos_type : " + cdto.getCos_type());
 		log.info("cos_name : " + cos_name);
 		log.info("price :" + cdto.getPrice());
@@ -114,56 +103,64 @@ public class CosController {
 		log.info("img_name : " + img_name);
 		log.info("ing_path : " + img_path);
 		log.info("thumbName : " + thumb_name);
-		log.info("thumbPath : " + thumb_path);
-		log.info("savePath : " + savePath);
+		log.info("ing_name : " + ing_name);
 		
 		cdto.setCos_name(cos_name);
 		cdto.setBrand(brand);
 		cdto.setReg_no(brand);
 		cdto.setReg_no(reg_no);
-		cdto.setIng_name(ing_name);
-		cdto.setImg_name(img_name);
-		cdto.setImg_path(img_path);
-		cdto.setThumb_name(thumb_name);
-		cdto.setThumb_path(thumb_path);
-		
-		File normal = new File(img_path);
-		cdto.getUpfile().transferTo(normal);
-		
-		File thumnail = new File(thumb_path);
-		cdto.getUpfile().transferTo(thumnail);
-		
+		if(cdto.getUpfile().isEmpty() == false) {
+			cdto.setImg_name(img_name);
+			cdto.setImg_path(img_path);
+			
+			File normal = new File(img_path);
+			cdto.getUpfile().transferTo(normal);
+		}
 		int re = cosService.insertCos(cdto);
+		
+		for(int i =0; i<ing_name.length; i++){
+			log.info("ing_name : " + ing_name[i]);
+			cosService.codeInsert(ing_name[i], cos_name);
+		}
 		if (re != 0) {
-			model.addAttribute("msg", "µÓ∑œµ«æ˙Ω¿¥œ¥Ÿ.");
+			model.addAttribute("msg", "Îì±Î°ùÎêòÏóàÏäµÎãàÎã§.");
 			model.addAttribute("url", "/cosList.do");
 		} else {
-			model.addAttribute("msg", "Ω«∆–«œø¥Ω¿¥œ¥Ÿ.");
+			model.addAttribute("msg", "Îì±Î°ùÏóê Ïã§Ìå®ÌñàÏäµÎãàÎã§.");
 			model.addAttribute("url", "/cosReg.do");
 		}
 		
 		log.info(this.getClass() + ".cosReg_proc end");
 		return "/alert";
 	}
-
-
-	
-	//»≠¿Â«∞∏Ò∑œ
+	//ÌôîÏû•Ìíà Î™©Î°ù
 	@RequestMapping(value="/cosList", method=RequestMethod.GET)
-	public String cosList(Model model) throws Exception{
+	public String cosList(Model model,HttpServletRequest req) throws Exception{
 		log.info(this.getClass() + ".cosList start");
-		List<cosmeticDTO> cList = cosService.getCosList();
-
-		if (cList == null) {
-			cList = new ArrayList<>();
-		}
-		model.addAttribute("cList", cList);
+		int currentPageNo = 1;
+		int maxPost = 10;
 		
+		if(req.getParameter("pages") != null)
+			currentPageNo = Integer.parseInt(req.getParameter("pages"));
+		
+		Paging paging = new Paging(currentPageNo, maxPost);
+		
+		int offset = (paging.getCurrentPageNo() - 1) * paging.getMaxPost();
+		
+		List<cosmeticDTO> page = cosService.getCosList(offset, paging.getMaxPost());
+		paging.setNumberOfRecords(cosService.writeGetCount());
+		
+		paging.makePaging();
+		if (page == null) {
+			page = new ArrayList<>();
+		}
+		model.addAttribute("page", page);
+		model.addAttribute("paging", paging);
 		log.info(this.getClass() + ".cosList end");
 		return "/cos/cosList";
 	}
 	
-	//»≠¿Â«∞ªÛºº
+	//ÌôîÏû•Ìíà ÏÉÅÏÑ∏
 	@RequestMapping(value="/cosDetail", method=RequestMethod.GET)
 	public String cosDetail(Model model, HttpServletRequest req,HttpSession session) throws Exception{
 
@@ -173,7 +170,7 @@ public class CosController {
 	
 	log.info("cos_no =" + cos_no);
 	cosmeticDTO cDTO = cosService.getcosDetail(cos_no);
-
+	List<ingDTO> iList = cosService.getcosDetailIng(cos_no);
 	likeDTO lDTO = new likeDTO();
 
 	lDTO.setCos_no(cos_no);
@@ -183,121 +180,251 @@ public class CosController {
 	
 	if (cDTO == null) {
 		cDTO = new cosmeticDTO();}
+	if (iList == null) {
+		iList = new ArrayList<>();
+	}
 	if (lDTO == null) {
 		lDTO = new likeDTO();}
 	
 	model.addAttribute("cDTO", cDTO);
 	model.addAttribute("lDTO", lDTO);
+	model.addAttribute("iList", iList);
 	
 	log.info(this.getClass() + ".cosDetail end");
 	return "/cos/cosDetail";
 	}
-
-	//º∫∫–¿∏∑Œ ∞Àªˆ
-	@RequestMapping(value="/ingredient_search", method=RequestMethod.POST)
-	public @ResponseBody List<cosmeticDTO> ingredient_search(@RequestParam(value = "good") String goods, @RequestParam(value = "bad") String bads, @RequestParam(value = "cos_type") String cos_type) throws Exception{
+	@RequestMapping(value="/cosEdit", method=RequestMethod.GET)
+	public String cosEdit(Model model,HttpServletRequest req) throws Exception{
+		log.info(this.getClass() + ".cosEdit start");
+		String cos_no = CmmUtil.nvl(req.getParameter("cos_no"));
+		log.info("cos_no =" + cos_no);
+		
+		cosmeticDTO cDTO = cosService.getcosDetail(cos_no);
+		List<ingDTO> iList = cosService.getcosDetailIng(cos_no);
+		if (cDTO == null) {
+			cDTO = new cosmeticDTO();}
+		if (iList == null) {
+			iList = new ArrayList<>();
+		}
+		model.addAttribute("cDTO", cDTO);
+		model.addAttribute("iList", iList);
+		log.info(this.getClass() + ".cosEdit end");
+		return "/cos/cosEdit";
+	}
+	//ÌôîÏû•Ìíà ÏàòÏ†ï
+	@RequestMapping(value="/cosEdit_proc", method=RequestMethod.POST)
+	public String cosEdit_proc(Model model,HttpServletRequest req, HttpSession session, cosmeticDTO cdto) throws Exception{
+		log.info(this.getClass() + ".cosEdit_proc start");
+		String msg = "";
+		String url = "";
+		String cos_no = CmmUtil.nvl(req.getParameter("cos_no"));
+		try {
+			UUID uuid = UUID.randomUUID();
+			String cos_names = CmmUtil.nvl(req.getParameter("cos_names"));
+			String brands = CmmUtil.nvl(req.getParameter("brands"));
+			String cos_name = TextUtil.exchangeEscapeNvl(cos_names);
+			String brand = TextUtil.exchangeEscapeNvl(brands);
+			String root = req.getSession().getServletContext().getRealPath("cos");
+			String[] ing_name = req.getParameterValues("ing_names");
+			String img_name = uuid+"_"+cdto.getUpfile().getOriginalFilename();
+			String img_path = root + "\\" + img_name;
+			String ori_img_name = cdto.getUpfile().getOriginalFilename();
+			
+			//int thumbWidth = 500;
+			//int thumbHeight = 300;
+			
+			//Image thumbnail=JimiUtils.getThumbnail(img_path, thumbWidth, thumbHeight, Jimi.IN_MEMORY);
+			//Jimi.putImage(thumbnail,thumb_path);
+			
+			log.info("cos_type : " + cdto.getCos_type());
+			log.info("cos_name : " + cos_name);
+			log.info("price :" + cdto.getPrice());
+			log.info("brand : " + brand);
+			log.info("img_name : " + img_name);
+			log.info("ing_path : " + img_path);
+			log.info("ori_img_name : " + ori_img_name);
+			
+			cdto.setCos_name(cos_name);
+			cdto.setBrand(brand);
+			
+			for(int i =0; i<ing_name.length; i++){
+				log.info("ing_name : " + ing_name[i]);
+				cosService.codeInsert(ing_name[i], cos_name);
+			}
+			
+			if(cdto.getUpfile().isEmpty() == false){
+				cdto.setImg_name(img_name);
+				cdto.setImg_path(img_path);
+				cdto.setOri_img_name(ori_img_name);
+				
+				File normal = new File(img_path);
+				cdto.getUpfile().transferTo(normal);
+			}
+			if(cdto.getUpfile().isEmpty() == true) {
+				File file = new File(img_path);
+    			file.delete();
+			}
+			cosService.updateCos(cdto);
+			
+			msg="ÏàòÏ†ïÎêòÏóàÏäµÎãàÎã§.";
+			url="/cosDetail.do?cos_no="+cos_no;
+			
+			cdto = null;
+			
+		}catch(Exception e) {
+			msg = "ÏàòÏ†ïÏóê Ïã§Ìå®ÌñàÏäµÎãàÎã§";
+    		url="/cosEdit.do?cos_no=" + cos_no;
+    		
+    		log.info(e.toString());
+    		e.printStackTrace();
+		}finally {
+			log.info(this.getClass() + ".cosEdit_proc end");
+			
+			model.addAttribute("msg", msg);
+			model.addAttribute("url", url);
+		}
+		return "/alert";
+	}
+	//ÌôîÏû•Ìíà ÏÇ≠Ï†ú
+	@RequestMapping(value="/cosDelete", method=RequestMethod.GET)
+	public String cosDelete(Model model,HttpServletRequest req,cosmeticDTO cdto) throws Exception{
+		log.info(this.getClass() + ".cosDelete start");
+		String cos_no = CmmUtil.nvl(req.getParameter("cos_no"));
+		log.info("cos_no =" + cos_no);
+		cosmeticDTO cDTO = new cosmeticDTO();
+		
+		String img_name = CmmUtil.nvl(req.getParameter("img_name"));
+		String root = req.getSession().getServletContext().getRealPath("cos");
+		String img_path = root + "\\" + img_name;
+		
+		log.info("img_name : "+img_name);
+		if(cdto.getImg_name() != null) {
+			File file = new File(img_path);
+			file.delete();
+		}
+		
+		cosService.codeDelete(cos_no);
+		
+		cDTO.setCos_no(cos_no);
+		
+		int result=  cosService.DeleteCos(cos_no);
+		if (result != 0) {
+			model.addAttribute("msg", "ÏÇ≠Ï†úÎêòÏóàÏäµÎãàÎã§.");
+			model.addAttribute("url", "/cosList.do");
+		} else {
+			model.addAttribute("msg", "ÏÇ≠Ï†úÏóê Ïã§Ìå®ÌñàÏäµÎãàÎã§.");
+			model.addAttribute("url", "/cosDetail.do?cos_no=" + cos_no);
+		}
+			
+		log.info(this.getClass() + ".cosDelete end");
+		return "/alert";
+	}
+	//ÏÑ±Î∂ÑÎ™ÖÏúºÎ°ú Í≤ÄÏÉâ
+	@RequestMapping(value="/ingredient_search", method=RequestMethod.GET)
+	public String ingredient_search(HttpServletRequest req,Model model, HttpSession session) throws Exception{
 
 		  log.info(getClass() + "ingredient_search start");
+		  String good = "";
+		  String cos_type = "";
 		  
-		  List<cosmeticDTO> clist= null;
-		   cosmeticDTO cDTO = new cosmeticDTO();
-		   String good = TextUtil.exchangeEscapeNvl(goods);
-		   String bad = TextUtil.exchangeEscapeNvl(bads);
-		    
-		    if(goods=="") {
-		    	log.info("bad : " + bad);
-			    log.info("cos_type : " + cos_type);
-			    log.info("¡¡¿∫º∫∫– ¡¶ø‹");
-		    	
-		    	cDTO.setBad("%"+bad+"%");
-				cDTO.setCos_type("%"+cos_type+"%");
-				//¡¡¿∫º∫∫–¡¶ø‹ ∞Àªˆ
-				clist = cosService.getWithoutGood(cDTO);
-			    
-		    }else if(bads=="") {
-		    	log.info("good : " + good);
-			    log.info("cos_type : " + cos_type);
-			    log.info("≥™ª€º∫∫– ¡¶ø‹");
-			    
-		    	cDTO.setGood("%"+good+"%");
-			    cDTO.setCos_type("%"+cos_type+"%");
-			    //«««“º∫∫–¡¶ø‹ ∞Àªˆ
-			    clist = cosService.getWithoutBad(cDTO);
-		    	
-		    }else if(cos_type=="ƒ´≈◊∞Ì∏Æ") {
-		    	log.info("good : " + good);
-			    log.info("bad : " + bad);
-			    log.info("»≠¿Â«∞¡æ∑˘ ¡¶ø‹");
-			    
-		    	cDTO.setGood("%"+good+"%");
-			    cDTO.setBad("%"+bad+"%");
-			    //»≠¿Â«∞≈∏¿‘¡¶ø‹ ∞Àªˆ
-			    clist = cosService.getWithoutCosType(cDTO);
-			    
+		  if(req.getParameter("good") != null) {
+		    	String goods = CmmUtil.nvl(req.getParameter("good"));
+		    	good = TextUtil.exchangeEscapeNvl(goods);
 		    }else {
-		    	log.info("good : " + good);
-			    log.info("bad : " + bad);
-			    log.info("cos_type : " + cos_type);
-			    log.info("øœ¿¸√º¿”");
-			    
-		    	cDTO.setGood("%"+good+"%");
-			    cDTO.setBad("%"+bad+"%");
-			    cDTO.setCos_type("%"+cos_type+"%");
-			  //øœ¿¸√º º∫∫–¿∏∑Œ ∞Àªˆ
-			    clist = cosService.getIngSearch(cDTO);
+		    	good = (String) session.getAttribute("good");
 		    }
-	   
+		  if(req.getParameter("cos_type") != null) {
+		    	cos_type = CmmUtil.nvl(req.getParameter("cos_type"));
+		    }else {
+		    	cos_type = (String) session.getAttribute("cos_type");
+		    }
+		  log.info("good : " + good);
+		    log.info("cos_type : " + cos_type);
+		  
+		    int currentPageNo = 1;
+			int maxPost = 10;
+			if(req.getParameter("pages") != null)
+				currentPageNo = Integer.parseInt(req.getParameter("pages"));
+			
+			Paging paging = new Paging(currentPageNo, maxPost);
+			
+			int offset = (paging.getCurrentPageNo() - 1) * paging.getMaxPost();
+			List<cosmeticDTO> page= cosService.getWithoutBad(good,cos_type,offset, paging.getMaxPost());
+			 paging.setNumberOfRecords(cosService.writeIngGetCount(good,cos_type));
+			    paging.makePaging();
+			    if (page == null) {
+					page = new ArrayList<>();
+				}			    
+			    session.setAttribute("cos_type",cos_type);
+			    session.setAttribute("good",good);
+			    model.addAttribute("page", page);
+			    model.addAttribute("paging", paging);
+			    model.addAttribute("good", good);
 		    log.info(getClass() + "ingredient_search end");
-		    log.info(clist);
-		 return clist;
+		 return "/cos/ingResult";
 	}
-	//º∫∫–¿∏∑Œ ¿⁄µøøœº∫
+	//ÏÑ±Î∂ÑÎ™ÖÏúºÎ°ú ÏûêÎèôÏôÑÏÑ±
 	@RequestMapping(value="/ingredient_auto", method= RequestMethod.POST)
-	public @ResponseBody List<ingDTO> ingredient_auto(@RequestParam(value = "good") String good, @RequestParam(value = "bad") String bad) throws Exception{
+	public @ResponseBody List<ingDTO> ingredient_auto(@RequestParam(value = "good") String good) throws Exception{
 
 		  log.info(getClass() + "ingredient_auto start");
 		  
-		  List<ingDTO> inglist= null;
 		  ingDTO iDTO = new ingDTO();
-		
-		  if(good=="") { 
-			  iDTO.setGood("%"+good+"%");
-			  log.info("goods : " + good);
-			  inglist = cosService.getIngGoodAuto(iDTO);	
-		  }else {
-			  iDTO.setBad("%"+bad+"%");
-			  log.info("bads : " + bad);
-			  inglist = cosService.getIngBadAuto(iDTO);	
-		  }
+		 
+			iDTO.setGood("%"+good+"%");
+			log.info("ÏûòÎì§Ïñ¥Ïò§ÎÇò? goods : " + good);
+			List<ingDTO> inglist = cosService.getIngGoodAuto(iDTO);	
+
 		 log.info(inglist);
 		 log.info(getClass() + "ingredient_auto end");
 		 return inglist;
 	}
 	
-	//º∫∫–∫∞ »≠¿Â«∞∏Ò∑œ
 	@RequestMapping(value="/ingredientList", method=RequestMethod.GET)
 	public String ingredientList() throws Exception{
 
 		return "/cos/ingredientList";
 	}
 	
-	//∫Í∑£µÂ∏Ì¿∏∑Œ ∞Àªˆ
-	@RequestMapping(value="/brand_search", method=RequestMethod.POST)
-	public @ResponseBody List<cosmeticDTO> brand_search(@RequestParam(value = "search") String search) throws Exception{
-		
+	//Î∏åÎûúÎìúÎ™ÖÏúºÎ°ú Í≤ÄÏÉâ
+	@RequestMapping(value="/brand_search", method=RequestMethod.GET)
+	public String brand_search(HttpServletRequest req,Model model, HttpSession session) throws Exception{
+			
 		    log.info(getClass() + "brand_search start");
-		    cosmeticDTO cDTO = new cosmeticDTO();
-		    String searchs = TextUtil.exchangeEscapeNvl(search);
-		    cDTO.setSearch("%"+searchs+"%");
-		    log.info("search : " + searchs);
-		    
-		    List<cosmeticDTO> clist = cosService.getBrandSearch(cDTO);		    
-		    log.info(clist);
+		    String search="";
+		    if(req.getParameter("search") != null) {
+		    	String searchs = CmmUtil.nvl(req.getParameter("search"));
+		    	search = TextUtil.exchangeEscapeNvl(searchs);
+		    }else {
+		    	search = (String) session.getAttribute("search");
+		    }
+		    log.info(search);
+		    int currentPageNo = 1;
+			int maxPost = 10;
+			if(req.getParameter("pages") != null)
+				currentPageNo = Integer.parseInt(req.getParameter("pages"));
+			
+			Paging paging = new Paging(currentPageNo, maxPost);
+			
+			int offset = (paging.getCurrentPageNo() - 1) * paging.getMaxPost();
+		    List<cosmeticDTO> page = cosService.getBrandSearch(search,offset, paging.getMaxPost());		    
+		    paging.setNumberOfRecords(cosService.writeBrandGetCount(search));
+		    paging.makePaging();
+		    if (page == null) {
+				page = new ArrayList<>();
+			}
+		    log.info("search : "+search);
+		    log.info("page : "+page);
+		    log.info("paging : "+paging);
+		    session.setAttribute("search",search);
+		    model.addAttribute("page", page);
+		    model.addAttribute("paging", paging);
+		    model.addAttribute("search", search);
 		    log.info(getClass() + "brand_search end");
-
-		    return clist;
+		    
+		    return "/cos/brandResult";
 	}
-	//∫Í∑£µÂ∏Ì ¿⁄µøøœº∫
+	//Î∏åÎûúÎìúÎ™ÖÏúºÎ°ú ÏûêÎèôÏôÑÏÑ±
 		@RequestMapping(value="/brand_auto", method=RequestMethod.POST)
 		public @ResponseBody List<cosmeticDTO> brand_auto(@RequestParam(value = "search") String search) throws Exception{
 			
@@ -309,151 +436,280 @@ public class CosController {
 			    
 			    List<cosmeticDTO> autolist = cosService.getBrandAuto(cDTO);
 			    
-			    log.info("¿⁄µøøœº∫ :"+autolist);
+			    log.info("ÏûêÎèôÏôÑÏÑ± :"+autolist);
 			    
 			    log.info(getClass() + "brand_auto end");
 
 			    return autolist;
 		}
-	
-	//∫Í∑£µÂ∫∞ »≠¿Â«∞∏Ò∑œ
+	   
 	@RequestMapping(value="/brandList", method=RequestMethod.GET)
 	public String brandList() throws Exception{
 
 		return "/cos/brandList";
 	}
 	
-	//¿”ªÍ∫Œ√ﬂ√µ »≠¿Â«∞∏Ò∑œ
+	//ÏûÑÏÇ∞Î∂Ä Ï∂îÏ≤ú ÌôîÏû•Ìíà
 	@RequestMapping(value="/pregnantList", method=RequestMethod.GET)
 	public String pregnantList(HttpServletRequest req, Model model, HttpSession session) throws Exception{
 		log.info(this.getClass().getName() + "pregnantList start");
-		  
-		List<cosmeticDTO> cList = cosService.getPregnantList();
-
-		if (cList == null) {
-			cList = new ArrayList<>();
+		int currentPageNo = 1;
+		int maxPost = 10;
+		if(req.getParameter("pages") != null)
+			currentPageNo = Integer.parseInt(req.getParameter("pages"));
+		
+		Paging paging = new Paging(currentPageNo, maxPost);
+		
+		int offset = (paging.getCurrentPageNo() - 1) * paging.getMaxPost();
+		
+		List<cosmeticDTO> page = cosService.getPregnantList(offset, paging.getMaxPost());
+		paging.setNumberOfRecords(cosService.writePregGetCount());
+		
+		paging.makePaging();
+		if (page == null) {
+			page = new ArrayList<>();
 		}
-		  model.addAttribute("cList",cList);
-		 
+		  model.addAttribute("cList",page);
+		  model.addAttribute("paging", paging);
 		  log.info(this.getClass().getName() + "pregnantList end");
 		return "/cos/pregnantList";
 	}
-	//øµ¿Øæ∆√ﬂ√µ »≠¿Â«∞∏Ò∑œ
+	//ÏòÅÏú†ÏïÑ Ï∂îÏ≤ú ÌôîÏû•Ìíà
 	@RequestMapping(value="/babyList", method=RequestMethod.GET)
 	public String babyList(HttpServletRequest req, Model model, HttpSession session) throws Exception{
 		log.info(this.getClass().getName() + "babyList start");
-		  
-			List<cosmeticDTO> cList = cosService.getBabyList();
-
-			if (cList == null) {
-				cList = new ArrayList<>();
+		int currentPageNo = 1;
+		int maxPost = 10;
+		if(req.getParameter("pages") != null)
+			currentPageNo = Integer.parseInt(req.getParameter("pages"));
+		
+		Paging paging = new Paging(currentPageNo, maxPost);
+		
+		int offset = (paging.getCurrentPageNo() - 1) * paging.getMaxPost();
+		
+			List<cosmeticDTO> page = cosService.getBabyList(offset, paging.getMaxPost());
+			paging.setNumberOfRecords(cosService.writeBabyGetCount());
+			
+			paging.makePaging();
+			if (page == null) {
+				page = new ArrayList<>();
 			}
-			  model.addAttribute("cList",cList);
+			  model.addAttribute("cList",page);
+			  model.addAttribute("paging", paging);
 		  log.info(this.getClass().getName() + "babyList end");
 		return "/cos/babyList";
 	}
-	//æÀ∑π∏£±‚√ﬂ√µ »≠¿Â«∞∏Ò∑œ
+	//ÏïåÎ†àÎ•¥Í∏∞ ÏÑ±Î∂Ñ Ï∂îÏ≤ú ÌôîÏû•Ìíà
 	@RequestMapping(value="/allergyList", method=RequestMethod.GET)
 	public String allergyList(HttpServletRequest req, Model model, HttpSession session) throws Exception{
 		log.info(this.getClass().getName() + "allergyList start");
-			List<cosmeticDTO> cList = cosService.getAllergyList();
-
-			if (cList == null) {
-				cList = new ArrayList<>();
+		int currentPageNo = 1;
+		int maxPost = 10;
+		if(req.getParameter("pages") != null)
+			currentPageNo = Integer.parseInt(req.getParameter("pages"));
+		
+		Paging paging = new Paging(currentPageNo, maxPost);
+		
+		int offset = (paging.getCurrentPageNo() - 1) * paging.getMaxPost();
+		List<cosmeticDTO> page = cosService.getAllergyList(offset, paging.getMaxPost());
+		paging.setNumberOfRecords(cosService.writeAllergyGetCount());
+		
+		paging.makePaging();
+		
+			if (page == null) {
+				page = new ArrayList<>();
 			}
-		  model.addAttribute("cList",cList);
-		 
+		  model.addAttribute("cList",page);
+		  model.addAttribute("paging", paging);
 		  log.info(this.getClass().getName() + "allergyList end");
 		return "/cos/allergyList";
 	}
-	//ºÓ«Œ«œ±‚
-	@RequestMapping(value="/shopping", method=RequestMethod.GET)
-	public String shopping(@RequestParam(required=false)String keyword,Model model) throws Exception{
-		log.info(this.getClass().getName() + "shopping start");
-		if(keyword !=null) {
-		List<shopDTO> slist = null;
-		String clientID = "ViwwjjxGofca4qXXjWME";
-	    String clientSecret = "NZd4qqXxP_";
-	    int display = 0;
-	    int start = 0;
-	    
-	    URL url;
-        url = new URL("https://openapi.naver.com/v1/search/"
-                + "shop.xml?query="
-                + URLEncoder.encode(keyword, "UTF-8")
-                + (display !=0 ? "&display=" +display :"")
-                + (start !=0 ? "&start=" +start :""));
-
-        URLConnection urlConn = url.openConnection();
-        urlConn.setRequestProperty("X-Naver-Client-Id", clientID);
-        urlConn.setRequestProperty("X-Naver-Client-Secret", clientSecret);
-        
-        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
-        XmlPullParser parser = factory.newPullParser();
-        parser.setInput(
-                new InputStreamReader(urlConn.getInputStream()));
-
-
-        int eventType = parser.getEventType();
-        shopDTO shop = null;
-        while (eventType != XmlPullParser.END_DOCUMENT) {
-            switch (eventType) {
-            case XmlPullParser.END_DOCUMENT: // πÆº≠¿« ≥°
-                break;
-            case XmlPullParser.START_DOCUMENT:
-                slist = new ArrayList<shopDTO>();
-                break;
-            case XmlPullParser.END_TAG: {
-                String tag = parser.getName();
-                if(tag.equals("item"))
-                {
-                    slist.add(shop);
-                    shop = null;
-                }
-            }
-            case XmlPullParser.START_TAG: {
-                String tag = parser.getName();
-                switch (tag) {
-                case "item":
-                	shop = new shopDTO();
-                    break;
-                case "title":
-                    if(shop != null)
-                    	shop.setTitle(parser.nextText());
-                    break;
-                case "link":
-                    if(shop != null)
-                    	shop.setLink(parser.nextText());
-                    break;
-                case "image":
-                    if(shop != null)
-                    	shop.setImage(parser.nextText());
-                    break;
-                case "lprice":
-                    if(shop != null)
-                    	shop.setLprice(parser.nextText());
-                    break;
-                case "hprice":
-                    if(shop != null)
-                    	shop.setHprice(parser.nextText());
-                    break;
-                case "mallName":
-                    if(shop != null)
-                    	shop.setMallName(parser.nextText());
-                    break;
-                case "productId":
-                    if(shop != null)
-                    	shop.setProductId(parser.nextText());
-                    break;
-                }
-            	}
-            }
-            eventType = parser.next();
-        }
-        model.addAttribute("slist", slist);
+		@RequestMapping(value="/shopping", method=RequestMethod.GET)
+		public String shopping() throws Exception{
+			return "/cos/shopping";
 		}
-		log.info(this.getClass().getName() + "shopping end");
-		return "/cos/shopping";
-	}
+/*		//naver API ÏáºÌïëÌïòÍ∏∞
+				@RequestMapping(value="/shopping_proc", method=RequestMethod.GET)
+				public String shopping_proc(@RequestParam(required=false)String keyword,Model 
+
+		model) throws Exception{
+					log.info(this.getClass().getName() + "shopping start");
+					log.info("shopping name:"+keyword);
+					if(keyword !=null) {
+					List<shopDTO> slist = null;
+					String clientID = "ViwwjjxGofca4qXXjWME";
+				    String clientSecret = "NZd4qqXxP_";
+				    int display = 0;
+				    int start = 0;
+				    
+				    URL url;
+			        url = new URL("https://openapi.naver.com/v1/search/"
+			                + "shop.xml?query="
+			                + URLEncoder.encode(keyword, "UTF-8")
+			                + (display !=0 ? "&display=" +display :"")
+			                + (start !=0 ? "&start=" +start :""));
+
+			        URLConnection urlConn = url.openConnection();
+			        urlConn.setRequestProperty("X-Naver-Client-Id", clientID);
+			        urlConn.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+
+			        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+			        XmlPullParser parser = factory.newPullParser();
+			        parser.setInput(
+			                new InputStreamReader(urlConn.getInputStream()));
+
+			        int eventType = parser.getEventType();
+			        shopDTO shop = null;
+			        while (eventType != XmlPullParser.END_DOCUMENT) {
+			            switch (eventType) {
+			            case XmlPullParser.END_DOCUMENT:
+			                break;
+			            case XmlPullParser.START_DOCUMENT:
+			                slist = new ArrayList<shopDTO>();
+			                break;
+			            case XmlPullParser.END_TAG: {
+			                String tag = parser.getName();
+			                if(tag.equals("item"))
+			                {
+			                    slist.add(shop);
+			                    shop = null;
+			                }
+			            }
+			            case XmlPullParser.START_TAG: {
+			                String tag = parser.getName();
+			                switch (tag) {
+			                case "item":
+			                	shop = new shopDTO();
+			                    break;
+			                case "title":
+			                    if(shop != null)
+			                    	shop.setTitle(parser.nextText());
+			                    break;
+			                case "link":
+			                    if(shop != null)
+			                    	shop.setLink(parser.nextText());
+			                    break;
+			                case "image":
+			                    if(shop != null)
+			                    	shop.setImage(parser.nextText());
+			                    break;
+			                case "lprice":
+			                    if(shop != null)
+			                    	shop.setLprice(parser.nextText());
+			                    break;
+			                case "hprice":
+			                    if(shop != null)
+			                    	shop.setHprice(parser.nextText());
+			                    break;
+			                case "mallName":
+			                    if(shop != null)
+			                    	shop.setMallName(parser.nextText());
+			                    break;
+			                case "productId":
+			                    if(shop != null)
+			                    	shop.setProductId(parser.nextText());
+			                    break;
+			                }
+			            	}
+			            }
+			            eventType = parser.next();
+			        }
+			        
+			        model.addAttribute("slist", slist);
+					}
+					
+					log.info(this.getClass().getName() + "shopping end");
+					return "/cos/shopping_proc";
+				
+				
+				}*/
+		//naver API ÏáºÌïëÌïòÍ∏∞
+		@RequestMapping(value="/shopping_proc", method=RequestMethod.POST)
+		public @ResponseBody List<shopDTO> shopping_proc(@RequestParam(required=false)String keyword) throws Exception{
+			log.info(this.getClass().getName() + "shopping start");
+			log.info(keyword);
+			
+			List<shopDTO> slist = null;
+			String clientID = "ViwwjjxGofca4qXXjWME";
+		    String clientSecret = "NZd4qqXxP_";
+		    int display = 1;
+		    int start = 0;
+		    
+		    URL url;
+		    String text = URLEncoder.encode(keyword,"UTF-8");
+	        url = new URL("https://openapi.naver.com/v1/search/"
+	                + "shop.xml?query="
+	                + text
+	                + (display !=0 ? "&display=" +display :"")
+	                + (start !=0 ? "&start=" +start :""));
+
+	        URLConnection urlConn = url.openConnection();
+	        urlConn.setRequestProperty("X-Naver-Client-Id", clientID);
+	        urlConn.setRequestProperty("X-Naver-Client-Secret", clientSecret);
+
+	        XmlPullParserFactory factory = XmlPullParserFactory.newInstance();
+	        XmlPullParser parser = factory.newPullParser();
+	        parser.setInput(
+	                new InputStreamReader(urlConn.getInputStream()));
+
+	        int eventType = parser.getEventType();
+	        shopDTO shop = null;
+	        while (eventType != XmlPullParser.END_DOCUMENT) {
+	            switch (eventType) {
+	            case XmlPullParser.END_DOCUMENT: // Âç†ÏèôÏòôÂç†ÏèôÏòôÂç†ÏèôÏòô Âç†ÏèôÏòô
+	                break;
+	            case XmlPullParser.START_DOCUMENT:
+	                slist = new ArrayList<shopDTO>();
+	                break;
+	            case XmlPullParser.END_TAG: {
+	                String tag = parser.getName();
+	                if(tag.equals("item"))
+	                {
+	                    slist.add(shop);
+	                    shop = null;
+	                }
+	            }
+	            case XmlPullParser.START_TAG: {
+	                String tag = parser.getName();
+	                switch (tag) {
+	                case "item":
+	                	shop = new shopDTO();
+	                    break;
+	                case "title":
+	                    if(shop != null)
+	                    	shop.setTitle(parser.nextText());
+	                    break;
+	                case "link":
+	                    if(shop != null)
+	                    	shop.setLink(parser.nextText());
+	                    break;
+	                case "image":
+	                    if(shop != null)
+	                    	shop.setImage(parser.nextText());
+	                    break;
+	                case "lprice":
+	                    if(shop != null)
+	                    	shop.setLprice(parser.nextText());
+	                    break;
+	                case "hprice":
+	                    if(shop != null)
+	                    	shop.setHprice(parser.nextText());
+	                    break;
+	                case "mallName":
+	                    if(shop != null)
+	                    	shop.setMallName(parser.nextText());
+	                    break;
+	                case "productId":
+	                    if(shop != null)
+	                    	shop.setProductId(parser.nextText());
+	                    break;
+	                }
+	            	}
+	            }
+	            eventType = parser.next();
+	        }
+			log.info(this.getClass().getName() + "shopping end");
+			return slist;
+		}
 
 }

@@ -75,11 +75,6 @@
                             </a>
                         </div>
                     </li>
-                     <li class="nav-item">
-                        <a class="nav-link" href="/ingList.do" onclick="scrollToDownload()">
-                              성분정보
-                        </a>
-                    </li>
                    
                     <%}else{%>
                     <li class="dropdown nav-item">
@@ -103,6 +98,11 @@
                     </li>
                    
                     <%}}%>
+                     <li class="nav-item">
+                        <a class="nav-link" href="/ingList.do" onclick="scrollToDownload()">
+                              성분정보
+                        </a>
+                    </li>
                     <li class="dropdown nav-item">
                         <a href="#" class="dropdown-toggle nav-link" data-toggle="dropdown">
                             검색

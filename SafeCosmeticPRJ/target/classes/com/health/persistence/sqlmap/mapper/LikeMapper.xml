@@ -2,8 +2,76 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 <mapper namespace="com.health.persistence.mapper.LikeMapper">
-
-
-
-
+	<!-- 좋아요추가 -->
+	<insert id="insertLike" parameterType="likeDTO" > 
+   INSERT INTO LIKE_COSMETIC
+     (
+      LIKE_NO, USER_NO, COS_NO, COS_NAME, REG_NO, REG_DT, PRICE, BRAND, AGE, SKIN_TYPE, SOMETHING, IMG_NAME
+     )
+    VALUES(
+     (SELECT IFNULL(MAX(LC.LIKE_NO),10000000)+1 FROM LIKE_COSMETIC LC), #{user_no}, #{cos_no}, #{cos_name}, #{reg_no}, NOW(), #{price}, #{brand},
+      (SELECT UI.AGE FROM USER_INFO UI WHERE UI.USER_NO = #{user_no}),  (SELECT UI.SKIN_TYPE FROM USER_INFO UI WHERE UI.USER_NO = #{user_no}),
+       (SELECT UI.SOMETHING FROM USER_INFO UI WHERE UI.USER_NO = #{user_no}), #{img_name}
+     )
+	</insert>
+   <!-- 좋아요취소 -->
+   <delete id="deleteLike" parameterType="likeDTO">
+	   DELETE FROM LIKE_COSMETIC
+	   WHERE USER_NO = #{user_no}
+	   AND COS_NO = #{cos_no}
+   </delete>
+	<!-- 좋아요목록(화장품상세)  -->
+	<select id="selectLike" parameterType="likeDTO" resultType="likeDTO">
+	   SELECT LIKE_NO, USER_NO, COS_NO, REG_DT, COS_NAME, PRICE, BRAND, IMG_NAME
+	   FROM LIKE_COSMETIC
+	   WHERE COS_NO = #{cos_no} AND USER_NO = #{user_no}
+	</select>
+	<!-- 좋아요상세 -->
+   <select id="getLikeSelect" resultType="likeDTO">
+   SELECT 
+     LIKE_NO, USER_NO, COS_NO, REG_DT, COS_NAME, PRICE, BRAND, IMG_NAME
+   FROM LIKE_COSMETIC
+   WHERE USER_NO = #{0}
+   LIMIT #{1}, #{2}
+   </select>
+   	<!--피부타입별 차트 -->
+   	<select id="getSkinType" resultType="skin_typeDTO" parameterType="String">
+		SELECT  
+			COUNT(CASE WHEN LC.SKIN_TYPE = '1' THEN 1 END) AS DRY_SKIN,
+			COUNT(CASE WHEN LC.SKIN_TYPE = '2' THEN 1 END) AS NORMAL_SKIN,
+			COUNT(CASE WHEN LC.SKIN_TYPE = '3' THEN 1 END) AS OILY_SKIN,
+			COUNT(CASE WHEN LC.SKIN_TYPE = '4' THEN 1 END) AS COMBINATION_SKIN
+		FROM LIKE_COSMETIC LC
+		WHERE LC.COS_NO = #{cos_no}
+	</select>
+   	<!--피부고민별 차트 -->
+   	<select id="getSomething" resultType="somethingDTO" parameterType="String">
+		SELECT  
+			COUNT(CASE WHEN LC.SOMETHING = 'a' THEN 1 END) AS NONE,
+			COUNT(CASE WHEN LC.SOMETHING = 'b' THEN 1 END) AS PREGNANT,
+			COUNT(CASE WHEN LC.SOMETHING = 'c' THEN 1 END) AS BABY,
+			COUNT(CASE WHEN LC.SOMETHING = 'd' THEN 1 END) AS ALLERGY
+		FROM LIKE_COSMETIC LC
+		WHERE LC.COS_NO = #{cos_no}
+	</select>
+	<!--연령별 차트 -->
+   	<select id="getAge" resultType="ageDTO" parameterType="String">
+				SELECT  
+			COUNT(CASE WHEN LC.AGE BETWEEN '2001' AND '2010' THEN 1 END) AS ONE,
+			COUNT(CASE WHEN LC.AGE BETWEEN '1991' AND '2000' THEN 1 END) AS TWO,
+			COUNT(CASE WHEN LC.AGE BETWEEN '1981' AND '1990' THEN 1 END) AS THREE,
+			COUNT(CASE WHEN LC.AGE BETWEEN '1971' AND '1980' THEN 1 END) AS FOUR,
+			COUNT(CASE WHEN LC.AGE BETWEEN '1961' AND '1970' THEN 1 END) AS FIVE,
+			COUNT(CASE WHEN LC.AGE BETWEEN '1951' AND '1960' THEN 1 END) AS SIX,
+			COUNT(CASE WHEN LC.AGE BETWEEN '1941' AND '1950' THEN 1 END) AS SEVEN
+		FROM LIKE_COSMETIC LC
+		WHERE LC.COS_NO = #{cos_no}
+	</select>
+   	<!-- 페이징 및 전체 레코드 갯수 조회 -->
+	<select id="writeGetCount" resultType="int">
+		SELECT COUNT(*)
+		FROM LIKE_COSMETIC
+		WHERE USER_NO = #{0}
+	</select>
+	
 </mapper>

@@ -14,26 +14,39 @@ import com.health.service.IBoardService;
 public class BoardService implements IBoardService{
 	@Resource(name="BoardMapper")
 	private BoardMapper boardMapper;
-	//°Ô½ÃÆÇ¸ñ·Ï
+	//ï¿½Ô½ï¿½ï¿½Ç¸ï¿½ï¿½
 	@Override
-	public List<boardDTO> getBoardList()  throws Exception {
-		return boardMapper.getBoardList();
+	public List<boardDTO> getBoardList(int offset, int noOfRecords)  throws Exception {
+		return boardMapper.getBoardList(offset,noOfRecords);
 	}
-	//°Ô½ÃÆÇµî·Ï
+	//ï¿½Ô½ï¿½ï¿½Çµï¿½ï¿½
 	@Override
 	public int insertBoard(boardDTO bDTO) throws Exception {
 		return boardMapper.insertBoard(bDTO);
 	}
-
-	//°Ô½ÃÆÇ»ó¼¼
+	//ï¿½Ô½ï¿½ï¿½Ç»ï¿½
 	@Override
 	public boardDTO getBoardDetail(String bo_no) throws Exception {
 		return boardMapper.getBoardDetail(bo_no);
 	}
-	//°Ô½ÃÆÇ»èÁ¦
+	//ï¿½Ô½ï¿½ï¿½Ç»ï¿½ï¿½ï¿½
 	@Override
 	public int DeleteBoard(String bo_no) throws Exception {
 		return boardMapper.DeleteBoard(bo_no);
+	}
+	//ï¿½Ô½ï¿½ï¿½Ç¼ï¿½ï¿½ï¿½
+	@Override
+	public int updateBoard(boardDTO bdto) throws Exception {
+		return boardMapper.updateBoard(bdto);
+	}
+	//ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	@Override
+	public void cntUpdate(boardDTO bDTO) throws Exception {
+		boardMapper.cntUpdate(bDTO);
+	}
+	@Override
+	public int writeGetCount() throws Exception {
+		return boardMapper.writeGetCount();
 	}
 
 	

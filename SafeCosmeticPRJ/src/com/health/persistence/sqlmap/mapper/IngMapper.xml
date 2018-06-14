@@ -18,9 +18,15 @@
 	</insert>
 	<!-- 성분목록 -->
 	<select id="getIngList" resultType="ingDTO">
-		SELECT ING_NO, ING_NAME, ING_ENG, ING_TYPE, DANGER_CHECK, EWG_LEVEL, REG_NO , REG_DT, MIX
+		SELECT ING_NO, ING_NAME, ING_ENG, ING_TYPE, DANGER_CHECK, EWG_LEVEL
 		FROM INGREDIENT
 		ORDER BY ING_NAME ASC
+		LIMIT #{0}, #{1}
+	</select>
+	<!-- 페이징 및 전체 레코드 갯수 조회 -->
+	<select id="writeGetCount" resultType="int">
+		SELECT COUNT(*)
+		FROM INGREDIENT
 	</select>
 	<!-- 성분상세 -->
 	<select parameterType="String" id="getingDetail" resultType="ingDTO">
@@ -45,5 +51,9 @@
 		FROM INGREDIENT
 		WHERE ING_NAME IN (values)
 	</select>
-	
+	<!-- 성분정보조회(화장품상세) -->
+	<select id="getIngNamesAuto" resultType="ingDTO">
+		SELECT DISTINCT ING_NAME
+		FROM INGREDIENT
+	</select>
 </mapper>

@@ -9,18 +9,20 @@ import com.health.config.Mapper;
 
 @Mapper("LikeMapper")
 public interface LikeMapper {
-	//ÁÁ¾Æ¿äÃë¼Ò
+	//ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½
 	int deleteLike(likeDTO lDTO) throws Exception;
-	//ÁÁ¾Æ¿äÃß°¡
+	//ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ß°ï¿½
 	void insertLike(likeDTO lDTO) throws Exception;
-	//ÁÁ¾Æ¿ä¸ñ·Ï
+	//ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½
 	likeDTO selectLike(likeDTO lDTO) throws Exception;
-	//ÁÁ¾Æ¿äÆäÀÌÁö
-	List<likeDTO> getLikeSelect(likeDTO lDTO) throws Exception;
-	//ÇÇºÎÅ¸ÀÔº° Â÷Æ®
+	//ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	List<likeDTO> getLikeSelect(String user_no, int offset, int noOfRecords) throws Exception;
+	//ï¿½Çºï¿½Å¸ï¿½Ôºï¿½ ï¿½ï¿½Æ®
 	List<skin_typeDTO> getSkinType(String cos_no) throws Exception;
-	//ÇÇºÎ°í¹Îº° Â÷Æ®
+	//ï¿½ÇºÎ°ï¿½Îºï¿½ ï¿½ï¿½Æ®
 	List<somethingDTO> getSomething(String cos_no) throws Exception;
-	//¾á·Éº° Â÷Æ®
+	//ï¿½ï¿½Éºï¿½ ï¿½ï¿½Æ®
 	List<ageDTO> getAge(String cos_no) throws Exception;
+	
+	int writeGetCount(String user_no) throws Exception;
 }

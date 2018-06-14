@@ -16,90 +16,142 @@ import com.health.service.ICosService;
 public class CosService implements ICosService{
 	@Resource(name="CosMapper")
 	private CosMapper cosMapper;
-	//È­ÀåÇ°µî·Ï
+	//í™”ì¥í’ˆ ë“±ë¡
 	@Override
 	public int insertCos(cosmeticDTO cDTO) throws Exception {
 		return cosMapper.insertCos(cDTO);
 	}
-	//È­ÀåÇ°µî·Ï - ¼ººĞ¸ñ·Ï
+	//È­ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½Ğ¸ï¿½ï¿½
 	@Override
 	public List<ingDTO> CosIng() throws Exception {
 		return cosMapper.CosIng();
 	}
-	//È­ÀåÇ°µî·Ï - ºê·£µå¸ñ·Ï
+	//È­ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ - ï¿½ê·£ï¿½ï¿½ï¿½ï¿½
 	@Override
 	public List<cosmeticDTO> CosBrand() throws Exception {
 		return cosMapper.CosBrand();
 	}
-	//È­ÀåÇ°¸ñ·Ï
+	//È­ï¿½ï¿½Ç°ï¿½ï¿½ï¿½
 	@Override
-	public List<cosmeticDTO> getCosList() throws Exception {
-		return cosMapper.getCosList();
+	public List<cosmeticDTO> getCosList(int offset, int noOfRecords) throws Exception {
+		return cosMapper.getCosList(offset,noOfRecords);
 	}
-	//È­ÀåÇ°»ó¼¼º¸±â
+	//í™”ì¥í’ˆ ìƒì„¸
 	@Override
 	public cosmeticDTO getcosDetail(String cos_no) throws Exception {
 		return cosMapper.getcosDetail(cos_no);
 	}
-	//ÁÁ¾Æ¿ä¸ñ·Ï
+	//í™”ì¥í’ˆ ìƒì„¸ - ì„±ë¶„ëª©ë¡
+	@Override
+	public List<ingDTO> getcosDetailIng(String cos_no) throws Exception {
+		return cosMapper.getcosDetailIng(cos_no);
+	}
+	//í™”ì¥í’ˆ ìˆ˜ì •
+	@Override
+	public int updateCos(cosmeticDTO cdto) throws Exception {
+		return  cosMapper.updateCos(cdto);
+	}
+	//í™”ì¥í’ˆ ì‚­ì œ
+	@Override
+	public int DeleteCos(String cos_no) throws Exception {
+		return cosMapper.DeleteCos(cos_no);
+	}
+	//ì¢‹ì•„ìš” ëª©ë¡
 	@Override
 	public likeDTO getLikeList(likeDTO lDTO) throws Exception {
 		return cosMapper.getLikeList(lDTO);
 	}
-	//ºê·£µå¸íÀ¸·Î °Ë»ö
+	//ë¸Œëœë“œëª…ìœ¼ë¡œ ê²€ìƒ‰
 	@Override
-	public List<cosmeticDTO> getBrandSearch(cosmeticDTO cDTO)  throws Exception{
-		return cosMapper.getBrandSearch(cDTO);
+	public List<cosmeticDTO> getBrandSearch(String search,int offset, int noOfRecords)  throws Exception{
+		return cosMapper.getBrandSearch(search,offset,noOfRecords);
 	}
-	//ºê·£µå¸í ÀÚµ¿¿Ï¼º
+	//ë¸Œëœë“œëª… ìë™ì™„ì„±
 	@Override
 	public List<cosmeticDTO> getBrandAuto(cosmeticDTO cDTO) throws Exception {
 		return cosMapper.getBrandAuto(cDTO);
 	}
-	//¼ººĞÀ¸·Î °Ë»ö
+	//ì„±ë¶„ëª…ìœ¼ë¡œ ê²€ìƒ‰
 	@Override
 	public List<cosmeticDTO> getIngSearch(cosmeticDTO cDTO) throws Exception {
 		return cosMapper.getIngSearch(cDTO);
 	}
-	//ÁÁÀº¼ººĞÁ¦¿Ü °Ë»ö
+	//ì¢‹ì€ì„±ë¶„ì œì™¸
 	@Override
 	public List<cosmeticDTO> getWithoutGood(cosmeticDTO cDTO) throws Exception {
 		return cosMapper.getWithoutGood(cDTO);
 	}
-	//ÇÇÇÒ¼ººĞÁ¦¿Ü °Ë»ö
+	//ë‚˜ìœì„±ë¶„ì œì™¸
 	@Override
 	public List<cosmeticDTO> getWithoutBad(cosmeticDTO cDTO) throws Exception {
 		return cosMapper.getWithoutBad(cDTO);
 	}
-	//È­ÀåÇ°Å¸ÀÔÁ¦¿Ü °Ë»ö
+	//íƒ€ì… ì œì™¸
 	@Override
 	public List<cosmeticDTO> getWithoutCosType(cosmeticDTO cDTO) throws Exception {
 		return cosMapper.getWithoutCosType(cDTO);
 	}
-	//ÁÁÀº¼ººĞ¸í ÀÚµ¿¿Ï¼º
+	//ì¢‹ì€ ì„±ë¶„ëª… ìë™ì™„ì„±
 	@Override
 	public List<ingDTO> getIngGoodAuto(ingDTO iDTO) throws Exception {
 		return cosMapper.getIngGoodAuto(iDTO);
 	}
-	//³ª»Û¼ººĞ¸í ÀÚµ¿¿Ï¼º
+	//ë‚˜ìœ ì„±ë¶„ëª… ìë™ì™„ì„±
 	@Override
 	public List<ingDTO> getIngBadAuto(ingDTO iDTO) throws Exception {
 		return cosMapper.getIngBadAuto(iDTO);
 	}
-	//ÀÓ»êºÎÃßÃµÈ­ÀåÇ°
+	//ì„ì‚°ë¶€ ì¶”ì²œ í™”ì¥í’ˆ
 	@Override
-	public List<cosmeticDTO> getPregnantList() throws Exception {
-		return cosMapper.getPregnantList();
+	public List<cosmeticDTO> getPregnantList(int offset, int noOfRecords) throws Exception {
+		return cosMapper.getPregnantList(offset,noOfRecords);
 	}
-	//¿µÀ¯¾ÆÃßÃµÈ­ÀåÇ°
+	//ì˜ìœ ì•„ ì¶”ì²œ í™”ì¥í’ˆ
 	@Override
-	public List<cosmeticDTO> getBabyList() throws Exception {
-		return cosMapper.getBabyList();
+	public List<cosmeticDTO> getBabyList(int offset, int noOfRecords) throws Exception {
+		return cosMapper.getBabyList(offset,noOfRecords);
 	}
-	//¾Ë·¹¸£±âÃßÃµÈ­ÀåÇ°
+	//ì•Œë ˆë¥´ê¸° ì¶”ì²œ í™”ì¥í’ˆ
 	@Override
-	public List<cosmeticDTO> getAllergyList() throws Exception {
-		return cosMapper.getAllergyList();
+	public List<cosmeticDTO> getAllergyList(int offset, int noOfRecords) throws Exception {
+		return cosMapper.getAllergyList(offset,noOfRecords);
 	}
-
+	//í™”ì¥í’ˆ ì „ì²´ ê°¯ìˆ˜ ì¡°íšŒ
+	@Override
+	public int writeGetCount() throws Exception {
+		return cosMapper.writeGetCount();
+	}
+	//ì½”ë“œí…Œì´ë¸” ing_no ë“±ë¡
+	@Override
+	public void codeInsert(String ing_name,String cos_name) throws Exception {
+		cosMapper.codeInsert(ing_name,cos_name);
+	}
+	@Override
+	public int writePregGetCount() throws Exception {
+		return cosMapper.writePregGetCount();
+	}
+	@Override
+	public int writeBabyGetCount() throws Exception {
+		return cosMapper.writeBabyGetCount();
+	}
+	@Override
+	public int writeAllergyGetCount() throws Exception {
+		return cosMapper.writeAllergyGetCount();
+	}
+	@Override
+	public void codeDelete(String cos_no) throws Exception {
+		cosMapper.codeDelete(cos_no);
+	}
+	@Override
+	public int writeBrandGetCount(String search) throws Exception {
+		return cosMapper.writeBrandGetCount(search);
+	}
+	@Override
+	public List<cosmeticDTO> getWithoutBad(String good, String cos_type, int offset, int maxPost) throws Exception {
+		return cosMapper.getWithoutBad(good,cos_type,offset,maxPost);
+	}
+	@Override
+	public int writeIngGetCount(String good, String cos_type) throws Exception {
+		return  cosMapper.writeIngGetCount(good,cos_type);
+	}
 }

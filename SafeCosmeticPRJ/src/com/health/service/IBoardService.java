@@ -5,14 +5,20 @@ import java.util.List;
 import com.health.DTO.boardDTO;
 
 public interface IBoardService {
-	//°Ô½ÃÆÇ¸ñ·Ï
-	List<boardDTO> getBoardList() throws Exception;
-	//°Ô½ÃÆÇµî·Ï
+	//ï¿½Ô½ï¿½ï¿½Ç¸ï¿½ï¿½
+	List<boardDTO> getBoardList(int offset, int noOfRecords) throws Exception;
+	//ï¿½Ô½ï¿½ï¿½Çµï¿½ï¿½
 	int insertBoard(boardDTO bDTO) throws Exception;
-	//°Ô½ÃÆÇ»ó¼¼
+	//ï¿½Ô½ï¿½ï¿½Ç»ï¿½
 	boardDTO getBoardDetail(String bo_no) throws Exception;
-	//°Ô½ÃÆÇ»èÁ¦
+	//ï¿½Ô½ï¿½ï¿½Ç»ï¿½ï¿½ï¿½
 	int DeleteBoard(String bo_no) throws Exception;
+	//ï¿½Ô½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	int updateBoard(boardDTO bdto) throws Exception;
+	//ï¿½ï¿½È¸ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	void cntUpdate(boardDTO bDTO) throws Exception;
+	//ê²Œì‹œíŒ ì´ ê°œìˆ˜
+	int writeGetCount() throws Exception;
 	
 
 

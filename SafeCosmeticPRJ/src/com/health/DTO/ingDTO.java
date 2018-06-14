@@ -14,6 +14,27 @@ public class ingDTO {
 	String mix;
 	String good;
 	String bad;
+	String search;
+	String offset;
+	String noOfRecords;
+	public String getOffset() {
+		return offset;
+	}
+	public void setOffset(String offset) {
+		this.offset = offset;
+	}
+	public String getNoOfRecords() {
+		return noOfRecords;
+	}
+	public void setNoOfRecords(String noOfRecords) {
+		this.noOfRecords = noOfRecords;
+	}
+	public String getSearch() {
+		return search;
+	}
+	public void setSearch(String search) {
+		this.search = search;
+	}
 	public String getGood() {
 		return good;
 	}

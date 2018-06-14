@@ -26,20 +26,25 @@
 	FROM USER_INFO
 	WHERE EMAIL = #{email}
 </select>
-
 <!-- 비밀번호찾기 -->
 <select parameterType="mainDTO" id="getUserPw" resultType="mainDTO">
  	SELECT USER_NO
 	FROM USER_INFO
 	WHERE EMAIL = #{email} AND USER_ID = #{user_id} 
 </select>
-
 <!-- 회원목록 -->
 <select id="getUserList" resultType="mainDTO">
 	SELECT USER_NO, USER_ID, EMAIL, GENDER, AGE, SKIN_TYPE, SOMETHING , REG_DT
 	FROM USER_INFO
 	WHERE AUTH = 'u' 
 	ORDER BY USER_NO ASC
+	LIMIT #{0}, #{1}
+</select>
+<!-- 페이징 및 전체 레코드 갯수 조회 -->
+<select id="writeGetCount" resultType="int">
+	SELECT COUNT(*)
+	FROM USER_INFO
+	WHERE AUTH = 'u'
 </select>
 <!-- 회원상세 -->
 <select parameterType="String" id="getUserDetail" resultType="mainDTO">

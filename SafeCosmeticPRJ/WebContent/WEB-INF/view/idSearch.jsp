@@ -50,6 +50,93 @@
     	var email = document.getElementById("email");
     	email.focus();
     };
+    
+	function doSubmit(f1) {
+		if (f1.email.value == "") {
+			alert("이메일을 입력하시기 바랍니다.");
+			f1.email.focus();
+			return false;
+		}
+	}
+	function doSubmit(f2) {
+		if (f2.email.value == "") {
+			alert("이메일을 입력하시기 바랍니다.");
+			f2.email.focus();
+			return false;
+		}
+		if (f2.user_id.value == "") {
+			alert("아이디를 입력하시기 바랍니다.");
+			f2.user_id.focus();
+			return false;
+		}
+	}
+	
+	//Id 이메일 체크
+	function emailCheck() {
+		var email = document.getElementById('email');
+		var blank = /[\s]/gi;
+		if (blank.test(email.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			email.value = "";
+			return false;
+		}
+		var special = /[`~!\#$%<>^&*\()\-=+_\’:;]/gi;
+		if (special.test(email.value) == true) {
+			alert('특수문자는 사용이 불가능합니다');
+			email.value = "";
+			return false;
+		}
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(email.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			email.value = "";
+			return false;
+		}
+	}
+	//PW 이메일 체크
+	function pw_emailCheck() {
+		var email = document.getElementById('pw_email');
+		var blank = /[\s]/gi;
+		if (blank.test(email.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			email.value = "";
+			return false;
+		}
+		var special = /[`~!\#$%<>^&*\()\-=+_\’:;]/gi;
+		if (special.test(email.value) == true) {
+			alert('특수문자는 사용이 불가능합니다');
+			email.value = "";
+			return false;
+		}
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(email.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			email.value = "";
+			return false;
+		}
+	}
+	//아이디 체크
+	function Id() {
+		var id = document.getElementById('user_id');
+		var blank = /[\s]/gi;
+		if (blank.test(id.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			id.value = "";
+			return false;
+		}
+		var special = /[`~!\#$%<>^&*\()\-=+_\’:;]/gi;
+		if (special.test(id.value) == true) {
+			alert('특수문자는 사용이 불가능합니다');
+			id.value = "";
+			return false;
+		}
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(id.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			id.value = "";
+			return false;
+		}
+	}
     </script>
     <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
 </head>
@@ -66,20 +153,20 @@
                                 </div>
                                 <p class="text-divider"></p>
                                 <div class="card-body">
-                                <form class="form" method="post" action="/idSearch_proc.do">
+                                <form class="form" name="f1" id="f1" method="post" action="/idSearch_proc.do" onsubmit="return doSubmit(this);">
                                     <div class="input-group">
-                                        <input type="email" class="form-control" placeholder="Email" id="email" name="email">
+                                        <input type="email" class="form-control" placeholder="Email" id="email" name="email" maxlength="50" onkeydown="emailCheck()">
                                     </div>
                                     <div class="card-footer justify-content-center">
-                                    	<input type="submit" value="ID SEARCH" id="button">
+                                    	<input type="submit" value="ID SEARCH" id="button" >
                                     </div>
                                     </form>
-                                    <form class="form" method="post" action="/pwSearch.do">
+                                    <form class="form" name="f2" id="f2" method="post" action="/pwSearch.do" onsubmit="return doSubmit(this);">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="ID" name="user_id">
+                                        <input type="text" class="form-control" placeholder="ID" name="user_id" id="user_id" onkeydown="Id()" maxlength="20">
                                     </div>
                                     <div class="input-group">
-                                         <input type="email" class="form-control" placeholder="Email" name="email">
+                                         <input type="email" class="form-control" placeholder="Email" name="email" id="pw_email" maxlength="50" onkeydown="pw_emailCheck()">
                                     </div>
                                     <div class="card-footer justify-content-center">
                                      <input type="submit" value="PASSWORD SEARCH" id="button">

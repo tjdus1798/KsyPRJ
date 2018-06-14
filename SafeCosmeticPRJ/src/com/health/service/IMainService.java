@@ -6,30 +6,32 @@ import com.health.DTO.mainDTO;
 
 public interface IMainService {
 
-	//·Î±×ÀÎ
+	//ï¿½Î±ï¿½ï¿½ï¿½
 	mainDTO getUserInfo(mainDTO mDTO) throws Exception; 
-	//È¸¿ø°¡ÀÔ
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	int insertJoin(mainDTO mDTO) throws Exception;
-	//¾ÆÀÌµðÃ£±â
+	//ï¿½ï¿½ï¿½Ìµï¿½Ã£ï¿½ï¿½
 	mainDTO getUserId(mainDTO mDTO) throws Exception;
-	//ÀÌ¸ÞÀÏÀÎÁõ ¼öÁ¤
+	//ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	int updateEmailConfirm(mainDTO mDTO) throws Exception;
-	//ºñ¹Ð¹øÈ£ º¯°æ
+	//ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½
 	int updatePwEmailConfirm(mainDTO mDTO) throws Exception;
-	//ºñ¹Ð¹øÈ£Ã£±â
+	//ï¿½ï¿½Ð¹ï¿½È£Ã£ï¿½ï¿½
 	mainDTO getUserPw(mainDTO mDTO) throws Exception;
-	//È¸¿ø¸ñ·Ï
-	List<mainDTO> getUserList() throws Exception;
-	//È¸¿ø»ó¼¼
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½
+	List<mainDTO> getUserList(int offset, int noOfRecords) throws Exception;
+	//È¸ï¿½ï¿½ï¿½ï¿½
 	mainDTO getUserDetail(String user_no) throws Exception;
-	//È¸¿ø»èÁ¦
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	int deleteUserInfo(mainDTO uDTO) throws Exception;
-	//È¸¿ø¼öÁ¤
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	int updateUserInfo(mainDTO mDTO) throws Exception;
-	//¾ÆÀÌµð Áßº¹Ã¼Å©
+	//ï¿½ï¿½ï¿½Ìµï¿½ ï¿½ßºï¿½Ã¼Å©
 	int getIdCheck(mainDTO mDTO) throws Exception;
-	//ÀÌ¸ÞÀÏ Áßº¹Ã¼Å©
+	//ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ßºï¿½Ã¼Å©
 	int getEmailCheck(mainDTO mDTO) throws Exception;
+	
+	int writeGetCount() throws Exception;
 	
 
 }

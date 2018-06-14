@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.health.DTO.mainDTO;
 import com.health.service.IMainService;
 import com.health.util.CmmUtil;
+import com.health.util.Paging;
 import com.health.util.SHA256;
 	
 @Controller
@@ -29,14 +30,14 @@ public class MainController {
 		
 	@Resource(name = "MainService")
 	private IMainService mainService;
-	
+	Paging pagemaker;
 	@Autowired
 	private JavaMailSender mailSender;		
 	
 	@RequestMapping(value="main", method=RequestMethod.GET)
 	public String main() throws Exception {
 
-		System.out.println("main start");
+		System.out.println("-----------main----------");
 		return "/main";
 	}
 	
@@ -44,7 +45,7 @@ public class MainController {
 	public String login() {
 		return "/login";
 	}
-	//¾ÆÀÌµğÁßº¹Ã¼Å©
+	//ì•„ì´ë”” ì¤‘ë³µ
 	@ResponseBody
 	@RequestMapping(value="/idCheck", method= {RequestMethod.POST,RequestMethod.GET})
 	public int idCheck(HttpServletRequest req)  throws Exception {
@@ -60,7 +61,7 @@ public class MainController {
 			return -1;
 		}
 	}
-	//ÀÌ¸ŞÀÏÁßº¹Ã¼Å©
+	//ì´ë©”ì¼ ì¤‘ë³µ
 	@ResponseBody
 	@RequestMapping(value="/emailCheck", method= {RequestMethod.POST,RequestMethod.GET})
 	public int emailCheck(HttpServletRequest req)  throws Exception {
@@ -76,7 +77,7 @@ public class MainController {
 			return -1;
 		}
 	}
-	//·Î±×ÀÎ
+	//ë¡œê·¸ì¸
 	@RequestMapping(value="/login_proc", method= {RequestMethod.GET, RequestMethod.POST})
 	public String login_proc(HttpServletRequest req, Model model, HttpSession session) throws Exception {
 		
@@ -100,12 +101,12 @@ public class MainController {
 				session.setAttribute("session_user_id", mDTO.getUser_id());
 				returnURL = "/main";
 			}else {
-				model.addAttribute("msg", "ÀÌ¸ŞÀÏÀÎÁõÀ» ÇØÁÖ¼¼¿ä");
+				model.addAttribute("msg", "ì´ë©”ì¼ ì¸ì¦ì€ í•„ìˆ˜ì…ë‹ˆë‹¤.");
 				model.addAttribute("url", "/login.do");
 				returnURL = "/alert";
 			}
 		} else {
-			model.addAttribute("msg", "ÀÏÄ¡ÇÏ´Â È¸¿øÀÌ ¾ø½À´Ï´Ù. ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä");
+			model.addAttribute("msg", "ì¡´ì¬ í•˜ì§€ì•ŠëŠ” ì•„ì´ë””/ë¹„ë°€ë²ˆí˜¸ ì…ë‹ˆë‹¤.");
 			model.addAttribute("url", "/login.do");
 			returnURL = "/alert";
 		}
@@ -122,7 +123,7 @@ public class MainController {
 		return "/join";
 	
 	}
-	//È¸¿ø°¡ÀÔ
+	//íšŒì›ê°€ì…
 	@RequestMapping(value="/join_proc", method= {RequestMethod.GET, RequestMethod.POST})
 	public String join_proc(HttpServletRequest req, Model model, HttpSession session) throws Exception {
 	log.info(this.getClass() + ".join_proc start");
@@ -155,51 +156,51 @@ public class MainController {
 	mDTO.setSkin_type(skin_type);
 	int re = mainService.insertJoin(mDTO);
 
-	//ÀÌ¸ŞÀÏ ÀÎÁõ url ¹ß¼Û
+	//ï¿½Ì¸ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ url ï¿½ß¼ï¿½
 	mDTO = mainService.getUserInfo(mDTO);
 	
 	String key = mDTO.getUser_no();
 	log.info(key);
 	log.info(mDTO.getEmail());
-	String setfrom = "seoyeon1798@gmail.com";					//¼Û½ÅÀÚ ¸ŞÀÏ ÁÖ¼Ò
-	String tomail = mDTO.getEmail();					        //¼ö½ÅÀÚ ¸ŞÀÏ ÁÖ¼Ò
-	String title = "Safe Cosmetic È¸¿ø °¡ÀÔ ÀÌ¸ŞÀÏ ÀÎÁõ";		//¸ŞÀÏ Á¦¸ñ
+	String setfrom = "seoyeon1798@gmail.com";					//ï¿½Û½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½
+	String tomail = mDTO.getEmail();					        //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½Ö¼ï¿½
+	String title = "Safe Cosmetic ì´ë©”ì¼ ì¸ì¦";		//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	StringBuffer contents = new StringBuffer();
 	
-	contents.append("ÀÌ¸ŞÀÏ ÀÎÁõÀ» Å¬¸¯ÇÏ½Ã¸é È¸¿ø °¡ÀÔÀÌ ¿Ï·áµË´Ï´Ù. <br/>")
+	contents.append("SafeCosmetic íšŒì›ê°€ì… <br/>")
 			.append("<a href='http://192.168.170.141:9000/emailConfirm.do?key=")
 			.append(key)
-			.append("'><h2>ÀÌ¸ŞÀÏ ÀÎÁõ</h2></a>");
+			.append("'><h2>ì´ë©”ì¼ ì¸ì¦í•˜ê¸°</h2></a>");
 	
 	MimeMessage message = mailSender.createMimeMessage();
 	MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
 	
-	messageHelper.setFrom(setfrom);						//¼Û½ÅÀÚ¸¦ »ı·«ÇÏ¸é Á¤»óÀÛµ¿À» ¾ÈÇÔ
-	messageHelper.setTo(tomail);						//¼ö½ÅÀÚ ¸ŞÀÏ
-	messageHelper.setSubject(title);					//¸ŞÀÏ Á¦¸ñÀº »ı·« °¡´É
-	messageHelper.setText(contents.toString(),true);	//¸ŞÀÏ ³»¿ë
+	messageHelper.setFrom(setfrom);						//ï¿½Û½ï¿½ï¿½Ú¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ûµï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	messageHelper.setTo(tomail);						//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	messageHelper.setSubject(title);					//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+	messageHelper.setText(contents.toString(),true);	//ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	
 	mailSender.send(message);
 	
 	
 	if (re != 0) {
-		model.addAttribute("msg", "ÀÌ¸ŞÀÏ ÀÎÁõÀ» ¿Ï·áÇØÁÖ½Ã±â ¹Ù¶ø´Ï´Ù.");
+		model.addAttribute("msg", "ì´ë©”ì¼ ì¸ì¦ í›„ ë¡œê·¸ì¸í•´ì£¼ì„¸ìš”!");
 		model.addAttribute("url", "/login.do");
 	} else {
-		model.addAttribute("msg", "È¸¿ø°¡ÀÔ¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+		model.addAttribute("msg", "íšŒì›ê°€ì…ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 		model.addAttribute("url", "/join.do");
 	}
 	log.info(this.getClass() + ".join_proc end");
 	return "/alert";
 	}
 	
-	//·Î±×¾Æ¿ô
+	//ë¡œê·¸ì•„ì›ƒ
 	@RequestMapping(value="/logOut")
 	public String logOut(Model model, HttpSession session) {
 		log.info(this.getClass() + ".logOut start");
 		session.setAttribute("session_user_no", "");
 		session.setAttribute("session_user_id", "");
-		model.addAttribute("msg", "·Î±×¾Æ¿ôµÇ¾ú½À´Ï´Ù.");
+		model.addAttribute("msg", "ë¡œê·¸ì•„ì›ƒ ë˜ì—ˆìŠµë‹ˆë‹¤.");
 		model.addAttribute("url", "/main.do");
 		log.info(this.getClass() + ".logOut end");
 		return "/alert";
@@ -212,7 +213,7 @@ public class MainController {
 	
 	}
 	
-	//¾ÆÀÌµğ Ã£±â
+	//ì•„ì´ë”” ì°¾ê¸°
 	@RequestMapping(value="/idSearch_proc", method= {RequestMethod.GET, RequestMethod.POST})
 	public String idSearch_proc(Model model, HttpServletRequest req) throws Exception {
 		
@@ -229,10 +230,10 @@ public class MainController {
 		mDTO = mainService.getUserId(mDTO);
 
 		if (mDTO != null) {
-			model.addAttribute("msg", "È¸¿ø´ÔÀÇ ¾ÆÀÌµğ´Â [ " + mDTO.getUser_id() + " ]ÀÔ´Ï´Ù.");
+			model.addAttribute("msg", "íšŒì›ë‹˜ì˜ ì•„ì´ë””ëŠ” [ " + mDTO.getUser_id() + " ì…ë‹ˆë‹¤.");
 			model.addAttribute("url", "/login.do");
 		} else {
-			model.addAttribute("msg", "ÀÏÄ¡ÇÏ´Â È¸¿øÀÌ ¾ø½À´Ï´Ù. ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä");
+			model.addAttribute("msg", "ë“±ë¡í•˜ì‹  ì´ë©”ì¼ì´ ì¡´ì¬í•˜ì§€ì•ŠìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/idSearch.do");
 		}
 		log.info(this.getClass() + ".id_search_proc end");
@@ -241,72 +242,63 @@ public class MainController {
 	
 	}
 	
-	//ºñ¹Ğ¹øÈ£ Ã£±â ÀÌ¸ŞÀÏ Àü¼Û
-	@RequestMapping(value="/pwSearch", method= {RequestMethod.GET,RequestMethod.POST})
-	
-	public String pwSearch(Model model, HttpServletRequest req) throws Exception {
-		
-		log.info(this.getClass() + ".pwSearch start");
-		
-		String user_id = req.getParameter("user_id");
-		String email = req.getParameter("email");
-		
-		log.info(this.getClass() + "id : " + user_id);
-		log.info(this.getClass() + "email : " + email);
-		
-		mainDTO mDTO = new mainDTO();
-		
-		mDTO.setUser_id(user_id);
-		mDTO.setEmail(email);
-		
-		
-		//ÀÌ¸ŞÀÏ ÀÎÁõ url ¹ß¼Û
-		log.info(mDTO.getUser_no());
-		
-		
-		log.info(mDTO.getEmail());
-		String setfrom = "seoyeon1798@gmail.com";					//¼Û½ÅÀÚ ¸ŞÀÏ ÁÖ¼Ò
-		String tomail = mDTO.getEmail();					        //¼ö½ÅÀÚ ¸ŞÀÏ ÁÖ¼Ò
-		String title = "Safe Cosmetic ºñ¹Ğ¹øÈ£º¯°æ";		        //¸ŞÀÏ Á¦¸ñ
-		StringBuffer contents = new StringBuffer();
-		try{
-			mDTO = mainService.getUserPw(mDTO);
-		}catch(Exception e) {
-			e.printStackTrace();
+	//ë¹„ë°€ë²ˆí˜¸ ì°¾ê¸° ì´ë©”ì¼ ì „ì†¡
+
+		@RequestMapping(value="/pwSearch", method= {RequestMethod.GET,RequestMethod.POST})
+		public String pwSearch(Model model, HttpServletRequest req) throws Exception {
+			log.info(this.getClass() + ".pwSearch start");
+			String user_id = req.getParameter("user_id");
+			String email = req.getParameter("email");
+
+			log.info(this.getClass() + "id : " + user_id);
+			log.info(this.getClass() + "email : " + email);
+			mainDTO mDTO = new mainDTO();
+			mDTO.setUser_id(user_id);
+			mDTO.setEmail(email);
+
+			//ì´ë©”ì¼ ì¸ì¦ url ë°œì†¡
+
+			log.info(mDTO.getUser_no());
+			log.info(mDTO.getEmail());
+			String setfrom = "seoyeon1798@gmail.com";					//ì†¡ì‹ ì ë©”ì¼ ì£¼ì†Œ
+			String tomail = mDTO.getEmail();					        //ìˆ˜ì‹ ì ë©”ì¼ ì£¼ì†Œ
+			String title = "Safe Cosmetic ë¹„ë°€ë²ˆí˜¸ë³€ê²½";		        //ë©”ì¼ ì œëª©
+			StringBuffer contents = new StringBuffer();
+			try{
+				mDTO = mainService.getUserPw(mDTO);
+			}catch(Exception e) {
+				e.printStackTrace();
+			}
+			String key = mDTO.getUser_no();
+			log.info(key);
+			contents.append("ë¹„ë°€ë²ˆí˜¸ë³€ê²½í•´ì£¼ì‹œê¸¸ ë°”ëë‹ˆë‹¤. <br/>")
+					.append("<a href='http://192.168.170.141:9000/pwChange.do?key=")
+					.append(key)
+					.append("'><h2>ë¹„ë°€ë²ˆí˜¸ ë³€ê²½</h2></a>");
+
+			MimeMessage message = mailSender.createMimeMessage();
+			MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
+			messageHelper.setFrom(setfrom);						//ì†¡ì‹ ìë¥¼ ìƒëµí•˜ë©´ ì •ìƒì‘ë™ì„ ì•ˆí•¨
+			messageHelper.setTo(tomail);						//ìˆ˜ì‹ ì ë©”ì¼
+			messageHelper.setSubject(title);					//ë©”ì¼ ì œëª©ì€ ìƒëµ ê°€ëŠ¥
+			messageHelper.setText(contents.toString(),true);	//ë©”ì¼ ë‚´ìš©
+
+			mailSender.send(message);
+			if (mDTO != null) {
+				model.addAttribute("msg", "ì´ë©”ì¼ì„ ì „ì†¡í–ˆìŠµë‹ˆë‹¤! ë¹„ë°€ë²ˆí˜¸ë¥¼ ë³€ê²½í•´ì£¼ì„¸ìš”.");
+				model.addAttribute("url", "/login.do");
+			} else {
+				model.addAttribute("msg", "ì´ë©”ì¼ ì „ì†¡ì„ ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
+				model.addAttribute("url", "/join.do");
+			}
+			log.info(this.getClass() + ".pwSearch end");
+			mDTO = null;
+
+			return "/alert";
+
 		}
-		String key = mDTO.getUser_no();
-		log.info(key);
-		
-		contents.append("ºñ¹Ğ¹øÈ£º¯°æÇØÁÖ½Ã±æ ¹Ù¶ø´Ï´Ù. <br/>")
-				.append("<a href='http://192.168.170.141:9000/pwChange.do?key=")
-				.append(key)
-				.append("'><h2>ºñ¹Ğ¹øÈ£ º¯°æ</h2></a>");
-		
-		MimeMessage message = mailSender.createMimeMessage();
-		MimeMessageHelper messageHelper = new MimeMessageHelper(message, true, "UTF-8");
-		
-		messageHelper.setFrom(setfrom);						//¼Û½ÅÀÚ¸¦ »ı·«ÇÏ¸é Á¤»óÀÛµ¿À» ¾ÈÇÔ
-		messageHelper.setTo(tomail);						//¼ö½ÅÀÚ ¸ŞÀÏ
-		messageHelper.setSubject(title);					//¸ŞÀÏ Á¦¸ñÀº »ı·« °¡´É
-		messageHelper.setText(contents.toString(),true);	//¸ŞÀÏ ³»¿ë
-		
-		mailSender.send(message);
-		
-		if (mDTO != null) {
-			model.addAttribute("msg", "ÀÌ¸ŞÀÏÀ» Àü¼ÛÇß½À´Ï´Ù! ºñ¹Ğ¹øÈ£¸¦ º¯°æÇØÁÖ¼¼¿ä.");
-			model.addAttribute("url", "/login.do");
-		} else {
-			model.addAttribute("msg", "ÀÌ¸ŞÀÏ Àü¼ÛÀ» ½ÇÆĞÇß½À´Ï´Ù.");
-			model.addAttribute("url", "/join.do");
-		}
-		log.info(this.getClass() + ".pwSearch end");
-		
-		mDTO = null;
-		
-		return "/alert";
-	}
 	
-	//ºñ¹Ğ¹øÈ£ Ã£±â
+	//ë¹„ë°€ë²ˆí˜¸ ë³€ê²½
 	@RequestMapping(value="/pwChange", method=RequestMethod.GET)
 	public String pwSearch_proc(String key, HttpSession session) {
 
@@ -323,22 +315,34 @@ public class MainController {
 	
 	}
 	
-	//È¸¿ø¸ñ·Ï
+	//íšŒì›ëª©ë¡
 	@RequestMapping(value="/userList")
-	public String userList(Model model) throws Exception {
+	public String userList(Model model,HttpServletRequest req) throws Exception {
 		log.info(this.getClass() + ".userList start");
+		int currentPageNo = 1;
+		int maxPost = 10;
 		
-		List<mainDTO> mList = mainService.getUserList();
+
+		if(req.getParameter("pages") != null)
+			currentPageNo = Integer.parseInt(req.getParameter("pages"));
 		
-		if (mList == null) {
-			mList = new ArrayList<>();
+		Paging paging = new Paging(currentPageNo, maxPost);
+		int offset = (paging.getCurrentPageNo() - 1) * paging.getMaxPost();
+		
+		List<mainDTO> page = mainService.getUserList(offset, paging.getMaxPost());
+		paging.setNumberOfRecords(mainService.writeGetCount());
+		
+		paging.makePaging();
+		if (page == null) {
+			page = new ArrayList<>();
 		}
-		model.addAttribute("mList", mList);
+		model.addAttribute("mList", page);
+		model.addAttribute("paging", paging);
 		log.info(this.getClass() + ".userList end");
 		return "/userList";
 	
 	}
-	//È¸¿ø»ó¼¼ÆäÀÌÁö
+	//íšŒì›ìƒì„¸
 	@RequestMapping(value="/userDetail", method=RequestMethod.GET)
 	public String userDetail(Model model, HttpServletRequest req, HttpSession session) throws Exception {
 		
@@ -358,7 +362,7 @@ public class MainController {
 
 		return "/userDetail";
 	}
-	//È¸¿ø¼öÁ¤
+	//íšŒì›ìˆ˜ì •
 	@RequestMapping(value="/userUpdate", method= {RequestMethod.GET,RequestMethod.POST})
 	public String userUpdate(Model model, HttpServletRequest req, HttpSession session) throws Exception {
 		log.info(this.getClass() + ".userUpdate start");
@@ -388,10 +392,10 @@ public class MainController {
 		int result = mainService.updateUserInfo(mDTO);
 
 		if (result != 0) {
-			model.addAttribute("msg", "È¸¿ø Á¤º¸°¡ ¼öÁ¤µÇ¾ú½À´Ï´Ù.");
+			model.addAttribute("msg", "ìˆ˜ì •ë˜ì—ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/userDetail.do?user_no=" + user_no);
 		} else {
-			model.addAttribute("msg", "È¸¿øÁ¤º¸ ¼öÁ¤¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			model.addAttribute("msg", "ìˆ˜ì •ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/userDetail.do?user_no=" + user_no);
 		}
 		log.info(this.getClass() + ".user_update end");
@@ -399,12 +403,11 @@ public class MainController {
 		return "/alert";
 	
 	}
-	//È¸¿øºñ¹Ğ¹øÈ£¼öÁ¤
 	@RequestMapping(value="/userCheck", method={RequestMethod.GET ,RequestMethod.POST})
 	public String userCheck() {
 		return "/userCheck";
 	}
-	//È¸¿øºñ¹Ğ¹øÈ£¼öÁ¤
+	//ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ì „ ì²´í¬
 	@RequestMapping(value="/userCheck_proc", method={RequestMethod.GET ,RequestMethod.POST})
 	public String userCheck_proc(HttpServletRequest req,Model model,HttpSession session) throws Exception {
 		
@@ -424,11 +427,11 @@ public class MainController {
 
 		String returnURL = "";
 		if (mDTO != null) {
-			model.addAttribute("msg", "ºñ¹Ğ¹øÈ£¸¦ º¯°æÇØÁÖ¼¼¿ä.");
+			model.addAttribute("msg", "ë¹„ë°€ë²ˆí˜¸ë¥¼ ë³€ê²½í•´ì£¼ì„¸ìš”.");
 			model.addAttribute("url", "/userPwChange.do");
 			returnURL = "/alert";
 		} else {
-			model.addAttribute("msg", "ºñ¹Ğ¹øÈ£°¡ Æ²·È½À´Ï´Ù. ´Ù½Ã È®ÀÎÇØÁÖ¼¼¿ä");
+			model.addAttribute("msg", "ë¹„ë°€ë²ˆí˜¸ê°€ ë§ì§€ì•ŠìŠµë‹ˆë‹¤. ë‹¤ì‹œ ì…ë ¥í•´ì£¼ì„¸ìš”.");
 			model.addAttribute("url", "/userCheck.do");
 			returnURL = "/alert";
 		}
@@ -439,12 +442,11 @@ public class MainController {
 		return returnURL;
 	
 	}
-	//È¸¿øºñ¹Ğ¹øÈ£¼öÁ¤
 		@RequestMapping(value="/userPwChange", method={RequestMethod.GET ,RequestMethod.POST})
 		public String userPwChange() {
 			return "/userPwChange";
 		}
-	//È¸¿øºñ¹Ğ¹øÈ£¼öÁ¤
+	//ë¹„ë°€ë²ˆí˜¸ ë³€ê²½
 	@RequestMapping(value="/userPwChange_proc", method={RequestMethod.GET ,RequestMethod.POST})
 	public String userPwChange_proc(HttpSession session, Model model,HttpServletRequest req) throws Exception {
 		log.info(this.getClass() + ".userPwChange_proc start");
@@ -463,17 +465,17 @@ public class MainController {
 		int result = mainService.updatePwEmailConfirm(mDTO);
 
 		if (result != 0) {
-			model.addAttribute("msg", "º¯°æµÇ¾ú½À´Ï´Ù.");
+			model.addAttribute("msg", "ë¹„ë°€ë²ˆí˜¸ê°€ ë³€ê²½ë˜ì—ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/main.do");
 		} else {
-			model.addAttribute("msg", "´Ù½Ã½ÃµµÇØÁÖ¼¼¿ä.");
+			model.addAttribute("msg", "ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/userPwChange.do");
 		}
 		log.info(this.getClass() + ".userPwChange_proc end");
 		return "/alert";
 	}
 	
-	//È¸¿ø»èÁ¦
+	//íšŒì›ì‚­ì œ
 	@RequestMapping(value="/userDelete", method=RequestMethod.GET)
 	public String userDelete(HttpServletRequest req,HttpSession session,Model model) throws Exception {
 		
@@ -489,10 +491,10 @@ public class MainController {
 		if (result != 0) {
 			session.setAttribute("session_user_no", "");
 			session.setAttribute("session_user_id", "");
-			model.addAttribute("msg", "È¸¿øÀÌ Å»ÅğµÇ¾ú½À´Ï´Ù.");
+			model.addAttribute("msg", "íƒˆí‡´í–ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/main.do");
 		} else {
-			model.addAttribute("msg", "È¸¿øÅ»Åğ¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			model.addAttribute("msg", "íšŒì›íƒˆí‡´ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/userDetail.do?user_no=" + user_no);
 		}
 		log.info(this.getClass() + ".userDelete end");
@@ -500,7 +502,7 @@ public class MainController {
 		return "/alert";
 	
 	}
-	//ÀÌ¸ŞÀÏ ÀÎÁõ
+	//ì´ë©”ì¼ í™•ì¸
 	@RequestMapping(value="/emailConfirm", method=RequestMethod.GET)
     public String emailConfirm(String key, Model model, HttpServletRequest req) throws Exception{
 		log.info(this.getClass() + ".emailConfirm start");
@@ -515,17 +517,17 @@ public class MainController {
 		int result = mainService.updateEmailConfirm(mDTO);
 
 		if (result != 0) {
-			model.addAttribute("msg", "ÀÎÁõµÇ¾ú½À´Ï´Ù.");
+			model.addAttribute("msg", "ì´ë©”ì¼ ì¸ì¦ë˜ì—ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/login.do");
 		} else {
-			model.addAttribute("msg", "ÀÎÁõ¿¡ ½ÇÆĞÇß½À´Ï´Ù.");
+			model.addAttribute("msg", "ì´ë©”ì¼ ì¸ì¦ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/login.do");
 		}
 		log.info(this.getClass() + ".emailConfirm end");
 		return "/alert";
 	}
 	
-	//ºñ¹Ğ¹øÈ£º¯°æ
+	//ë¹„ë°€ë²ˆí˜¸ ì°¾ê¸°
 		@RequestMapping(value="/pwEmailConfirm", method= {RequestMethod.GET ,RequestMethod.POST})
 	    public String pwEmailConfirm(Model model, HttpServletRequest req, HttpSession session) throws Exception{
 			log.info(this.getClass() + ".pwEmailConfirm start");
@@ -544,10 +546,10 @@ public class MainController {
 			int result = mainService.updatePwEmailConfirm(mDTO);
 
 			if (result != 0) {
-				model.addAttribute("msg", "º¯°æµÇ¾ú½À´Ï´Ù.");
+				model.addAttribute("msg", "ë¹„ë°€ë²ˆí˜¸ê°€ ë³€ê²½ë˜ì—ˆìŠµë‹ˆë‹¤.");
 				model.addAttribute("url", "/login.do");
 			} else {
-				model.addAttribute("msg", "´Ù½Ã½ÃµµÇØÁÖ¼¼¿ä.");
+				model.addAttribute("msg", "ë¹„ë°€ë²ˆí˜¸ ë³€ê²½ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 				model.addAttribute("url", "/login.do");
 			}
 			log.info(this.getClass() + ".pwEmailConfirm end");

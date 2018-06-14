@@ -10,30 +10,32 @@ import com.health.config.Mapper;
 
 @Mapper("MainMapper")
 public interface MainMapper {
-	//·Î±×ÀÎ
+	//ï¿½Î±ï¿½ï¿½ï¿½
 	public mainDTO getUserInfo(mainDTO mDTO);
-	//È¸¿ø°¡ÀÔ
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public int insertJoin(mainDTO mDTO) throws Exception;
-	//¾ÆÀÌµðÃ£±â
+	//ï¿½ï¿½ï¿½Ìµï¿½Ã£ï¿½ï¿½
 	public mainDTO getUserId(mainDTO mDTO) throws Exception;
-	//ÀÌ¸ÞÀÏÀÎÁõ ¼öÁ¤
+	//ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	public int updateEmailConfirm(mainDTO mDTO) throws Exception;
-	//ºñ¹Ð¹øÈ£ º¯°æ
+	//ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½
 	public int updatePwEmailConfirm(mainDTO mDTO) throws Exception;
-	//ºñ¹Ð¹øÈ£Ã£±â
+	//ï¿½ï¿½Ð¹ï¿½È£Ã£ï¿½ï¿½
 	public mainDTO getUserPw(mainDTO mDTO) throws Exception;
-	//È¸¿ø¸ñ·Ï
-	public List<mainDTO> getUserList() throws Exception;
-	//È¸¿ø»ó¼¼
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½
+	public List<mainDTO> getUserList(int offset, int noOfRecords) throws Exception;
+	//È¸ï¿½ï¿½ï¿½ï¿½
 	public mainDTO getUserDetail(String user_no) throws Exception;
-	//È¸¿ø»èÁ¦
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public int deleteUserInfo(mainDTO mDTO) throws Exception;
-	//È¸¿ø¼öÁ¤
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	public int updateUserInfo(mainDTO mDTO) throws Exception;
-	//¾ÆÀÌµðÁßº¹Ã¼Å©
+	//ï¿½ï¿½ï¿½Ìµï¿½ï¿½ßºï¿½Ã¼Å©
 	public int getIdCheck(mainDTO mDTO) throws Exception;
-	//ÀÌ¸ÞÀÏÁßº¹Ã¼Å©
+	//ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ßºï¿½Ã¼Å©
 	public int getEmailCheck(mainDTO mDTO) throws Exception;
+	
+	public int writeGetCount() throws Exception;
 	
 
 }

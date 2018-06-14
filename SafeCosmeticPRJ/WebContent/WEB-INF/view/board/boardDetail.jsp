@@ -40,13 +40,14 @@
     }
     #right {
     float:right;
-    background-color:rgb(197, 224, 180);
-	color:white;
-	border-style:none;
+    background-color: #ffffff;
+    color: #7b9e03;
+    border: solid #7b9e03 1px;
 	border-radius: 5px;
 	width:70px;
 	height:30px;
 	font-weight:bold;
+	margin-left: 5px;
     }
      #button {
 	background-color:rgb(197, 224, 180);
@@ -58,14 +59,25 @@
 	font-size:20px;
 	font-weight:bold;
 	}
+	#center{
+	display: block;
+    margin-left: auto;
+    margin-right: auto;
+	}
     </style>
     
     <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
     <script>
-  //상세이동
-    function doDetail(n){
+  //삭제하기
+    function doDelete(n, m){
         var bo_no = n;
-        location.href="/boardDelete.do?bo_no=" + bo_no;
+        var img_name=m;
+        location.href="/boardDelete.do?bo_no=" + bo_no +"&img_name="+ img_name;
+  		}
+    //수정하기
+    function doEdit(n){
+        var bo_no = n;
+        location.href="/boardEdit.do?bo_no=" + bo_no;
   		}
     </script>
 </head>
@@ -73,21 +85,20 @@
 <div class="main main-raised">
         <div class="section section-basic">
              <div class="container">
-
                 <div class="row">
                     <div class="col-md-12 ml-auto mr-auto" >
                             <h3 id="h"><%= CmmUtil.nvl(bDTO.getTitle()) %></h3>
+                            <input type="hidden" id="img_name" name="img_name" value="<%=CmmUtil.nvl(bDTO.getImg_name()) %>">
                             <%if(SESSION_USER_ID.equals("admin")){ %>
-                            <a>&ensp;<input type="button" value="삭제" id="right" onclick="doDetail(<%=bDTO.getBo_no()%>);">>&ensp;</a>
-                            <a href="/boardEdit.do">&ensp;<input type="button" value="수정" id="right" >&ensp;</a>
+                            <a>&ensp;<input type="button" value="삭제" id="right" onclick="doDelete('<%=bDTO.getBo_no()%>','<%=bDTO.getImg_name()%>');"></a>
+                            <input type="button" value="수정" id="right"  onclick="doEdit(<%=bDTO.getBo_no()%>);">&ensp;</a>
                             <%} %><br>
                             <h6><%= CmmUtil.nvl(bDTO.getReg_dt()) %></h6>
                             <hr> 
-                            <img src="./upload/<%= CmmUtil.nvl(bDTO.getImg_name()) %>"><br/>
+                            <%if(CmmUtil.nvl(bDTO.getImg_name()).length() > 1){ %>
+                           		 <img src="./upload/<%= CmmUtil.nvl(bDTO.getImg_name()) %>" id="center"><br><br>
+                            <%}%>
                             <%= CmmUtil.nvl(bDTO.getContent()) %>
-                            <form class="form" method="post" action="#">
-                           
-                            </form>
                 	</div>
             	</div>
            </div>

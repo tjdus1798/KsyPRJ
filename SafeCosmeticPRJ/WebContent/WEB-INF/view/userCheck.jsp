@@ -49,8 +49,38 @@
     	var pw = document.getElementById("password");
     	pw.focus();
     };
+    
+    function doSubmit(f) { //전송시 유효성 체크
+        if (f.password.value == "") {
+            alert("비밀번호를 입력해주세요.");
+            f.password.focus();
+            return false;
+         }
+    }
+    function pwdCheck() {
+		var pwd = document.getElementById('password');
+		var blank = /[\s]/gi;
+		if (blank.test(pwd.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			pwd.value = "";
+			return false;
+		}
+
+		var special = /[.`~!@\#$%<>^&*\()\-=+_\’:;]/gi;
+		if (special.test(pwd.value) == true) {
+			alert('특수문자는 사용이 불가능합니다');
+			pwd.value = "";
+			return false;
+		}
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(pwd.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			pwd.value = "";
+			return false;
+		}
+	}
     </script>
-        <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
+    <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
 </head>
 <body class="index-page ">
     <div class="main main-raised">
@@ -65,9 +95,9 @@
                                 </div>
                                 <p class="text-divider"></p>
                                 <div class="card-body">
-                                <form class="form" method="post" action="/userCheck_proc.do">
+                                <form class="form" method="post" action="/userCheck_proc.do" onsubmit="return doSubmit(this);" name="f">
                                     <div class="input-group">
-                                        <input type="password" class="form-control" placeholder="Password" name="password" id="password">
+                                        <input type="password" class="form-control" placeholder="Password" name="password" id="password"  maxlength="20" onkeydown="pwdCheck()">
                                     </div>
                                     <div class="card-footer justify-content-center">
                                     	<input type="submit" value="비밀번호 변경" id="button">

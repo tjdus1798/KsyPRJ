@@ -3,20 +3,25 @@ package com.health.service;
 import java.util.List;
 
 import com.health.DTO.ingDTO;
+import com.health.util.Criteria;
 
 public interface IIngService {
 
-	//¼ººĞµî·Ï
+	//ì„±ë¶„ë“±ë¡
 	int insertIng(ingDTO iDTO) throws Exception;
-	//¼ººĞ¸ñ·Ï
-	List<ingDTO> getIngList() throws Exception;
-	//¼ººĞ»ó¼¼
+	//ì„±ë¶„ëª©ë¡
+	List<ingDTO> getIngList(int offset, int noOfRecords) throws Exception;
+	//ì„±ë¶„ìƒì„¸
 	ingDTO getingDetail(String ing_no) throws Exception;
-	//¼ººĞ¼öÁ¤
+	//ì„±ë¶„ìˆ˜ì •
 	int updateIng(ingDTO iDTO) throws Exception;
-	//¼ººĞ»èÁ¦
+	//ì„±ë¶„ì‚­ì œ
 	int deleteIng(ingDTO iDTO) throws Exception;
-	//¼ººĞÁ¤º¸Á¶È¸(È­ÀåÇ°»ó¼¼)
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¸(È­ï¿½ï¿½Ç°ï¿½ï¿½)
 	ingDTO selectIngInfo(List<ingDTO> iList) throws Exception;
+	//ï¿½ï¿½ï¿½Ğ¸ï¿½ ï¿½Úµï¿½ï¿½Ï¼ï¿½
+	List<ingDTO> getIngNamesAuto() throws Exception;
+	//ì„±ë¶„ ì „ì²´ ê°¯ìˆ˜ ì¡°íšŒ
+	int writeGetCount() throws Exception;
 
 }

@@ -13,13 +13,13 @@
             <nav class="pull-left">
                 <ul>
                     <li>
-                        <a href="https://www.kcia.or.kr/cid/">
+                        <a href="https://www.kcia.or.kr/cid/" target="_blank">
                             화장품성분사전
                         </a>
                     </li>
                     |
                     <li>     
-                         <a href="http://www.mfds.go.kr/index.do" >
+                         <a href="http://www.mfds.go.kr/index.do" target="_blank">
                         	 식약청 
                          </a>
                     </li>

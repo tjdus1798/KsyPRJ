@@ -35,6 +35,53 @@
             return false;
          }
     }
+  //아이디 체크
+
+	function idCheck() {
+		var id = document.getElementById('user_id');
+		var blank = /[\s]/gi;
+		if (blank.test(id.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			id.value = "";
+			return false;
+		}
+		var special = /[.`~!@\#$%<>^&*\()\-=+_\’:;]/gi;
+		if (special.test(id.value) == true) {
+			alert('특수문자는 사용이 불가능합니다');
+			id.value = "";
+			return false;
+		}
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(id.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			id.value = "";
+			return false;
+		}
+	}
+
+	//비밀번호 체크
+
+	function pwdCheck() {
+		var pwd = document.getElementById('password');
+		var blank = /[\s]/gi;
+		if (blank.test(pwd.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			pwd.value = "";
+			return false;
+		}
+		var special = /[.`~!@\#$%<>^&*\()\-=+_\’:;]/gi;
+		if (special.test(pwd.value) == true) {
+			alert('특수문자는 사용이 불가능합니다');
+			pwd.value = "";
+			return false;
+		}
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(pwd.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			pwd.value = "";
+			return false;
+		}
+	}
     </script>
     <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
 </head>
@@ -53,10 +100,10 @@
                                 <p class="text-divider"></p>
                                 <div class="card-body">
                                     <div class="input-group">
-                                        <input type="text" class="form-control" placeholder="ID" name="user_id" id="user_id">
+                                        <input type="text" class="form-control" placeholder="ID" name="user_id" id="user_id" onkeydown="idCheck()" maxlength="20">
                                     </div>
                                     <div class="input-group">
-                                        <input type="password" class="form-control" placeholder="Password" name="password">
+                                        <input type="password" class="form-control" placeholder="Password" name="password" onkeydown="pwdCheck()" maxlength="20">
                                     </div>
                                      <h6 class="right">Forgot <a href="/idSearch.do">Id</a> / <a href="/idSearch.do">Password</a>?</h6>
                                 </div>

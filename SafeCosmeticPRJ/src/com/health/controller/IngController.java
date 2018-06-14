@@ -12,14 +12,14 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.health.DTO.ingDTO;
-import com.health.DTO.likeDTO;
-import com.health.DTO.mainDTO;
 import com.health.service.IIngService;
-import com.health.service.impl.IngService;
 import com.health.util.CmmUtil;
+import com.health.util.Paging;
+import com.health.util.TextUtil;
 
 @Controller
 public class IngController {
@@ -27,23 +27,25 @@ public class IngController {
 
 	@Resource(name = "IngService")
 	private IIngService ingService;
-
+	Paging pagemaker;
 	@RequestMapping(value = "/ingReg", method = RequestMethod.GET)
 	public String ingReg() throws Exception {
 
 		return "/ing/ingReg";
 	}
 
-	// ¼ººĞµî·Ï
+	//ì„±ë¶„ ë“±ë¡
 	@RequestMapping(value = "/ingReg_proc", method = RequestMethod.POST)
 	public String ingReg_proc(HttpServletRequest req, Model model) throws Exception {
 
 		log.info(this.getClass() + ".ingReg_proc start");
 
 		String reg_no = CmmUtil.nvl(req.getParameter("user_no"));
-		String ing_name = CmmUtil.nvl(req.getParameter("ing_name"));
+		String ing_names = CmmUtil.nvl(req.getParameter("ing_name"));
+		String ing_name = TextUtil.exchangeEscapeNvl(ing_names);
 		String ing_eng = CmmUtil.nvl(req.getParameter("ing_eng"));
-		String mix = CmmUtil.nvl(req.getParameter("mix"));
+		String mixs = CmmUtil.nvl(req.getParameter("mix"));
+		String mix = TextUtil.exchangeEscapeNvl(mixs);
 		String ewg_level = CmmUtil.nvl(req.getParameter("ewg_level"));
 		String ing_type = CmmUtil.nvl(req.getParameter("ing_type"));
 		String danger_check = CmmUtil.nvl(req.getParameter("danger_check"));
@@ -68,32 +70,45 @@ public class IngController {
 
 		int re = ingService.insertIng(iDTO);
 		if (re != 0) {
-			model.addAttribute("msg", "µî·ÏµÇ¾ú½À´Ï´Ù.");
+			model.addAttribute("msg", "ë“±ë¡ë˜ì—ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/ingList.do");
 		} else {
-			model.addAttribute("msg", "½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			model.addAttribute("msg", "ë“±ë¡ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/ingReg.do");
 		}
 		log.info(this.getClass() + ".ingReg_proc end");
 		return "/alert";
 	}
 
-	// ¼ººĞ¸ñ·Ï
+	//ì„±ë¶„ ëª©ë¡
 	@RequestMapping(value = "/ingList", method = RequestMethod.GET)
-	public String ingList(Model model) throws Exception {
+	public String ingList(Model model, HttpServletRequest req) throws Exception {
 		log.info(this.getClass() + ".ingList start");
+		
+		int currentPageNo = 1;
+		int maxPost = 10;
+		
+		if(req.getParameter("pages") != null)
+			currentPageNo = Integer.parseInt(req.getParameter("pages"));
+		
+		Paging paging = new Paging(currentPageNo, maxPost);
+		
+		int offset = (paging.getCurrentPageNo() - 1) * paging.getMaxPost();
 
-		List<ingDTO> iList = ingService.getIngList();
-
-		if (iList == null) {
-			iList = new ArrayList<>();
+		List<ingDTO> page = ingService.getIngList(offset, paging.getMaxPost());
+		paging.setNumberOfRecords(ingService.writeGetCount());
+		
+		paging.makePaging();
+		if (page == null) {
+			page = new ArrayList<>();
 		}
-		model.addAttribute("iList", iList);
+		model.addAttribute("page", page);
+		model.addAttribute("paging", paging);
 		log.info(this.getClass() + ".ingList end");
 		return "/ing/ingList";
 
 	}
-	// ¼ººĞ»ó¼¼
+	//ì„±ë¶„ ìƒì„¸
 	@RequestMapping(value = "/ingDetail", method = RequestMethod.GET)
 	public String ingDetail(Model model, HttpServletRequest req) throws Exception {
 		log.info(this.getClass() + ".ingDetail start");
@@ -107,7 +122,6 @@ public class IngController {
 		log.info(this.getClass() + ".ingDetail end");
 		return "/ing/ingDetail";
 	}
-	//¼ººĞ¼öÁ¤
 	@RequestMapping(value = "/ingEdit", method = RequestMethod.GET)
 	public String ingEdit(Model model, HttpServletRequest req) throws Exception {
 		log.info(this.getClass() + ".ingEdit start");
@@ -121,14 +135,16 @@ public class IngController {
 		log.info(this.getClass() + ".ingEdit end");
 		return "/ing/ingEdit";
 	}
-	//¼ººĞ¼öÁ¤½ÇÇà
+	//ì„±ë¶„ ìˆ˜ì •
 	@RequestMapping(value = "/ingEdit_proc", method = RequestMethod.POST)
 	public String ingEdit_proc(HttpServletRequest req,HttpSession session,Model model) throws Exception {
 		log.info(this.getClass() + ".ingEdit_proc start");
 		
-		String ing_name = CmmUtil.nvl(req.getParameter("ing_name"));
+		String ing_names = CmmUtil.nvl(req.getParameter("ing_name"));
+		String ing_name = TextUtil.exchangeEscapeNvl(ing_names);
 		String ing_eng = CmmUtil.nvl(req.getParameter("ing_eng"));
-		String mix = CmmUtil.nvl(req.getParameter("mix"));
+		String mixs = CmmUtil.nvl(req.getParameter("mix"));
+		String mix = TextUtil.exchangeEscapeNvl(mixs);
 		String ewg_level = CmmUtil.nvl(req.getParameter("ewg_level"));
 		String ing_type = CmmUtil.nvl(req.getParameter("ing_type"));
 		String danger_check = CmmUtil.nvl(req.getParameter("danger_check"));
@@ -158,10 +174,10 @@ public class IngController {
 		int result = ingService.updateIng(iDTO);
 		
 		if (result != 0) {
-			model.addAttribute("msg", "¼ººĞÁ¤º¸°¡ ¼öÁ¤µÇ¾ú½À´Ï´Ù.");
+			model.addAttribute("msg", "ìˆ˜ì •í•˜ì˜€ìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/ingDetail.do?ing_no=" + ing_no);
 		} else {
-			model.addAttribute("msg", "¼ººĞÁ¤º¸ ¼öÁ¤¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			model.addAttribute("msg", "ìˆ˜ì •ì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/ingDetail.do?ing_no=" + ing_no);
 		}
 		log.info(this.getClass() + ".ingEdit_proc end");
@@ -181,10 +197,10 @@ public class IngController {
 		int result = ingService.deleteIng(iDTO);
 		
 		if (result != 0) {
-			model.addAttribute("msg", "¼ººĞÁ¤º¸°¡ »èÁ¦µÇ¾ú½À´Ï´Ù.");
+			model.addAttribute("msg", "ì‚­ì œë˜ì—ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/ingList.do");
 		} else {
-			model.addAttribute("msg", "¼ººĞÁ¤º¸ »èÁ¦¿¡ ½ÇÆĞÇÏ¿´½À´Ï´Ù.");
+			model.addAttribute("msg", "ì‚­ì œì— ì‹¤íŒ¨í–ˆìŠµë‹ˆë‹¤.");
 			model.addAttribute("url", "/ingDetail.do?ing_no=" + ing_no);
 		}
 		log.info(this.getClass() + ".ingDelete end");
@@ -192,7 +208,7 @@ public class IngController {
 		return "/alert";
 	}
 	
-	//¼ººĞÁ¤º¸Á¶È¸(È­ÀåÇ°»ó¼¼)
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¸(È­ï¿½ï¿½Ç°ï¿½ï¿½)
 	@RequestMapping(value = "/ingInfo_select", method = RequestMethod.POST)
 	public @ResponseBody ingDTO ingInfo_select(HttpServletRequest req) throws Exception {
 		
@@ -222,6 +238,20 @@ public class IngController {
 		  return ing;
 		
 	}
+	
+	//í™”ì¥í’ˆ ë“±ë¡ì‹œ ì„±ë¶„ëª… ìë™ì™„ì„±
+		@RequestMapping(value = "/ing_check", method = RequestMethod.POST)
+		public @ResponseBody List<ingDTO> ing_check() throws Exception {
+			log.info(this.getClass() + ".ing_check start");
+			ingDTO iDTO = new ingDTO();
+		    
+		    List<ingDTO> autolist = ingService.getIngNamesAuto();
+		    
+		    log.info("ìë™ì™„ì„± :"+autolist);
+		    
+			log.info(this.getClass() + ".ing_check end");
+			return autolist;
+		}
 	
 	
 }

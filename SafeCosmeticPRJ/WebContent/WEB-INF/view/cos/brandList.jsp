@@ -1,11 +1,12 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ page import="com.health.util.CmmUtil"%>
+
 <!DOCTYPE html>
 <html>
 <head>
     <%
-    request.setCharacterEncoding("euc-kr");
+    request.setCharacterEncoding("UTF-8");
 
     String SESSION_USER_ID = CmmUtil.nvl((String)session.getAttribute("session_user_id"));
     String SESSION_USER_NO = CmmUtil.nvl((String)session.getAttribute("session_user_no"));
@@ -35,7 +36,7 @@
 	background-color: rgb(197, 224, 180);
 	color: white;
 	border-style: none;
-	width: 30%;
+	width: 20%;
 	height: 50px;
 	font-size: 20px;
 	font-weight: bold;
@@ -133,13 +134,9 @@ p {
 	font-weight: bold;
 	color:black;
 }
-
 </style>
-
-
 </head>
 <body class="index-page ">
-
 	<div class="main main-raised">
 		<div class="section section-basic">
 			<div class="container">
@@ -148,27 +145,16 @@ p {
 						<h3>브랜드별 검색</h3>
 						<hr>
 							<div class="form-group">
+							<form class="form" action="brand_search.do"  onsubmit="return doSubmit(this);">
 								<input class="form-control" class="searchbox" id="exampleInputEmail1" type="text"
-									name="searchbox" aria-describedby="emailHelp"
+									name="search" aria-describedby="emailHelp"
 									placeholder="&ensp;브랜드명 검색"> 
 								
-									 <input type="button" value="SEARCH" class="btn" style="background-color: rgb(197, 224, 180)">
+									 <input type="submit" value="SEARCH" class="btn" style="background-color: rgb(197, 224, 180)" id="button">
+								</form>
 							</div>
-							
 							<div id="search">
-							
-							<!-- <hr> 
-                           <div>
-							<img src="./image/NoPic.png" alt="Rounded Image" class="rounded img-fluid" id="w" id="inline" style="cursor:pointer">
-							<div id="inline">
-								<p id="brand">에뛰드하우스</p>
-								<p id="cos_name" onclick="javascript:doDetail();" style="cursor:pointer">반짝반짝 립스틱</p>
-								<p id="price">9800원</p>
-								<p id="a"></p>
 							</div>
-							</div> -->
-							</div>
-							  
         		 		<!-- <div align="center"><input type="button" class="btn" id="addview" value="더보기" style="background-color: rgb(197, 224, 180)"> -->
  					</div>
 					</div>
@@ -178,80 +164,19 @@ p {
 	</div>
 </body>
 <jsp:include page="/WEB-INF/view/footer.jsp" flush="false"></jsp:include>
-
-
 <!-- <script src="./bootstrap/js/jquery-3.3.1.min.js"></script> -->
 <!-- <script src="https://code.jquery.com/jquery-1.12.4.js"></script> -->
  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script> 
 <script>
-var cos_no = "";
+function doSubmit(form) { //전송시 유효성 체크
+	if (form.search.value == "") {
+        alert("브랜드명을 입력해주세요.");
+        form.search.focus();
+        return false;
+     }
+}
 $(function(){
-	//검색
-	$("#exampleInputEmail1").change(function() {
-		var search = $('#exampleInputEmail1').val();
-		var contents = "";
-		var count = "";
-		var content = "";
-	   if (search == "") {
-	      location.href="/cos/brandList.do";
-	   } else {
-	      $.ajax({
-	         url : "brand_search.do",
-	         method : "post",
-	         data : {'search' : search},
-	         datatype : "json", 
-	         success : function(data) {
-          	 	contents += "제품&ensp;<font style='color:#7b9e03'><b>" + count + "</b></font>&ensp;개";
-             	content += "<hr>";
-	            $.each(data, function (key, value) {
-	            		count =  value.like_count;
-	           			cos_no = value.cos_no;
-	            	  console.log("key : "+key);
-	            	  console.log("value : "+value);
-	            	  console.log("cos_no : "+ value.cos_no);
-	                  content += "<div style='height:100px'>";
-	                  content += "<img src='./cosmetic/"+ value.img_name +"' alt='Rounded Image' class='rounded img-fluid' id='w' id='inline' style='cursor:pointer' onclick='doDetail(" + cos_no + ");'>";
-	                  content += "<div id='inline'>";
-	                  content += "<p id='brand'>"+value.brand+"</p>";
-	                  content += "<p id='cos_name' onclick='javascript:doDetail();' style='cursor:pointer' onclick='doDetail(" + cos_no + ");'>"+ value.cos_name +"</p>";
-	                  content += "<p id='price'>" + value.price + "원</p></div></div><hr/>";
-	            });
-	            
-	            if(content == ""){
-	         	   content += '<b>"'+search+'" 에 해당하는 검색결과가 없습니다.</font><b><br><br></div>';
-			 			$('#search').append(contents+content);
-	            }else{
-	            $('#search').html('');
-	            $('#search').append(contents+content);
-	            }
-	               $('#addview').remove();
-	         	}
-	         
-	      });
-	   }
-	});
-/*  	 var tag=[];
-	//자동완성
-	$("#exampleInputEmail1").keyup(function() {
-	   var search = $('#exampleInputEmail1').val();
-	      $.ajax({
-	         url : "brand_auto.do",
-	         method : "post",
-	         data : {'search' : search},
-	         datatype : "json", 
-	         success : function(data) {
-	            $.each(data, function (key, value) {
-	            	  tag.push(value.brand);
-	            });
-	            	console.log(tag);
-	         }
-	      });
-	});
-	  $( "#exampleInputEmail1").autocomplete({
-  		source: tag
-  	});  */ 
-	
      $( "#exampleInputEmail1" ).autocomplete({
     	 width: 300,
          max: 10,
@@ -291,11 +216,7 @@ $(function(){
       
 });
 
-//상세이동
-function doDetail(n){
-    var cos_no = n;
-    location.href="/cosDetail.do?cos_no=" + cos_no;
- }
+
 </script>
 
 </html>

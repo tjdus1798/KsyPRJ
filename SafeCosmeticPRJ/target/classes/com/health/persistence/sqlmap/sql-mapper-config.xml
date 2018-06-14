@@ -10,8 +10,9 @@
     	<typeAlias type="com.health.DTO.likeDTO" alias="likeDTO" /> 
     	<typeAlias type="com.health.DTO.ingDTO" alias="ingDTO" /> 
     	<typeAlias type="com.health.DTO.boardDTO" alias="boardDTO" />
-    	<typeAlias type="com.health.DTO.boardDTO" alias="bo_imgDTO" />
-    	 
+    	<typeAlias type="com.health.DTO.skin_typeDTO" alias="skin_typeDTO" />
+    	<typeAlias type="com.health.DTO.somethingDTO" alias="somethingDTO" />
+    	<typeAlias type="com.health.DTO.ageDTO" alias="ageDTO" />
     	
     </typeAliases>
 </configuration>

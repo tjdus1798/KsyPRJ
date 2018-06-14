@@ -3,10 +3,14 @@
 <%@ page import="com.health.DTO.ingDTO"%>
 <%@ page import="com.health.util.CmmUtil"%>
 <%
+	request.setCharacterEncoding("euc-kr");
 
 	ingDTO iDTO = (ingDTO)request.getAttribute("iDTO");
 	if(iDTO==null) iDTO = new ingDTO();
 	String ing_no = CmmUtil.nvl(iDTO.getIng_no());
+
+    String SESSION_USER_ID = CmmUtil.nvl((String)session.getAttribute("session_user_id"));
+    String SESSION_USER_NO = CmmUtil.nvl((String)session.getAttribute("session_user_no"));
 %>
 <!DOCTYPE html>
 <html>
@@ -112,7 +116,7 @@ function doEdit(i){
     var ing_no = i;
     location.href="/ingEdit.do?ing_no="+ ing_no;
  }
-
+//삭제하기
 function delete_check(i) {
 	var ing_no = i;
     if(confirm("삭제하시겠습니까?")){
@@ -133,8 +137,10 @@ function delete_check(i) {
 					<div class="col-md-12 ml-auto mr-auto">
 						<h3><%= CmmUtil.nvl(iDTO.getIng_name()) %></h3>
 						&ensp; <label id="eng"><%= CmmUtil.nvl(iDTO.getIng_eng()) %></label>&ensp;
+						<%if(SESSION_USER_ID.equals("admin")) {%>
 						 <span class="badge" onclick="doEdit(<%=iDTO.getIng_no()%>);">수정</span>
 						 <span class="badge" onclick="delete_check(<%=iDTO.getIng_no()%>);">삭제</span>
+						 <%} %>
 						<hr>
 						 <input type="hidden" id="ing_no" name="ing_no" value="<%=CmmUtil.nvl(iDTO.getIng_no()) %>">
 						<div class="divTable listTable">

@@ -35,10 +35,12 @@
 	background-color: rgb(197, 224, 180);
 	color: white;
 	border-style: none;
-	width: 50%;
-	height: 50px;
-	font-size: 20px;
-	font-weight: bold;
+	    width: 20%;
+    height: 45px;
+    font-size: 20px;
+    font-weight: bold;
+    margin-left: 52%;
+    margin-top: -160px;
 }
  .btn {
 	background-color: rgb(197, 224, 180);
@@ -152,20 +154,21 @@ p {
 	<div class="main main-raised">
 		<div class="section section-basic">
 			<div class="container">
-
+			<form class="form" action="ingredient_search.do"  onsubmit="return doSubmit(this);">
 				<div class="row">
+				
 					<div class="col-md-12 ml-auto mr-auto">
 						<h3>성분별 검색</h3>
 						<hr>
 								<select name="cos_type" id="selectbox">
-								<option style="background: #cdd0c3;">카테고리</option>
-								<option style="background: #cdd0c3;">기초화장품</option>
+								<option style="background: #cdd0c3;" value="choice">카테고리</option>
+								<option style="background: #cdd0c3;" value="choice">기초화장품</option>
 								<option value="skin">스킨토너</option>
 								<option value="lotion">로션/에멀젼/에센스</option>
 								<option value="cream">크림/오일</option>
 								<option value="mask">팩, 마스크</option>
 								<option value="sunblock">자외선차단제</option>
-								<option style="background: #cdd0c3;" value="0">메이크업</option>
+								<option style="background: #cdd0c3;" value="choice">메이크업</option>
 								<option value="makeup_base">메이크업 베이스</option>
 								<option value="powder">파우더</option>
 								<option value="foundation">파운데이션</option>
@@ -176,32 +179,29 @@ p {
 								<option value="mascara">마스카라</option>
 								<option value="lipstick">립스틱</option>
 								<option value="lip_gloss">립글로즈, 립밤</option>
-								<option style="background: #cdd0c3;" value="0">클렌징</option>
+								<option style="background: #cdd0c3;" value="choice">클렌징</option>
 								<option value="remover">립&아이리무버</option>
 								<option value="Cleansing_foam">클렌징폼</option>
 								<option value="cleansing_cream">클렌징크림</option>
 								<option value="cleansing_oil">클렌징오일/워터</option>
-								<option style="background: #cdd0c3;" value="0">바디제품</option>
+								<option style="background: #cdd0c3;" value="choice">바디제품</option>
 								<option value="body_lotion">바디로션</option>
 								<option value="body_oil">바디오일</option>
 								<option value="body_wash">바디워시</option>
 							</select>
 							<br/><br/>
 								<input class="form-control" id="exampleInputEmail1" type="text"
-									name="good" aria-describedby="emailHelp" 
-									placeholder="&ensp;포함할 성분 검색"><br/><input
-									class="form-control" id="exampleInputEmail2" type="text"
-									name="bad" aria-describedby="emailHelp"
-									placeholder="&ensp;제외할 성분 검색">
-							
+									name="good" aria-describedby="emailHelp" id="good"
+									placeholder="&ensp;포함할 성분 검색">
 
-							 <br/> <br/>
-							<input type="button" value="SEARCH" class="btn"
-								id="button" onclick='doSearch()'>
+							<input type="submit" value="SEARCH" class="btn"
+								id="button">
 								
 						<div id="search"></div>
 					</div>
+					
 				</div>
+				</form>
 			</div>
 		</div>
 	</div>
@@ -210,132 +210,59 @@ p {
 <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script>
-//전체 검색
-function doSearch(){
-	   var good = $('input[name=good]').val();
-	   var bad = $('input[name=bad]').val();
-	   var category = $("select[name=cos_type]").val();
-	   
-	      $.ajax({
-	         url : "ingredient_search.do",
-	         method : "post",
-	         data : {'good' : good,
-	        	 	'bad' : bad,
-	        	 	'cos_type' : category },
-	         datatype : "json", 
-	         success : function(data) {
-	            var content = "";
-
-	            $.each(data, function (key, value) {
-						
-	            	  console.log("key : "+key);
-	            	  console.log("value : "+value);
-	            	  content += "<hr/>";
-	            	  content += "제품&ensp;<font style='color:#7b9e03'><b>" + value.like_count + "</b></font>&ensp;개";
-	               	  content += "<hr>";
-	                  content += "<div  style='height:100px'>";
-	                  content += "<img src='./cosmetic/"+ value.img_name +"' alt='Rounded Image' class='rounded img-fluid' id='w' id='inline' style='cursor:pointer' onclick='doDetail(" + value.cos_no + ");'>";
-	                  content += "<div id='inline'>";
-	                  
-	                  content += "<p id='brand'>"+value.brand+"</p>";
-	                  content += "<p id='cos_name' onclick='javascript:doDetail();' style='cursor:pointer' onclick='doDetail(" + value.cos_no + ");'>"+ value.cos_name +"</p>";
-	                  content += "<p id='price'>" + value.price + "</p></div></div>";
-	             
-	            });
-	            
-	            if(content == ""){
-	            	content += '<hr>';
-	         	   content += '<br><b><font>해당하는 검색결과가 없습니다.</font></b><br><br></div>';
-			 			$('#search').html(content);
-	            }else{
-	            $('#search').html(content);
-	            }
-	               $('#addview').remove();
-	         	}
-	         
-	      });
-	};
+function doSubmit(form) { //전송시 유효성 체크
 	
+	if (form.cos_type.value == "choice") {
+        alert("분류를 선택해주세요.");
+        form.cos_type.focus();
+        return false;
+     }
+	if (form.good.value == "") {
+        alert("성분명을 입력해주세요.");
+        form.good.focus();
+        return false;
+     }
+}
 $(function(){
-	 $('input[name=good]').autocomplete({
-     	  width: 300,
-          max: 10,
-          delay: 100,
-          minLength: 1,
-          autoFocus: true,
-          cacheLength: 1,
-          scroll: true,
-          highlight: false,
-          source: function( request, response ) {
-         	 var good = $('input[name=good]').val();
-            $.ajax({
-              url: "ingredient_auto.do",
-              method : "post",
-              data: {
-             	 "good" : good 
-             },
-              dataType: "json",
-              success: function( data ) {
-             	 response($.map(data, function (item) {  
-                      return {  
-                          value: item
-                     	 }  
-                  }))  
-                  console.log(data);
-              } ,
-              open: function() {
-                  $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-              },
-              close: function() {
-                $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-              }
-            });
-          }
-      });  
-      
-      $( 'input[name=bad]' ).autocomplete({
-	     	 width: 300,
-	          max: 10,
-	          delay: 100,
-	          minLength: 1,
-	          autoFocus: true,
-	          cacheLength: 1,
-	          scroll: true,
-	          highlight: false,
-	          source: function( request, response ) {
-	         	 var bad = $('input[name=bad]').val();
-	            $.ajax({
-	              url: "ingredient_auto.do",
-	              method : "post",
-	              data: {
-	             	 "bad" : bad 
-	             },
-	              dataType: "json",
-	              success: function( data ) {
-	             	 response($.map(data, function (item) {  
-	                      return {  
-	                          value: item.bad
-	                      }  
-	                  }))  
-	                  console.log(data);
-	 	               
-	              } ,
-	              open: function() {
-	                  $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
-	              },
-	              close: function() {
-	                $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
-	              }
-	            });
-	          }
-	      });  
-      });
-	
-//상세이동
-function doDetail(n){
-    var cos_no = n;
-    location.href="/cosDetail.do?cos_no=" + cos_no;
- }
-</script>
+	$( "#exampleInputEmail1").autocomplete({
+   		width: 300,
+        max: 10,
+        delay: 100,
+        minLength: 1,
+        autoFocus: true,
+        cacheLength: 1,
+        scroll: true,
+        highlight: false,
+        source: function( request, response ) {
+       	 var search = $('#exampleInputEmail1').val();
+          $.ajax({
+            url: "ingredient_auto.do",
+            method : "post",
+            data: {
+           	 "good" : search 
+           },
+            dataType: "json",
+            success: function( data ) {
+           	 response($.map(data, function (item) {  
+                    return {  
+                        value: item.ing_name  
+                    }  
+                    console.log(data);
+                }))  
+                return false;
+            } ,
+            open: function() {
+                $( this ).removeClass( "ui-corner-all" ).addClass( "ui-corner-top" );
+            },
+            close: function() {
+              $( this ).removeClass( "ui-corner-top" ).addClass( "ui-corner-all" );
+            }
+          });
+        }
+    });  
+	 
+     });
 
+
+</script>
 </html>

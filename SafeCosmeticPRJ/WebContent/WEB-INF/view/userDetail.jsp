@@ -64,7 +64,7 @@ String age = CmmUtil.nvl(mDTO.getAge());
     $(Document).ready(function(){
     	var id = document.getElementById("user_id");
     	id.focus();
-    	var age= <%=CmmUtil.nvl(mDTO.getAge())%>
+    	var age= <%=CmmUtil.nvl(mDTO.getAge())%>;
     	$("#selectbox").val(age).attr("selected", "selected");
 
     });

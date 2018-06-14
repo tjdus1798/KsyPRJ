@@ -63,4 +63,6 @@
 		</props>
 		</property>
 	</bean>
+	<!-- 네이버 쇼핑 API-->
+	 
 </beans>

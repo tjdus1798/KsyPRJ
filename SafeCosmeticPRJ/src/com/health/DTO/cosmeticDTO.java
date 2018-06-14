@@ -22,8 +22,21 @@ public class cosmeticDTO {
 	private String img_path;
 	private String img_name;
 	private String thumb_name;
+	private String ori_img_name;
+	private String read_more;
+	public String getRead_more() {
+		return read_more;
+	}
+	public void setRead_more(String read_more) {
+		this.read_more = read_more;
+	}
+	public String getOri_img_name() {
+		return ori_img_name;
+	}
+	public void setOri_img_name(String ori_img_name) {
+		this.ori_img_name = ori_img_name;
+	}
 	MultipartFile upfile;
-	
 	public MultipartFile getUpfile(){
 		return upfile;
 	}

@@ -23,6 +23,7 @@ import com.health.DTO.skin_typeDTO;
 import com.health.DTO.somethingDTO;
 import com.health.service.ILikeService;
 import com.health.util.CmmUtil;
+import com.health.util.Paging;
 import com.health.util.TextUtil;
 
 @Controller
@@ -35,25 +36,34 @@ public class LikeController {
 	@RequestMapping(value="/likeList", method=RequestMethod.GET)
 	public String likeList(HttpServletRequest req, Model model, HttpSession session) throws Exception{
 
-		log.info(this.getClass().getName() + "likeList start");
-		  
+		  log.info(this.getClass().getName() + "likeList start");
 		  String user_no =  CmmUtil.nvl((String) session.getAttribute("session_user_no"));
 		  log.info("user_no : " + user_no);
-		  
 		  likeDTO lDTO = new likeDTO();
-		  
-		  lDTO.setUser_no(user_no);
-		  
-		  List<likeDTO> lList = likeService.getLikeSelect(lDTO);
-		  log.info("List:" + lList);
-		  
-		  model.addAttribute("lList",lList);
-		 
+		  	int currentPageNo = 1;
+		  	int maxPost = 10;
+			
+			if(req.getParameter("pages") != null)
+				currentPageNo = Integer.parseInt(req.getParameter("pages"));
+			
+			Paging paging = new Paging(currentPageNo, maxPost);
+			
+			int offset = (paging.getCurrentPageNo() - 1) * paging.getMaxPost();
+		  List<likeDTO> page = likeService.getLikeSelect(user_no,offset, paging.getMaxPost());
+		  paging.setNumberOfRecords(likeService.writeGetCount(user_no));
+			
+		  paging.makePaging();
+		  if (page == null) {
+				page = new ArrayList<>();
+			}
+		  log.info("page:" + page);
+		  model.addAttribute("page",page);
+		  model.addAttribute("paging", paging);
 		  log.info(this.getClass().getName() + "likeList end");
 		return "/cos/likeList";
 	
 	}	
-	//ÁÁ¾Æ¿äÃß°¡
+	//ì¢‹ì•„ìš” ì¶”ê°€
 	@RequestMapping(value="/like_insert", method= {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody likeDTO like_insert(HttpServletRequest req, HttpSession session) throws Exception{
 		log.info(this.getClass().getName() + "like_insert start!");
@@ -90,7 +100,7 @@ public class LikeController {
 		log.info(this.getClass().getName() + "like_insert end!");
 	return lDTO;
 	}	
-	//ÁÁ¾Æ¿äÃë¼Ò
+	//ì¢‹ì•„ìš” ì·¨ì†Œ
 	@RequestMapping(value="/like_delete", method= {RequestMethod.GET,RequestMethod.POST})
 	public @ResponseBody int like_delete(HttpSession session,HttpServletRequest req) throws Exception{
 	log.info(this.getClass().getName() + "like_delete start!");
@@ -110,7 +120,7 @@ public class LikeController {
 	   return likeService.deleteLike(lDTO);
 
 	}
-	//ÁÁ¾Æ¿ä°Ë»ö
+	//ì¢‹ì•„ìš” ê²€ìƒ‰
 	  @RequestMapping(value = "like_select")
 	  public @ResponseBody likeDTO like_select(HttpServletRequest req, HttpSession session)
 	    throws Exception {
@@ -141,7 +151,7 @@ public class LikeController {
 		    
 		  return "/cos/analysis";
 		}
-	  //ÇÇºÎÅ¸ÀÔº° Â÷Æ®
+	  //ì¢‹ì•„ìš” ê²€ìƒ‰
 	  @RequestMapping(value="/skin_search", method=RequestMethod.POST)
 		public @ResponseBody List<skin_typeDTO> skin_search(@RequestParam(value = "cos_no") String cos_no) throws Exception{
 		  log.info(getClass() + "skin_search start");
@@ -160,7 +170,6 @@ public class LikeController {
 		  log.info(getClass() + "skin_search end");
 		  return stlist;
 		}
-	//ÇÇºÎ°í¹Îº° Â÷Æ®
 	  @RequestMapping(value="/something_search", method=RequestMethod.POST)
 		public @ResponseBody List<somethingDTO> something_search(@RequestParam(value = "cos_no") String cos_no) throws Exception{
 		  log.info(getClass() + "something_search start");
@@ -176,7 +185,6 @@ public class LikeController {
 		  return slist;
 		}
 	  
-	//¾á·Éº° Â÷Æ®
 	  @RequestMapping(value="/age_search", method=RequestMethod.POST)
 		public @ResponseBody List<ageDTO> age_search(@RequestParam(value = "cos_no") String cos_no) throws Exception{
 		  log.info(getClass() + "age_search start");

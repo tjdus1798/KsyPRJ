@@ -15,65 +15,69 @@ public class MainService implements IMainService {
 		
 	@Resource(name="MainMapper")
 	private MainMapper mainMapper;
-	//·Î±×ÀÎ
+	//ï¿½Î±ï¿½ï¿½ï¿½
 	@Override
 	public mainDTO getUserInfo(mainDTO mDTO) throws Exception {
 		return mainMapper.getUserInfo(mDTO);
 	}
-	//È¸¿ø°¡ÀÔ
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	@Override
 	public int insertJoin(mainDTO mDTO) throws Exception {
 		return mainMapper.insertJoin(mDTO);
 	}
-	//¾ÆÀÌµðÃ£±â
+	//ï¿½ï¿½ï¿½Ìµï¿½Ã£ï¿½ï¿½
 	@Override
 	public mainDTO getUserId(mainDTO mDTO) throws Exception {
 		return mainMapper.getUserId(mDTO);
 	}
-	//ÀÌ¸ÞÀÏÀÎÁõ ¼öÁ¤
+	//ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 	@Override
 	public int updateEmailConfirm(mainDTO mDTO) throws Exception {
 		return mainMapper.updateEmailConfirm(mDTO);
 	}
-	//ºñ¹Ð¹øÈ£ º¯°æ
+	//ï¿½ï¿½Ð¹ï¿½È£ ï¿½ï¿½ï¿½ï¿½
 	@Override
 	public int updatePwEmailConfirm(mainDTO mDTO) throws Exception {
 		return mainMapper.updatePwEmailConfirm(mDTO);
 	}
-	//ºñ¹Ð¹øÈ£Ã£±â
+	//ï¿½ï¿½Ð¹ï¿½È£Ã£ï¿½ï¿½
 	@Override
 	public mainDTO getUserPw(mainDTO mDTO) throws Exception {
 		return mainMapper.getUserPw(mDTO);
 	}
-	//È¸¿ø¸ñ·Ï
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½
 		@Override
-		public List<mainDTO> getUserList() throws Exception {
-			return mainMapper.getUserList();
+		public List<mainDTO> getUserList(int offset, int noOfRecords) throws Exception {
+			return mainMapper.getUserList(offset,noOfRecords);
 	}
-	//È¸¿ø»ó¼¼
+	//È¸ï¿½ï¿½ï¿½ï¿½
 	@Override
 	public mainDTO getUserDetail(String user_no) throws Exception {
 		return mainMapper.getUserDetail(user_no);
 	}
-	//È¸¿ø»èÁ¦
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	@Override
 	public int deleteUserInfo(mainDTO mDTO) throws Exception {
 		return mainMapper.deleteUserInfo(mDTO);
 	}
-	//È¸¿ø¼öÁ¤
+	//È¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	@Override
 	public int updateUserInfo(mainDTO mDTO) throws Exception {
 		return mainMapper.updateUserInfo(mDTO);
 	}
-	//¾ÆÀÌµðÁßº¹Ã¼Å©
+	//ï¿½ï¿½ï¿½Ìµï¿½ï¿½ßºï¿½Ã¼Å©
 	@Override
 	public int getIdCheck(mainDTO mDTO) throws Exception {
 		return mainMapper.getIdCheck(mDTO);
 	}
-	//ÀÌ¸ÞÀÏÁßº¹Ã¼Å©
+	//ï¿½Ì¸ï¿½ï¿½ï¿½ï¿½ßºï¿½Ã¼Å©
 	@Override
 	public int getEmailCheck(mainDTO mDTO) throws Exception {
 		return mainMapper.getEmailCheck(mDTO);
+	}
+	@Override
+	public int writeGetCount() throws Exception {
+		return  mainMapper.writeGetCount();
 	}
 		
 }

@@ -4,20 +4,25 @@ import java.util.List;
 
 import com.health.DTO.ingDTO;
 import com.health.config.Mapper;
+import com.health.util.Criteria;
 
 @Mapper("IngMapper")
 public interface IngMapper {
-	//¼ººÐµî·Ï
+	//ï¿½ï¿½ï¿½Ðµï¿½ï¿½
 	public int insertIng(ingDTO iDTO) throws Exception;
-	//¼ººÐ¸ñ·Ï
-	public List<ingDTO> getIngList() throws Exception;
-	//¼ººÐ»ó¼¼
+	//ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½
+	public List<ingDTO> getIngList(int offset, int noOfRecords) throws Exception;
+	//ï¿½ï¿½ï¿½Ð»ï¿½
 	public ingDTO getingDetail(String ing_no) throws Exception;
-	//¼ººÐ¼öÁ¤
+	//ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½
 	public int updateIng(ingDTO iDTO) throws Exception;
-	//¼ººÐ»èÁ¦
+	//ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½
 	public int deleteIng(ingDTO iDTO) throws Exception;
-	//¼ººÐÁ¤º¸Á¶È¸(È­ÀåÇ°»ó¼¼)
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¸(È­ï¿½ï¿½Ç°ï¿½ï¿½)
 	public ingDTO selectIngInfo(List<ingDTO> iList) throws Exception;
+	//ï¿½ï¿½ï¿½Ð¸ï¿½ ï¿½Úµï¿½ï¿½Ï¼ï¿½
+	public List<ingDTO> getIngNamesAuto() throws Exception;
+	//ì„±ë¶„ ì „ì²´ ê°¯ìˆ˜ ì¡°íšŒ
+	public int writeGetCount() throws Exception;
 
 }

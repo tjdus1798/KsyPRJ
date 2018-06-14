@@ -28,11 +28,8 @@
     <!-- CSS Just for demo purpose, don't include it in your project -->
     <link href="./bootstrap/main/assets/assets-for-demo/demo.css" rel="stylesheet" />
     <!-- iframe removal -->
-    
     <style>
-    
     #selectbox{
-	
 	width:150px;
 	height:30px;
 	color:gray;
@@ -49,7 +46,11 @@
 	height:50px;
 	font-size:20px;
 	}
-	
+	#btn {
+	background-color:rgb(197, 224, 180);
+	color:white;
+	border-style:none;
+	}
 	.invalid{
 	background-image:
 	linear-gradient(to top, #f44336 2px, rgba(244, 67, 54, 0) 2px), 
@@ -58,15 +59,60 @@
     </style>
     <script src="./bootstrap/js/jquery-3.3.1.min.js"></script>
     <script>
+    var idExists = "1";//ID 중복체크 실행여부(1: 중복체크 실행안함 / 2: 아이디 중복 / 3: 통과)
+    var emailExists = "1";
+    function doIdCheck() {
+    	var id = $("#user_id").val();
+    		var id = $("#user_id").val();
+    		$.ajax({
+    			url : '/idCheck.do',
+    			method : "POST",
+    			data : {
+    				user_id: id
+    			},
+    			dataType:"text",
+    			success : function(data) {
+    				if(data == 1){
+    					alert("이미 존재하는 아이디입니다.");
+    					idExists = 2;
+    				}else if(data == -1){
+    					alert("사용가능한 아이디입니다.");
+    					id.readOnly = true;
+    					idExists = 3;
+    				}
+    			}
+    		});
+    }
+    function doEmailCheck() {
+    	var email = $("#email").val();
+    		var email = $("#email").val();
+    		$.ajax({
+    			url : '/emailCheck.do',
+    			method : "POST",
+    			data : {
+    				email: email
+    			},
+    			dataType:"text",
+    			success : function(data) {
+    				if(data == 1){
+    					alert("이미 존재하는 이메일입니다.");
+    					emailExists = 2;
+    				}else if(data == -1){
+    					alert("사용가능한 이메일입니다.");
+    					emailExists = 3;
+    				}
+    			}
+    		});
+    }
     $(function(){
     	var id = document.getElementById("user_id");
     	id.focus();
-    	var checkAjaxSetTimeout;
+    	/* var checkAjaxSetTimeout;
     	$("#user_id").keyup(function(){
     		//clearTimeout(checkAjaxSetTimeout);
     	    //checkAjaxSetTimeout = setTimeout(function(){
     	    var id = $("#user_id").val();
-        	//if(id.length > 4){
+        	if(id.length > 3){
         		var id = $("#user_id").val();
         		$.ajax({
         			url : '/idCheck.do',
@@ -78,21 +124,23 @@
         			success : function(data) {
         				if(data == 1){
         					$("#ui").html("This ID already exists.");
+        					idExists =2;
         				}else if(data == -1){
         					$("#ui").html("This ID can be used.");
+        					idExists = 1;
         				}
         			}
         		});
         		
-        		//}
+        		}
     	       // },1000);
-    	});
-    	var checkAjaxSetTimeout;
+    	}); */
+/*     	var checkAjaxSetTimeout;
     	$("#email").keyup(function(){
     		//clearTimeout(checkAjaxSetTimeout);
     	    //checkAjaxSetTimeout = setTimeout(function(){
     	    var email = $("#email").val();
-        	//if(email.length > 5){
+        	if(email.length > 5){
         		var email = $("#email").val();
         		$.ajax({
         			url : '/emailCheck.do',
@@ -110,11 +158,11 @@
         			}
         		});
         		
-        		//}
+        		}
     	        //},1000);
-    	});
+    	}); */
 
-    	 $("#password_check").keyup(function(){
+    	/*  $("#password_check").keyup(function(){
     		 clearTimeout(checkAjaxSetTimeout);
  		    checkAjaxSetTimeout = setTimeout(function(){
     		    	 var pw_check = $("#password_check").val();
@@ -128,7 +176,7 @@
     		    		 }
     		    	 }
     		    });
-    	    });
+    	    }); */
     });
    
  function doSubmit(form) { //전송시 유효성 체크
@@ -138,8 +186,28 @@
            form.user_id.focus();
            return false;
         }
+        if (idExists == "1") {
+            alert("아이디 중복확인을 해주세요.");
+            form.user_id.focus();
+            return false;
+         }
+        if (idExists == "2") {
+            alert("중복되는 아이디입니다.");
+            form.user_id.focus();
+            return false;
+         }
  		if (form.email.value == "") {
             alert("이메일을 입력해주세요.");
+            form.email.focus();
+            return false;
+         }
+ 		if (emailExists == "1") {
+            alert("이메일 중복확인을 해주세요.");
+            form.email.focus();
+            return false;
+         }
+ 		if (emailExists == "2") {
+            alert("중복되는 이메일입니다.");
             form.email.focus();
             return false;
          }
@@ -148,8 +216,111 @@
             form.password.focus();
             return false;
          }
-        
+        if (form.password_check.value == "") {
+            alert("비밀번호를 입력해주세요.");
+            form.password_check.focus();
+            return false;
+         }
+        if (form.password.value != form.password_check.value) {
+			alert("비밀번호와 비밀번호 확인이 일치하지 않습니다.");
+			form.password.focus();
+    		return false;
+    	}
+        if (form.age.value == "age_option") {
+            alert("생년월일을 선택해주세요.");
+            form.age.focus();
+            return false;
+         }
+        if (form.skin_type.value == "") {
+            alert("피부타입을 선택해주세요.");
+            form.skin_type.focus();
+            return false;
+         }
     }
+//아이디 체크
+	function idCheck() {
+		var id = document.getElementById('user_id');
+		var blank = /[\s]/gi;
+		if (blank.test(id.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			id.value = "";
+			return false;
+		}
+		var special = /[.`~!@\#$%<>^&*\()\-=+_\’:;]/gi;
+		if (special.test(id.value) == true) {
+			alert('특수문자는 사용이 불가능합니다');
+			id.value = "";
+			return false;
+		}
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(id.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			id.value = "";
+			return false;
+		}
+	}
+	//이메일 체크
+	function emailCheck() {
+		var email = document.getElementById('email');
+		var blank = /[\s]/gi;
+		if (blank.test(email.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			email.value = "";
+			return false;
+		}
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(email.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			email.value = "";
+			return false;
+		}
+	}
+	//비밀번호 체크
+
+	function pwdCheck() {
+		var pwd = document.getElementById('password');
+		var blank = /[\s]/gi;
+		if (blank.test(pwd.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			pwd.value = "";
+			return false;
+		}
+		var special = /[.`~!@\#$%<>^&*\()\-=+_\’:;]/gi;
+		if (special.test(pwd.value) == true) {
+			alert('특수문자는 사용이 불가능합니다');
+			pwd.value = "";
+			return false;
+		}
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(pwd.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			pwd.value = "";
+			return false;
+		}
+	}
+	//비밀번호 확인 체크
+		function pwdChkCheck() {
+		var pwdChk = document.getElementById('password_check');
+		var blank = /[\s]/gi;
+		if (blank.test(pwdChk.value) == true) {
+			alert('공백은 사용할 수 없습니다');
+			pwdChk.value = "";
+			return false;
+		}
+		var special = /[.`~!@\#$%<>^&*\()\-=+_\’:;]/gi;
+		if (special.test(pwdChk.value) == true) {
+			alert('특수문자는 사용이 불가능합니다');
+			pwdChk.value = "";
+			return false;			
+		}		
+		var hangle = /[ㄱ-ㅎ|ㅏ-ㅣ|가-힝]/gi;
+		if (hangle.test(pwdChk.value) == true) {
+			alert('한글은 사용이 불가능합니다');
+			pwdChk.value = "";
+			return false;
+
+		}
+	}
 
     </script>
     <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
@@ -168,30 +339,30 @@
                                 </div>
                                 <p class="text-divider"></p>
                                 <div class="card-body">
-  									<div class="form-group">
+  									<div class="form-group" >
 		                                 <label for="exampleInput1" class="bmd-label-floating">아이디</label>
-		                                <input type="text" class="form-control" id="user_id" name="user_id">
-		                                <span class="bmd-help" id="ui"></span>
+		                                <input type="text" class="form-control" id="user_id" name="user_id" autocomplete="off" maxlength="20" onkeydown="idCheck()" style="display: inline;">
+		                                <span class="bmd-help" id="ui"></span><input type="button" value="중복확인" id="btn" onclick="doIdCheck()">
                             		</div>
                                     <div class="form-group">
 		                                 <label for="exampleInput1" class="bmd-label-floating">Email</label>
-		                                <input type="email" class="form-control" id="email" name="email">
-		                                <span class="bmd-help" id="ec"></span>
+		                                <input type="email" class="form-control" id="email" name="email" autocomplete="off" onkeydown="emailCheck()" maxlength="50"  style="display: inline;">
+		                                <span class="bmd-help" id="ec"></span><input type="button" value="중복확인" id="btn" onclick="doEmailCheck()">
                             		</div>
                             		<div class="form-group">
 		                                 <label for="exampleInput1" class="bmd-label-floating">비밀번호</label>
-		                                <input type="password" class="form-control" id="password" name="password">
+		                                <input type="password" class="form-control" id="password" name="password" onkeydown="pwdCheck()" maxlength="20">
 		                                <span class="bmd-help"></span>
                             		</div>
                             		<div class="form-group">
 		                                 <label for="exampleInput1" class="bmd-label-floating">비밀번호 확인</label>
-		                                <input type="password" class="form-control" id="password_check">
+		                                <input type="password" class="form-control" id="password_check" name="password_check" onkeydown="pwdChkCheck()" maxlength="20">
 		                                <span class="bmd-help" id="pw"></span>
                             		</div>
                             		<br>
 										<label for="exampleInput1" class="bmd-label-floating">나이</label><br/>
 	                            		<select name="age" id="selectbox" >
-	                            		<option value="">&ensp;생년월일</option>
+	                            		<option value="age_option">&ensp;생년월일</option>
 	                            		<% 
 	                            		String toDate = new java.text.SimpleDateFormat("yyyy").format(new java.util.Date());
 											for (int i=1960 ; i<=Integer.parseInt(toDate) ; i++) { %>

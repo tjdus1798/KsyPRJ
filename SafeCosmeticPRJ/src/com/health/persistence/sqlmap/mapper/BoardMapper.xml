@@ -18,6 +18,12 @@
 		SELECT BO_NO, TITLE, CONTENT, CNT, REG_NO , REG_DT
 		FROM BOARD
 		ORDER BY REG_NO DESC
+		LIMIT #{0}, #{1}
+	</select>
+	<!-- 페이징 및 전체 레코드 갯수 조회 -->
+	<select id="writeGetCount" resultType="int">
+		SELECT COUNT(*)
+		FROM BOARD
 	</select>
 	<!-- 게시판상세 -->
 	<select id="getBoardDetail" resultType="boardDTO">
@@ -30,4 +36,17 @@
 		DELETE FROM BOARD 
 		WHERE BO_NO = #{bo_no}
 	</delete>
+	<!-- 게시판수정 -->
+	<update id="updateBoard" parameterType="boardDTO">
+		UPDATE BOARD 
+		SET TITLE = #{title}, CONTENT = #{content}, IMG_PATH = #{img_path}, IMG_NAME = #{img_name}, ORI_IMG_NAME = #{ori_img_name}, CHG_NO = '10000010', CHG_DT = NOW()
+		WHERE BO_NO = #{bo_no}
+	</update>
+	<!-- 조회수 증가 -->
+   <update id="cntUpdate" parameterType="boardDTO">
+      UPDATE BOARD SET
+         CNT = CNT + 1
+      WHERE
+         BO_NO = #{bo_no}   
+   </update>
 </mapper>

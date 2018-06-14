@@ -13,6 +13,15 @@
   <link href="./bootstrap/common/vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
   <!-- Custom styles for this template-->
     <style>
+    #exampleInputEmail1 {
+	display: inline;
+	border: solid 0.1px #d2d2d2;
+	background-image:none;
+}
+#exampleInputEmail1:focus {
+	border-color:#7b9e03;
+	box-shadow:0 0 0 0.2rem #7b9e0359;
+}
     #button {
 	background-color:rgb(197, 224, 180);
 	color:white;
@@ -21,19 +30,20 @@
 	width:300px;
 	height:50px;
 	font-size:20px;
+	font-weight: bold;
 	}
 #selectbox1{
 	
-	width:35%;
-	height:30px;
+	width:50%;
+	height:40px;
 	color:gray;
 	border-radius: 7px;
 	border-color: #d2d2d2;
 }
 #selectbox2{
 	
-	width:35%;
-	height:30px;
+	width:50%;
+	height:40px;
 	color:gray;
 	border-radius: 7px;
 	border-color: #d2d2d2;
@@ -48,6 +58,30 @@
     	var id = document.getElementById("user_id");
     	id.focus();
     };
+    
+    function doSubmit(form) { //전송시 유효성 체크
+           
+           if (form.ing_name.value == "") {
+              alert("성분명을 입력해주세요.");
+              form.ing_name.focus();
+              return false;
+           }
+           if (form.ing_eng.value == "") {
+               alert("성분의 영문명을 입력해주세요.");
+               form.ing_eng.focus();
+               return false;
+            }
+           if (form.mix.value == "") {
+               alert("배합목적을 입력해주세요.");
+               form.mix.focus();
+               return false;
+            }
+           if (form.ewg_level.value == "") {
+               alert("EWG등급을 입력해주세요.");
+               form.ewg_level.focus();
+               return false;
+            }
+    }
     </script>
     <jsp:include page="/WEB-INF/view/top.jsp" flush="false"></jsp:include>
 </head>
@@ -59,25 +93,25 @@
                 <div class="row">
                     <div class="col-md-12 ml-auto mr-auto" >
                             <h3>성분등록</h3><hr>
-                            <form class="form" method="post" action="/ingReg_proc.do">
+                            <form class="form" method="post" action="/ingReg_proc.do" onsubmit="return doSubmit(this);" >
                            <div class="form-group">
 				           <label for="exampleInputEmail1">성분명</label>
-				           <input class="form-control" id="exampleInputEmail1" 
+				           <input class="form-control" id="exampleInputEmail1" maxlength="100"
 				           name="ing_name" type="text" aria-describedby="#">
 				           </div>
 				            <div class="form-group">
 				           <label for="exampleInputEmail1">영문명</label>
-				           <input class="form-control" id="exampleInputEmail1" 
+				           <input class="form-control" id="exampleInputEmail1" maxlength="200"
 				           name="ing_eng" type="text" aria-describedby="#">
 				           </div>
                           <div class="form-group">
 				           <label for="exampleInputEmail1">배합목적</label>
-				           <input class="form-control" id="exampleInputEmail1"
+				           <input class="form-control" id="exampleInputEmail1"maxlength="150"
 				           name="mix" type="text" aria-describedby="#">
 				           </div>
 				           <div class="form-group">
 				           <label for="exampleInputEmail1">EWG등급</label>
-				           <input class="form-control" id="exampleInputEmail1"
+				           <input class="form-control" id="exampleInputEmail1" maxlength="5"
 				           name="ewg_level" type="text" aria-describedby="#">
 				           </div>
 				           <div class="form-group">
@@ -105,7 +139,7 @@
 				           
 				           <div class="card-header card-header-primary text-center">
 				           <input type="submit" value="등록" class="btn" style="width:150px" id="button">
-				           <input type="button" value="취소" class="btn" style="width:150px" id="button">
+				           <input type="button" value="취소" class="btn" style="width:150px" id="button" onclick="location.href='/ingList.do'">
 				           </div>
 				           </div>		
                             </form>

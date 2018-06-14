@@ -9,41 +9,52 @@ import org.springframework.stereotype.Service;
 import com.health.DTO.ingDTO;
 import com.health.persistence.mapper.IngMapper;
 import com.health.service.IIngService;
+import com.health.util.Criteria;
 
 @Service("IngService")
 public class IngService implements IIngService{
 	
 	@Resource(name="IngMapper")
 	private IngMapper ingMapper;
-	//¼ººÐµî·Ï
+	//ï¿½ï¿½ï¿½Ðµï¿½ï¿½
 	@Override
 	public int insertIng(ingDTO iDTO) throws Exception {
 		return ingMapper.insertIng(iDTO);
 	}
-	//¼ººÐ¸ñ·Ï
+	//ï¿½ï¿½ï¿½Ð¸ï¿½ï¿½
 	@Override
-	public List<ingDTO> getIngList() throws Exception {
-		return ingMapper.getIngList();
+	public List<ingDTO> getIngList(int offset, int noOfRecords) throws Exception {
+		return ingMapper.getIngList(offset, noOfRecords);
 	}
-	//¼ººÐ»ó¼¼
+	//ï¿½ï¿½ï¿½Ð»ï¿½
 	@Override
 	public ingDTO getingDetail(String ing_no) throws Exception {
 		return ingMapper.getingDetail(ing_no);
 	}
-	//¼ººÐ¼öÁ¤
+	//ï¿½ï¿½ï¿½Ð¼ï¿½ï¿½ï¿½
 	@Override
 	public int updateIng(ingDTO iDTO) throws Exception {
 		return ingMapper.updateIng(iDTO);
 	}
-	//¼ººÐ»èÁ¦
+	//ï¿½ï¿½ï¿½Ð»ï¿½ï¿½ï¿½
 	@Override
 	public int deleteIng(ingDTO iDTO) throws Exception {
 		return ingMapper.deleteIng(iDTO);
 	}
-	//¼ººÐÁ¤º¸Á¶È¸(È­ÀåÇ°»ó¼¼)
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¸(È­ï¿½ï¿½Ç°ï¿½ï¿½)
 	@Override
 	public ingDTO selectIngInfo(List<ingDTO> iList) throws Exception {
 		return ingMapper.selectIngInfo(iList);
+	}
+	//ï¿½ï¿½ï¿½Ð¸ï¿½ ï¿½Úµï¿½ï¿½Ï¼ï¿½
+	@Override
+	public List<ingDTO> getIngNamesAuto() throws Exception {
+		return ingMapper.getIngNamesAuto();
+	}
+	//ì„±ë¶„ ì „ì²´ ê°¯ìˆ˜ ì¡°íšŒ
+	@Override
+	public int writeGetCount() throws Exception {
+		return ingMapper.writeGetCount();
 	}
 	
 }

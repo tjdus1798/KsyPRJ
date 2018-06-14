@@ -9,39 +9,59 @@ import com.health.config.Mapper;
 
 @Mapper("CosMapper")
 public interface CosMapper {
-	//È­ÀåÇ°µî·Ï
+	//È­ï¿½ï¿½Ç°ï¿½ï¿½ï¿½
 	public int insertCos(cosmeticDTO cDTO) throws Exception ;
-	//È­ÀåÇ°µî·Ï - ¼ººĞ¸ñ·Ï
+	//È­ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ - ï¿½ï¿½ï¿½Ğ¸ï¿½ï¿½
 	public List<ingDTO> CosIng();
-	//È­ÀåÇ°µî·Ï - ºê·£µå¸ñ·Ï
+	//È­ï¿½ï¿½Ç°ï¿½ï¿½ï¿½ - ï¿½ê·£ï¿½ï¿½ï¿½ï¿½
 	public List<cosmeticDTO> CosBrand();
-	//È­ÀåÇ°¸ñ·Ï
-	public List<cosmeticDTO> getCosList() throws Exception;
-	//È­ÀåÇ°»ó¼¼
+	//í™”ì¥í’ˆ ëª©ë¡
+	public List<cosmeticDTO> getCosList(int offset, int noOfRecords) throws Exception;
+	//í™”ì¥í’ˆ ìƒì„¸
 	public cosmeticDTO getcosDetail(String cos_no) throws Exception;
-	//ÁÁ¾Æ¿ä¸ñ·Ï
+	//í™”ì¥í’ˆ ìƒì„¸ - ì„±ë¶„ëª©ë¡
+	public List<ingDTO> getcosDetailIng(String cos_no) throws Exception;
+	//í™”ì¥í’ˆ ìˆ˜ì •
+	public int updateCos(cosmeticDTO cdto) throws Exception;
+	//í™”ì¥í’ˆ ì‚­ì œ
+	public int DeleteCos(String cos_no) throws Exception;
+	//ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½
 	public likeDTO getLikeList(likeDTO lDTO) throws Exception;
-	//ºê·£µå¸íÀ¸·Î °Ë»ö
-	public List<cosmeticDTO> getBrandSearch(cosmeticDTO cDTO) throws Exception;
-	//ºê·£µå¸í ÀÚµ¿¿Ï¼º
+	//ï¿½ê·£ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
+	public List<cosmeticDTO> getBrandSearch(String search,int offset, int noOfRecords) throws Exception;
+	//ï¿½ê·£ï¿½ï¿½ï¿½ ï¿½Úµï¿½ï¿½Ï¼ï¿½
 	public List<cosmeticDTO> getBrandAuto(cosmeticDTO cDTO) throws Exception;
-	//¼ººĞÀ¸·Î °Ë»ö
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
 	public List<cosmeticDTO> getIngSearch(cosmeticDTO cDTO) throws Exception;
-	//ÁÁÀº¼ººĞÁ¦¿Ü °Ë»ö
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
 	public List<cosmeticDTO> getWithoutGood(cosmeticDTO cDTO) throws Exception;
-	//ÇÇÇÒ¼ººĞÁ¦¿Ü °Ë»ö
+	//ï¿½ï¿½ï¿½Ò¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
 	public List<cosmeticDTO> getWithoutBad(cosmeticDTO cDTO) throws Exception;
-	//È­ÀåÇ°Å¸ÀÔÁ¦¿Ü °Ë»ö
+	//È­ï¿½ï¿½Ç°Å¸ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ë»ï¿½
 	public List<cosmeticDTO> getWithoutCosType(cosmeticDTO cDTO) throws Exception;
-	//³ª»Û¼ººĞ¸í ÀÚµ¿¿Ï¼º
+	//ï¿½ï¿½ï¿½Û¼ï¿½ï¿½Ğ¸ï¿½ ï¿½Úµï¿½ï¿½Ï¼ï¿½
 	public List<ingDTO> getIngBadAuto(ingDTO iDTO) throws Exception;
-	//ÁÁÀº¼ººĞ¸í ÀÚµ¿¿Ï¼º
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ğ¸ï¿½ ï¿½Úµï¿½ï¿½Ï¼ï¿½
 	public List<ingDTO> getIngGoodAuto(ingDTO iDTO) throws Exception;
-	//ÀÓ»êºÎÃßÃµÈ­ÀåÇ°
-	public List<cosmeticDTO> getPregnantList() throws Exception;
-	//¿µÀ¯¾ÆÃßÃµÈ­ÀåÇ°
-	public List<cosmeticDTO> getBabyList() throws Exception;
-	//¾Ë·¹¸£±âÃßÃµÈ­ÀåÇ°
-	public List<cosmeticDTO> getAllergyList() throws Exception;
+	//ï¿½Ó»ï¿½ï¿½ï¿½ï¿½ÃµÈ­ï¿½ï¿½Ç°
+	public List<cosmeticDTO> getPregnantList(int offset, int noOfRecords) throws Exception;
+	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÃµÈ­ï¿½ï¿½Ç°
+	public List<cosmeticDTO> getBabyList(int offset, int noOfRecords) throws Exception;
+	//ï¿½Ë·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ÃµÈ­ï¿½ï¿½Ç°
+	public List<cosmeticDTO> getAllergyList(int offset, int noOfRecords) throws Exception;
+	//í™”ì¥í’ˆ ì „ì²´ ê°¯ìˆ˜ ì¡°íšŒ
+	public int writeGetCount() throws Exception;
+	//ì½”ë“œí…Œì´ë¸” ing_no ë“±ë¡
+	public void codeInsert(String ing_name,String cos_name) throws Exception;
+	//
+	public int writePregGetCount() throws Exception;
+	//
+	public int writeBabyGetCount() throws Exception;
+	//
+	public int writeAllergyGetCount() throws Exception;
+	public void codeDelete(String cos_no) throws Exception;
+	public int writeBrandGetCount(String search) throws Exception;
+	public List<cosmeticDTO> getWithoutBad(String good, String cos_type, int offset, int maxPost) throws Exception;
+	public int writeIngGetCount(String good, String cos_type) throws Exception;
 	
 }

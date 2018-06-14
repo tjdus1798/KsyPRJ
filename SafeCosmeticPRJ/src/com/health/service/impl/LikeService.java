@@ -18,39 +18,43 @@ import com.health.service.ILikeService;
 public class LikeService implements ILikeService{
 	@Resource(name="LikeMapper")
 	private LikeMapper likeMapper;
-	//ÁÁ¾Æ¿äÃë¼Ò
+	//ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½
 	@Override
 	public int deleteLike(likeDTO lDTO) throws Exception {
 		return likeMapper.deleteLike(lDTO);
 	}
-	//ÁÁ¾Æ¿äÃß°¡
+	//ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ß°ï¿½
 	@Override
 	public void insertLike(likeDTO lDTO) throws Exception {
 		likeMapper.insertLike(lDTO);
 	}
-	//ÁÁ¾Æ¿ä¸ñ·Ï
+	//ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½
 	@Override
 	public likeDTO selectLike(likeDTO lDTO) throws Exception {
 		return likeMapper.selectLike(lDTO);
 	}
-	//ÁÁ¾Æ¿äÆäÀÌÁö
+	//ï¿½ï¿½ï¿½Æ¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 	@Override
-	public List<likeDTO> getLikeSelect(likeDTO lDTO) throws Exception {
-		return likeMapper.getLikeSelect(lDTO);
+	public List<likeDTO> getLikeSelect(String user_no, int offset, int noOfRecords) throws Exception {
+		return likeMapper.getLikeSelect(user_no,offset,noOfRecords);
 	}
-	//ÇÇºÎÅ¸ÀÔº° Â÷Æ®
+	//ï¿½Çºï¿½Å¸ï¿½Ôºï¿½ ï¿½ï¿½Æ®
 	@Override
 	public List<skin_typeDTO> getSkinType(String cos_no) throws Exception {
 		return likeMapper.getSkinType(cos_no);
 	}
-	//ÇÇºÎ°í¹Îº° Â÷Æ®
+	//ï¿½ÇºÎ°ï¿½Îºï¿½ ï¿½ï¿½Æ®
 	@Override
 	public List<somethingDTO> getSomething(String cos_no) throws Exception {
 		return likeMapper.getSomething(cos_no);
 	}
-	//¾á·Éº° Â÷Æ®
+	//ï¿½ï¿½Éºï¿½ ï¿½ï¿½Æ®
 	@Override
 	public List<ageDTO> getAge(String cos_no) throws Exception {
 		return likeMapper.getAge(cos_no);
+	}
+	@Override
+	public int writeGetCount(String user_no) throws Exception {
+		return likeMapper.writeGetCount(user_no);
 	}
 }
