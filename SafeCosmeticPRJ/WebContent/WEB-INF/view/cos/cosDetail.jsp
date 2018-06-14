@@ -12,7 +12,6 @@
 <head>
 <%
     request.setCharacterEncoding("euc-kr");
-
     String SESSION_USER_ID = CmmUtil.nvl((String)session.getAttribute("session_user_id"));
     String SESSION_USER_NO = CmmUtil.nvl((String)session.getAttribute("session_user_no"));
     
@@ -44,7 +43,6 @@
 h3 {
 	display: inline;
 }
-
 #eng {
 	color: gray;
 	font-size: 13px;
@@ -52,14 +50,12 @@ h3 {
 #inline-block {
 	display: inline-block;
 }
-
 #inline-block-label {
 	display: inline-block;
 	position: absolute;
 	font-weight: bold;
 	font-size: 19px;
 }
-
 #inline {
 	display: inline-block;
 	position: absolute;
@@ -76,11 +72,9 @@ p {
 	color: gray;
 	font-weight: lighter;
 }
-
 #db {
 	color: black;
 }
-
 #button {
 	background-color: rgb(197, 224, 180);
 	color: white;
@@ -90,16 +84,13 @@ p {
 	font-weight: bold;
 	font-size: 18px;
 }
-
 #brand {
 	font-size: 17px;
 }
-
 h4 {
 	font-weight: bold;
 	font-size: 20px;
 }
-
 div.listTable {
 	font-family: sans-serif;
 	border: 1px solid #E3DEDE;
@@ -108,18 +99,15 @@ div.listTable {
 	text-align: center;
 	border-collapse: collapse;
 }
-
 .divTable.listTable .divTableCell, .divTable.listTable .divTableHead {
 	border: 1px solid #e8e5e5;
 	padding: 7px 7px;
 }
-
 .divTable.listTable .divTableBody .divTableCell {
 	font-size: 18px;
 	color: #3c4858;
 	font-weight: bold;
 }
-
 .divTable.listTable .divTableHeading {
 	background: #FFFFFF;
 	background: -moz-linear-gradient(top, #ffffff 0%, #ffffff 66%, #FFFFFF 100%);
@@ -127,7 +115,6 @@ div.listTable {
 	background: linear-gradient(to bottom, #ffffff 0%, #ffffff 66%, #FFFFFF 100%);
 	border-bottom: 0px solid #545454;
 }
-
 .divTable.listTable .divTableHeading .divTableHead {
 	font-size: 14px;
 	font-weight: bold;
@@ -135,7 +122,6 @@ div.listTable {
 	text-align: center;
 	border-left: 0px solid #545454;
 }
-
 .divTable.listTable .divTableHeading .divTableHead:first-child {
 	border-left: none;
 }
@@ -143,23 +129,18 @@ div.listTable {
 .divTable {
 	display: table;
 }
-
 .divTableRow {
 	display: table-row;
 }
-
 .divTableHeading {
 	display: table-header-group;
 }
-
 .divTableCell, .divTableHead {
 	display: table-cell;
 }
-
 .divTableHeading {
 	display: table-header-group;
 }
-
 .divTableBody {
 	display: table-row-group;
 }
@@ -170,7 +151,6 @@ div.listTable {
 </style>
 <script src="./bootstrap/js/jquery-3.3.1.min.js"></script>
 <script>
-
 $(function(){
 	var ing =  $("#ing_name").val();
 	select();
@@ -239,9 +219,7 @@ function insert(){
 	            alert("다시 시도해주세요.");
 	         }
 	   });
-
 };
-
 //좋아요취소
 function LikeDelete(){
        $.ajax({
