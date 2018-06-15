@@ -168,7 +168,7 @@ public class MainController {
 	StringBuffer contents = new StringBuffer();
 	
 	contents.append("SafeCosmetic 회원가입 <br/>")
-			.append("<a href='http://192.168.170.141:9000/emailConfirm.do?key=")
+			.append("<a href='http://192.168.175.44:8080/emailConfirm.do?key=")
 			.append(key)
 			.append("'><h2>이메일 인증하기</h2></a>");
 	
@@ -272,7 +272,7 @@ public class MainController {
 			String key = mDTO.getUser_no();
 			log.info(key);
 			contents.append("비밀번호변경해주시길 바랍니다. <br/>")
-					.append("<a href='http://192.168.170.141:9000/pwChange.do?key=")
+					.append("<a href='http://192.168.175.44:8080/pwChange.do?key=")
 					.append(key)
 					.append("'><h2>비밀번호 변경</h2></a>");
 
